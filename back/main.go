@@ -54,7 +54,7 @@ func quoteOfTheDay(w http.ResponseWriter, req *http.Request) {
 		fmt.Println(url)
 
 		if err != nil {
-			log.Fatal("couldn't get result from API server : " + err)
+			log.Fatal("couldn't get result from API server : ")
 		}
 		defer resp.Body.Close()
 		body, _ := ioutil.ReadAll(resp.Body)
