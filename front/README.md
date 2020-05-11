@@ -1,4 +1,14 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+```
+docker build -t frontapp:1.0 --rm --build-arg GIT_USER=cyan21 --build-arg GIT_TOKEN=<TOKEN> .
+
+# access app on docker host port 80
+docker run -p 80:9000 -d frontapp:1.0
+```
+
+## NOTICE
+
+this project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
