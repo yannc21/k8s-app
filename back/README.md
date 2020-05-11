@@ -1,17 +1,33 @@
 
-## environment variables to set
+## build
+
+```
+docker build -t backapp:1.0 --rm --build-arg GIT_USER=cyan21 --build-arg GIT_TOKEN=<TOKEN> .
+```
+
+## run
+
+env.txt
 
 ```
 # FQDN can be the hostname or IP 
-export APP_FQDN=""
-export APP_PORT=""
+# default 0.0.0.0
+APP_FQDN=""
+
+# default 8090 
+APP_PORT=""
 
 # if true will read data.json 
 # if unset or empty or false will query  https://www.quotes.net
-export OFFLINE_MODE=true
+OFFLINE_MODE=true
 
 # credentials for https://www.quotes.net
-export API_UID=""
-export API_TOKENID=""
+# only if OFFLINE_MODE=false or unset
+API_UID=""
+API_TOKENID=""
 
+```
+Execute
+```
+docker run --env-file env.txt -p 8090:8090 -d backapp:1.0
 ```
