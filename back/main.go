@@ -51,9 +51,10 @@ func quoteOfTheDay(w http.ResponseWriter, req *http.Request) {
 		searchtype := "AUTHOR"
 		url := "https://www.stands4.com/services/v2/quotes.php?uid=" + uid + "&tokenid=" + token + "&searchtype=" + searchtype + "&query=" + query + "&format=json"
 		resp, err := http.Get(url)
+		fmt.Println(url)
 
 		if err != nil {
-			log.Fatal("couldn't get result from API server")
+			log.Fatal("couldn't get result from API server : " + err)
 		}
 		defer resp.Body.Close()
 		body, _ := ioutil.ReadAll(resp.Body)
