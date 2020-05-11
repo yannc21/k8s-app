@@ -61,7 +61,7 @@ func quoteOfTheDay(w http.ResponseWriter, req *http.Request) {
 		thequote, _ := json.Marshal(res.Result[0])
 		toReturn = string(thequote)
 	}
-
+	fmt.Println(toReturn)
 	fmt.Fprintf(w, toReturn)
 
 }
@@ -90,5 +90,5 @@ func main() {
 		}
 	}
 	http.HandleFunc("/quote", quoteOfTheDay)
-	http.ListenAndServe(fqdn + ":" + port, nil)
+	http.ListenAndServe(fqdn+":"+port, nil)
 }
