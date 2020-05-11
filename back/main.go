@@ -69,10 +69,15 @@ func quoteOfTheDay(w http.ResponseWriter, req *http.Request) {
 func main() {
 
 	envVar := []string{"API_UID", "API_TOKENID"}
-	fqdn := ":8090"
+	fqdn := "0.0.0.0"
+	port := "8090"
 
 	if tmp := os.Getenv("FQDN"); tmp != "" {
 		fqdn = tmp
+	}
+
+	if tmp := os.Getenv("PORT"); tmp != "" {
+		port = tmp
 	}
 
 	if os.Getenv("OFFLINE_MODE") == "true" {
@@ -85,5 +90,5 @@ func main() {
 		}
 	}
 	http.HandleFunc("/quote", quoteOfTheDay)
-	http.ListenAndServe(fqdn, nil)
+	http.ListenAndServe(fqdn + ":" + port, nil)
 }
