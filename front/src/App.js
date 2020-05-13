@@ -12,7 +12,7 @@ class App extends Component {
   componentDidMount() {
     const headers = { 'Content-Type': 'application/json' }
 
-    fetch("http://backapp-my-back-app:80/quote", {headers})
+    fetch("http://BACKAPP:80/quote", {headers})
     .then(res => res.json())
     .then((data) => {
       this.setState({ quote: data })
