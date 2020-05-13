@@ -1,9 +1,9 @@
 
 ```
-docker build -t frontapp:1.0 --rm --build-arg GIT_USER=cyan21 --build-arg GIT_TOKEN=<TOKEN> .
+docker build -t frontapp:1.0  --build-arg GIT_USER=cyan21 --build-arg GIT_TOKEN=<TOKEN> .
 
-# access app on docker host port 80
-docker run -p 80:9000 -d frontapp:1.0
+# URL without protocol but can specify the port 
+docker run -e URL=machin.com -p 80:80 -d frontapp:1.0
 ```
 
 ## NOTICE

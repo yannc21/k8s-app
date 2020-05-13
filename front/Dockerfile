@@ -1,9 +1,10 @@
-FROM mhart/alpine-node:14.2 AS builder
+FROM node:14-alpine3.10 
 
 WORKDIR /tmp/ 
 
 ARG GIT_USER
 ARG GIT_TOKEN
+ENV URL="morty.com"
 
 RUN apk update && apk add git 
 RUN git clone https://$GIT_USER:$GIT_TOKEN@github.com/cyan21/k8s-app
@@ -12,13 +13,18 @@ WORKDIR /tmp/k8s-app/front
 
 RUN npm i 
 RUN npm run build 
+RUN npm i -g serve 
 
-FROM nginx:1.18-alpine
-RUN apk update && apk add curl 
+COPY package.json  .
+COPY package-lock.json .
+COPY public public/ 
+COPY node_modules node_modules/ 
+COPY src src/ 
+COPY build build/ 
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /tmp/k8s-app/front/build /usr/share/nginx/html 
+COPY updateURL.sh . 
+RUN chmod u+x updateURL.sh
 
-EXPOSE 9000 
+EXPOSE 80 
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/bin/sh", "-c", "./updateAndRun.sh $URL"]
