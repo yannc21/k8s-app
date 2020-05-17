@@ -4,7 +4,7 @@ WORKDIR /tmp/
 
 ARG GIT_USER
 ARG GIT_TOKEN
-ENV URL="morty.com"
+ENV URL="morty.net"
 
 RUN apk update && apk add git 
 RUN git clone https://$GIT_USER:$GIT_TOKEN@github.com/cyan21/k8s-app
