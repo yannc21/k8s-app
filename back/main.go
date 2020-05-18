@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/grpc/grpc"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -75,6 +76,8 @@ func main() {
 	envVar := []string{"API_UID", "API_TOKENID"}
 	fqdn := "0.0.0.0"
 	port := "8090"
+
+	grpcServer := grpc.NewServer()
 
 	if tmp := os.Getenv("FQDN"); tmp != "" {
 		fqdn = tmp
