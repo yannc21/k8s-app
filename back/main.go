@@ -4,9 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
+
+	//	"log"
 	"net/http"
 	"os"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type results struct {
