@@ -23,7 +23,6 @@ pipelines:
       - name: build_front_app
         type: Bash
         configuration:
-          sourceLocation: front/
           inputResources:
             - name: srcFrontRepo
           integrations:
@@ -34,7 +33,6 @@ pipelines:
             - add_run_variables buildStepName=${step_name}
             - add_run_variables ${step_name}_buildNumber=${run_number}
             - add_run_variables ${step_name}_buildName=${pipeline_name}
-            - rm -rf $run_dir/workspace/jfrog
             - retry_command jfrog rt config --url $artifactory_eu _url --user $artifactory_eu _user --apikey $artifactory_eu _apikey --interactive=false
             - retry_command jfrog rt npmc --repo-resolve npm-remote
             - retry_command jfrog rt npmi --build-name=$step_name --build-number=$run_number
