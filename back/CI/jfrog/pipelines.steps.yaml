@@ -19,6 +19,8 @@ pipelines:
           outputFile: backend
           inputResources:
             - name: src_code_backapp
+          integrations:
+            - name: artifactory_eu
 
       # Run some test
       - name: unit_test_go_backapp
@@ -26,8 +28,6 @@ pipelines:
         configuration:
           inputSteps:
             - name: build_go_backapp 
-          integrations:
-            - name: artSecret
         execution:
           onExecute:
             - echo "Testing ..." 
