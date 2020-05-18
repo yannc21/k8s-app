@@ -1,0 +1,16 @@
+resources:
+  - name: src_code_backapp
+    type: GitRepo
+    configuration:
+      path: k8s-app
+      branches:
+        include: master
+      gitProvider: yann_github
+              
+  # Build info for the published Go app
+  - name: build_info_backapp
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: backapp-go
+      buildNumber: 1

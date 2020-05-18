@@ -1,0 +1,41 @@
+pipelines:
+  - name: backapp_go_pipeline
+    steps:
+      # Build the Go app from the GitRepo
+      - name: build_go_backapp
+        type: GoBuild
+        configuration:
+          sourceLocation: back/
+          repository: app-go
+          outputLocation: /tmp/dist
+          outputFile: backend
+          inputResources:
+            - name: src_code_backapp
+          integrations:
+            - name: artifactory_eu
+
+      # Run some test
+      - name: unit_test_go_backapp
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: build_go_backapp 
+          integrations:
+            - name: artSecret
+        execution:
+          onExecute:
+            - echo "Testing ..." 
+          onSuccess:
+            - echo "OK" 
+
+      # Publish the Go app binary to Artifactory
+      - name: publish_go_backapp
+        type: GoPublishBinary
+        configuration:
+          autoPublishBuildInfo: true
+          inputSteps:
+            - name: unit_test_go_backapp
+          targetRepository: app-generic-dev-local
+          integrations:
+            - name: artifactory_eu
+                          
