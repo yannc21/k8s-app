@@ -3,7 +3,7 @@ resources:
     type: GitRepo
     configuration:
       gitProvider: hza_github
-      path: HamzaZFrog/k8s-app/front
+      path: HamzaZFrog/k8s-app
       branches:
         include: master
   - name: FrontAppBuildInfo
