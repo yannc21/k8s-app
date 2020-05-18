@@ -23,6 +23,7 @@ pipelines:
       - name: build_front_app
         type: Bash
         configuration:
+          sourceLocation: front
           inputResources:
             - name: srcFrontRepo
           integrations:
