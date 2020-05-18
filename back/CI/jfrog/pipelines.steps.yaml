@@ -46,3 +46,24 @@ pipelines:
             - name: artifactory_eu
           outputResources:
             - name: build_info_backapp
+
+      - name: scan_go_backapp
+        type: XrayScan
+        configuration:
+          failOnScan: false
+          inputResources:
+            - name: build_info_backapp
+              trigger: false
+          outputResources:
+            - name: build_info_backapp_scanned
+ 
+        execution:
+          onStart:
+            - echo "Preparing for work..."
+            - echo "Prepping build environment"
+          onSuccess:
+            - echo "Job well done!"
+          onFailure:
+            - echo "uh oh, something went wrong"
+          onComplete: #always
+            - echo "Cleaning up some stuff"

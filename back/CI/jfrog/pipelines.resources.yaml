@@ -14,3 +14,10 @@ resources:
       sourceArtifactory: artifactory_eu
       buildName: backapp-go
       buildNumber: 1
+
+  - name: build_info_backapp_scanned
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: backapp-go
+      buildNumber: 1
