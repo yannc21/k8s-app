@@ -33,9 +33,10 @@ pipelines:
         type: GoPublishBinary
         configuration:
           autoPublishBuildInfo: true
+          targetRepository: app-generic-dev-local
           inputSteps:
             - name: unit_test_go_backapp
-          targetRepository: app-generic-dev-local
           integrations:
             - name: artifactory_eu
-                          
+          outputResources:
+            - name: build_info_backapp
