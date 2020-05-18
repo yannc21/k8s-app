@@ -39,5 +39,5 @@ configuration:
             - retry_command jfrog rt config --url $artifactory_eu _url --user $artifactory_eu _user --apikey $artifactory_eu _apikey --interactive=false
             - retry_command jfrog rt npmc --repo-resolve npm-remote
             - retry_command jfrog rt npmi --build-name=$step_name --build-number=$run_number
-            - retry_command jfrog rt bp --build-name=$step_name --build-number=$run_number
+            - retry_command jfrog rt bp $step_name $run_number
             - add_run_files /tmp/jfrog/. jfrog
