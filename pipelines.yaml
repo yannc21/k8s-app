@@ -1,0 +1,43 @@
+resources:
+  - name: srcFrontRepo
+    type: GitRepo
+    configuration:
+      gitProvider: hza_github
+      path: HamzaZFrog/k8s-app/front
+      branches:
+        include: master
+
+  - name: FrontAppBuildInfo
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: FrontApp_Build
+      buildNumber: 1
+      
+pipelines:
+  - name: k8s_pipeline
+    steps:
+    - name: FrontApp
+      type: NpmBuild
+      configuration:
+        runtime:
+          type: image
+          image:
+            custom:
+              name: docker.bintray.io/jfrog/pipelines-u18node
+              tag: 10.16.3
+        repositoryName: npm
+        sourceLocation: .
+        integrations:
+          - name: artifactory_eu
+        inputResources:
+          - name: srcFrontRepo
+      execution:
+        onStart:
+          - echo  "Preparing for work..."
+        onSuccess:
+          - echo "Job well done!"
+        onFailure:
+          - echo "You Lose"
+        onComplete:
+          - echo "Leave it as you found it. Let's clean it"
