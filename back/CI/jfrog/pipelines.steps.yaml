@@ -1,5 +1,13 @@
 pipelines:
   - name: backapp_go_pipeline
+    configuration:
+      runtime:
+        type: image
+        image:
+          auto:
+            language: go
+            versions:
+              - "1.13.7"
     steps:
       # Build the Go app from the GitRepo
       - name: build_go_backapp
