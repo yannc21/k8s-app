@@ -23,6 +23,12 @@ pipelines:
       - name: build_front_app
         type: Bash
         configuration:
+          runtime:
+            type: image
+            image:
+              custom:
+                name: docker.bintray.io/jfrog/pipelines-u18node
+                tag: 10.16.3
           inputResources:
             - name: srcFrontRepo
           integrations:
