@@ -19,8 +19,6 @@ pipelines:
           outputFile: backend
           inputResources:
             - name: src_code_backapp
-          integrations:
-            - name: artifactory_eu
 
       # Run some test
       - name: unit_test_go_backapp
