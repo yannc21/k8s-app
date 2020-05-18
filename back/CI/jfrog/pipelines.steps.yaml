@@ -53,7 +53,7 @@ pipelines:
           failOnScan: false
           inputResources:
             - name: build_info_backapp
-              trigger: false
+              trigger: true
           outputResources:
             - name: build_info_backapp_scanned
  
