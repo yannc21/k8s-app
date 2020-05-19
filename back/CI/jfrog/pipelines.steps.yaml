@@ -20,7 +20,7 @@ pipelines:
           inputResources:
             - name: src_code_backapp
           environmentVariables:
-            OFFLINE_MODE: true
+            OFFLINE_MODE: "true"
           integrations:
             - name: artifactory_eu
         execution:
