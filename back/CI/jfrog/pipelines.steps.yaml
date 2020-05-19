@@ -2,7 +2,7 @@ pipelines:
   - name: backapp_go_pipeline
     configuration:
       environmentVariables:
-        "OFFLINE_MODE": "true"
+        OFFLINE_MODE: true
       runtime:
         type: image
         image:
@@ -22,7 +22,7 @@ pipelines:
           inputResources:
             - name: src_code_backapp
           environmentVariables:
-            "OFFLINE_MODE": "true"
+            OFFLINE_MODE: true
           integrations:
             - name: artifactory_eu
         execution:
@@ -131,20 +131,20 @@ pipelines:
           outputResources:
             - name: build_info_docker_backapp_promoted
 
-  - name: app_deploy_pipeline
-    steps:
-      - name: deploy_helm_chart
-        type: HelmDeploy
-        configuration:
-          valueFilePaths:                       # optional
-            - <path and filename>
-          releaseName: yann-app
-          dryRun: true
-          lint: false
-          lintFlags: "--strict"
-          test: false
-          testFlags: "--parallel"
-          integrations:
-            - name: hza_k8s
-          inputResources:
-            - name: app_helm_chart
+  # - name: app_deploy_pipeline
+  #   steps:
+  #     - name: deploy_helm_chart
+  #       type: HelmDeploy
+  #       configuration:
+  #         valueFilePaths:                       # optional
+  #           - <path and filename>
+  #         releaseName: yann-app
+  #         dryRun: true
+  #         lint: false
+  #         lintFlags: "--strict"
+  #         test: false
+  #         testFlags: "--parallel"
+  #         integrations:
+  #           - name: hza_k8s
+  #         inputResources:
+  #           - name: app_helm_chart
