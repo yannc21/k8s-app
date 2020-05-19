@@ -9,6 +9,8 @@ resources:
       files:
         exclude: ^back\/CI\/Docker\/.+
       gitProvider: yann_github
+      buildOn:
+        commit: false
 
 # DOCKER PIPELINE
   - name: src_dockerfile_backapp
@@ -20,7 +22,9 @@ resources:
       files:
         include: ^back\/CI\/Docker\/.+
       gitProvider: yann_github
-
+      buildOn:
+        commit: false
+        
   # HELM PIPELINE
   # - name: src_helm_chart_app
   #   type: GitRepo
