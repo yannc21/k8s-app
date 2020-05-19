@@ -34,7 +34,7 @@ pipelines:
           onSuccess:
             - echo "OK" 
 
-      # Publish the Go app binary to Artifactory
+      # Publish the Go app (binary) and Go Build Info to Artifactory 
       - name: publish_go_backapp
         type: GoPublishBinary
         configuration:
@@ -47,6 +47,7 @@ pipelines:
           outputResources:
             - name: build_info_backapp
 
+      # Scan Build Info
       - name: scan_go_backapp
         type: XrayScan
         configuration:
@@ -56,14 +57,74 @@ pipelines:
               trigger: true
           outputResources:
             - name: build_info_backapp_scanned
- 
-        execution:
-          onStart:
-            - echo "Preparing for work..."
-            - echo "Prepping build environment"
-          onSuccess:
-            - echo "Job well done!"
-          onFailure:
-            - echo "uh oh, something went wrong"
-          onComplete: #always
-            - echo "Cleaning up some stuff"
+
+      # Promote Go Build Info
+      - name: promote_build_info_go_backapp
+        type: PromoteBuild
+        configuration:
+          targetRepository: app-generic-rc-local
+          includeDependencies: false
+          status: "SANDBOX_OK"
+          comment: "Unit testing and Xray scan passed succesfully"
+          copy: false
+          inputResources:
+            - name: build_info_backapp_scanned
+              trigger: false
+          outputResources:
+            - name: build_info_backapp_promoted
+
+  - name: backapp_docker_pipeline
+    steps:
+      - name: build_docker_backapp
+        type: DockerBuild
+        configuration:
+          dockerFileName: jfrog-Dockerfile
+          dockerImageName: 'yannaws-app-docker.jfrog.io/backapp'
+          dockerImageTag: ${run_number}
+          inputResources:
+            - name: src_code_backapp
+            - name: build_info_backapp_promoted
+            - name: backapp_exec
+          integrations:
+            - name: artifactory_eu
+
+      # - name: publish_docker_backapp
+      #   type: DockerPush
+      #   configuration:
+      #     targetRepository: yannaws-app-docker.jfrog.io
+      #     inputSteps:
+      #       - name: build_docker_backapp
+      #     integrations:
+      #       - name: artifactory_eu
+
+      # - name: publish_build_info_docker_backapp
+      #   type: PublishBuildInfo
+      #   configuration:
+      #     inputSteps:
+      #       - name: publish_docker_backapp
+      #     outputResources:
+      #       - name: build_info_docker_backapp
+
+      # - name: scan_docker_build_info_backapp
+      #   type: XrayScan
+      #   configuration:
+      #     failOnScan: false
+      #     inputResources:
+      #       - name: build_info_docker_backapp
+      #         trigger: true
+      #     outputResources:
+      #       - name: build_info_docker_backapp_scanned
+
+      # - name: promote_docker_build_info_backapp
+      #   type: PromoteBuild
+      #   configuration:
+      #     targetRepository: app-docker-sit-local
+      #     includeDependencies: true
+      #     status: "DOCKER_SCAN_OK"
+      #     comment: "Xray scan passed succesfully"
+      #     copy: false
+      #     inputResources:
+      #       - name: build_info_docker_backapp_scanned
+      #         trigger: false
+      #     outputResources:
+      #       - name: build_info_docker_backapp_promoted

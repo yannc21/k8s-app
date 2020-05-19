@@ -1,4 +1,6 @@
 resources:
+# GO PIPELINE
+
   - name: src_code_backapp
     type: GitRepo
     configuration:
@@ -21,3 +23,39 @@ resources:
       sourceArtifactory: artifactory_eu
       buildName: backapp-go
       buildNumber: 1
+  
+  - name: build_info_backapp_promoted
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: backapp-go
+      buildNumber: 1
+
+# DOCKER PIPELINE 
+  - name: go_backapp
+    type: FileSpec
+    configuration:
+      sourceArtifactory: artifactory_eu
+      pattern: app-generic/backend
+      target: .
+
+  # - name: build_info_docker_backapp
+  #   type: BuildInfo
+  #   configuration:
+  #     sourceArtifactory: artifactory_eu
+  #     buildName: backapp-docker
+  #     buildNumber: 1
+
+  # - name: build_info_docker_backapp_scanned
+  #   type: BuildInfo
+  #   configuration:
+  #     sourceArtifactory: artifactory_eu
+  #     buildName: backapp-docker
+  #     buildNumber: 1
+
+  # - name: build_info_docker_backapp_promoted
+  #   type: BuildInfo
+  #   configuration:
+  #     sourceArtifactory: artifactory_eu
+  #     buildName: backapp-docker
+  #     buildNumber: 1
