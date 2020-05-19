@@ -79,6 +79,7 @@ pipelines:
         type: DockerBuild
         configuration:
           dockerFileName: jfrog-Dockerfile
+          dockerFileLocation: back/
           dockerImageName: 'yannaws-app-docker.jfrog.io/backapp'
           dockerImageTag: ${run_number}
           inputResources:
