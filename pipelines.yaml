@@ -52,7 +52,6 @@ pipelines:
             - name: npm_build_frontend
           integrations:
             - name: artifactory_eu
-          sourceLocation: front/
         execution:
           onStart:
             - npm run build
