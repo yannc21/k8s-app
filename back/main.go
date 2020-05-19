@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/grpc/grpc"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/crypto/sha3"
 )
 
 type results struct {
@@ -77,7 +77,7 @@ func main() {
 	fqdn := "0.0.0.0"
 	port := "8090"
 
-	grpcServer := grpc.NewServer()
+	fmt.Println(sha3.New512())
 
 	if tmp := os.Getenv("FQDN"); tmp != "" {
 		fqdn = tmp
