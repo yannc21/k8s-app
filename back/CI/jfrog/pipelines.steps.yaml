@@ -92,11 +92,12 @@ pipelines:
         execution:
           onStart:
             - echo "Copying exec binary to specific location..."
-            - pwd && ls -l && ls -l ${res_src_dockerfile_backapp_resourcePath}
-            - ls ${res_backapp_exec_resourcePath} 
+#            - pwd && ls -l && ls -l ${res_src_dockerfile_backapp_resourcePath}
+#            - ls ${res_backapp_exec_resourcePath} 
             - cp ${res_backapp_exec_resourcePath}/backend ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
-            - ls -l ${res_src_dockerfile_backapp_resourcePath}/
-            - cd ${res_src_dockerfile_backapp_resourcePath}/ && curl -O "https://${int_yann_github_token}@raw.githubusercontent.com/cyan21/k8s-app/master/back/data.json"
+            - cd ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/ && curl -O "https://${int_yann_github_token}@raw.githubusercontent.com/cyan21/k8s-app/master/back/data.json"
+            - ls -l ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker
+
           onSuccess:
             - echo "Job well done!"
       # - name: publish_docker_backapp
