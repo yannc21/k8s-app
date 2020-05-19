@@ -69,7 +69,7 @@ pipelines:
           copy: false
           inputResources:
             - name: build_info_backapp_scanned
-              trigger: false
+              trigger: true
           outputResources:
             - name: build_info_backapp_promoted
 
@@ -88,7 +88,13 @@ pipelines:
             - name: backapp_exec
           integrations:
             - name: artifactory_eu
-
+        execution:
+          onStart:
+            - echo "Copying exec binary to specific location..."
+            - ls ${res_backapp_exec_resourcePath} && cp ${res_backapp_exec_resourcePath}/backend ${res_src_code_backapp_path}/back/CI/
+            - ls ${res_src_code_backapp_path}
+          onSuccess:
+            - echo "Job well done!"
       # - name: publish_docker_backapp
       #   type: DockerPush
       #   configuration:

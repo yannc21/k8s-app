@@ -37,7 +37,7 @@ resources:
     configuration:
       sourceArtifactory: artifactory_eu
       pattern: app-generic/backend
-      target: .
+
 
   # - name: build_info_docker_backapp
   #   type: BuildInfo
