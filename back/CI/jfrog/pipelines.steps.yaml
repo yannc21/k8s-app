@@ -36,7 +36,7 @@ pipelines:
           autoPublishBuildInfo: true
           targetRepository: app-generic-dev-local
           inputSteps:
-            - name: unit_test_go_backapp
+            - name: build_go_backapp
           integrations:
             - name: artifactory_eu
           outputResources:
