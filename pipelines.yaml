@@ -64,7 +64,7 @@ pipelines:
             dockerImageName: artifactory-eu.soleng-emea-staging.jfrog.team/docker-local/frontapp
             dockerImageTag: ${run_number}
           inputResources:
-            - name: be_gitRepo
+            - name: srcFrontRepo
               trigger: false
           inputSteps:
             - name: publish_frontend
