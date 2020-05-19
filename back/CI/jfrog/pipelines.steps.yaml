@@ -126,7 +126,7 @@ pipelines:
         type: PromoteBuild
         configuration:
           targetRepository: app-docker-sit-local
-          includeDependencies: true
+          includeDependencies: false
           status: "DOCKER_SCAN_OK"
           comment: "Xray scan passed succesfully"
           copy: false
