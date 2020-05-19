@@ -97,46 +97,46 @@ pipelines:
             - cp ${res_backapp_exec_resourcePath}/backend ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
             - cd ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/ && curl -O "https://${int_yann_github_token}@raw.githubusercontent.com/cyan21/k8s-app/master/back/data.json"
             - ls -l ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker
-
           onSuccess:
             - echo "Job well done!"
-      # - name: publish_docker_backapp
-      #   type: DockerPush
-      #   configuration:
-      #     targetRepository: yannaws-app-docker.jfrog.io
-      #     inputSteps:
-      #       - name: build_docker_backapp
-      #     integrations:
-      #       - name: artifactory_eu
 
-      # - name: publish_build_info_docker_backapp
-      #   type: PublishBuildInfo
-      #   configuration:
-      #     inputSteps:
-      #       - name: publish_docker_backapp
-      #     outputResources:
-      #       - name: build_info_docker_backapp
+      - name: publish_docker_backapp
+        type: DockerPush
+        configuration:
+          targetRepository: yannaws-app-docker.jfrog.io
+          inputSteps:
+            - name: build_docker_backapp
+          integrations:
+            - name: artifactory_eu
 
-      # - name: scan_docker_build_info_backapp
-      #   type: XrayScan
-      #   configuration:
-      #     failOnScan: false
-      #     inputResources:
-      #       - name: build_info_docker_backapp
-      #         trigger: true
-      #     outputResources:
-      #       - name: build_info_docker_backapp_scanned
+      - name: publish_build_info_docker_backapp
+        type: PublishBuildInfo
+        configuration:
+          inputSteps:
+            - name: publish_docker_backapp
+          outputResources:
+            - name: build_info_docker_backapp
 
-      # - name: promote_docker_build_info_backapp
-      #   type: PromoteBuild
-      #   configuration:
-      #     targetRepository: app-docker-sit-local
-      #     includeDependencies: true
-      #     status: "DOCKER_SCAN_OK"
-      #     comment: "Xray scan passed succesfully"
-      #     copy: false
-      #     inputResources:
-      #       - name: build_info_docker_backapp_scanned
-      #         trigger: false
-      #     outputResources:
-      #       - name: build_info_docker_backapp_promoted
+      - name: scan_docker_build_info_backapp
+        type: XrayScan
+        configuration:
+          failOnScan: false
+          inputResources:
+            - name: build_info_docker_backapp
+              trigger: true
+          outputResources:
+            - name: build_info_docker_backapp_scanned
+
+      - name: promote_docker_build_info_backapp
+        type: PromoteBuild
+        configuration:
+          targetRepository: app-docker-sit-local
+          includeDependencies: true
+          status: "DOCKER_SCAN_OK"
+          comment: "Xray scan passed succesfully"
+          copy: false
+          inputResources:
+            - name: build_info_docker_backapp_scanned
+              trigger: false
+          outputResources:
+            - name: build_info_docker_backapp_promoted
