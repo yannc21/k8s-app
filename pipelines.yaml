@@ -41,7 +41,7 @@ pipelines:
             - add_run_variables ${step_name}_buildName=${pipeline_name}
             - retry_command jfrog rt config myart --url $int_artifactory_eu_url --user $int_artifactory_eu_user --apikey $int_artifactory_eu_apikey --interactive=false
             - jfrog --version
-            - retry_command jfrog rt npmc
+            - retry_command jfrog rt npm-config
             - retry_command jfrog rt npmi --build-name=$step_name --build-number=$run_number
             - retry_command jfrog rt bp $step_name $run_number
             - add_run_files /tmp/jfrog/. jfrog
