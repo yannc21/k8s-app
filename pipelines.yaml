@@ -43,7 +43,7 @@ pipelines:
           onFailure:
             - echo "You Lose"
           onComplete:
-            - echo "Leave it as you found it. Let's clean it"
+            - add_run_files ${res_srcFrontRepo_resourcePath}/ my_cache_directory
       
       - name: pack_frontend
         type: Bash
@@ -54,6 +54,7 @@ pipelines:
             - name: artifactory_eu
         execution:
           onStart:
+            - restore_run_files my_cache_directory nodes_modules/
             - npm run build
      
       - name: publish_frontend
