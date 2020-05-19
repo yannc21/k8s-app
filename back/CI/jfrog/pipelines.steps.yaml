@@ -83,7 +83,7 @@ pipelines:
           dockerImageName: 'yannaws-app-docker.jfrog.io/backapp'
           dockerImageTag: ${run_number}
           inputResources:
-            - name: src_code_backapp
+            - name: src_dockerfile_backapp
             - name: build_info_backapp_promoted
             - name: backapp_exec
           integrations:
@@ -92,9 +92,11 @@ pipelines:
         execution:
           onStart:
             - echo "Copying exec binary to specific location..."
-            - ls ${res_backapp_exec_resourcePath} && cp ${res_backapp_exec_resourcePath}/backend ${res_src_code_backapp_path}/back/CI/
-            - ls ${res_src_code_backapp_path}
-            - curl -O "https://${res_yann_github_gitProvider_token}@raw.githubusercontent.com/cyan21/k8s-app/master/back/data.json"
+            - pwd && ls -l && ls -l ${res_src_dockerfile_backapp_resourcePath}
+            - ls ${res_backapp_exec_resourcePath} 
+            - cp ${res_backapp_exec_resourcePath}/backend ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
+            - ls -l ${res_src_dockerfile_backapp_resourcePath}/
+            - cd ${res_src_dockerfile_backapp_resourcePath}/ && curl -O "https://${int_yann_github_token}@raw.githubusercontent.com/cyan21/k8s-app/master/back/data.json"
           onSuccess:
             - echo "Job well done!"
       # - name: publish_docker_backapp

@@ -8,7 +8,18 @@ resources:
       branches:
         include: master
       gitProvider: yann_github
-              
+
+  - name: src_dockerfile_backapp
+    type: GitRepo
+    configuration:
+      path: cyan21/k8s-app
+      branches:
+        include: master
+      files:
+        include: ^back\/CI\/Docker\/.+
+      gitProvider: yann_github
+
+
   # Build info for the published Go app
   - name: build_info_backapp
     type: BuildInfo
