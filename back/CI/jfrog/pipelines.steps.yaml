@@ -103,17 +103,12 @@ pipelines:
       - name: publish_docker_backapp
         type: DockerPush
         configuration:
-          targetRepository: yannaws-app-docker.jfrog.io
+          targetRepository: app-docker
+          autoPublishBuildInfo: true
           inputSteps:
             - name: build_docker_backapp
           integrations:
             - name: artifactory_eu
-
-      - name: publish_build_info_docker_backapp
-        type: PublishBuildInfo
-        configuration:
-          inputSteps:
-            - name: publish_docker_backapp
           outputResources:
             - name: build_info_docker_backapp
 
