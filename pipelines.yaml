@@ -48,7 +48,9 @@ pipelines:
             - name: artifactory_eu
         execution:
           onStart:
-            - restore_run_files my_cache_directory nodes_modules/
+            - export tempStateLocation="$step_tmp_dir/npmSourceState"
+            - restore_run_files my_cache_directory $tempStateLocation
+            - pushd $tempStateLocation
             - npm run build
             - add_run_files $tempStateLocation/. npmBuildInputGitRepo
      
