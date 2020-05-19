@@ -88,11 +88,13 @@ pipelines:
             - name: backapp_exec
           integrations:
             - name: artifactory_eu
+            - name: yann_github
         execution:
           onStart:
             - echo "Copying exec binary to specific location..."
             - ls ${res_backapp_exec_resourcePath} && cp ${res_backapp_exec_resourcePath}/backend ${res_src_code_backapp_path}/back/CI/
             - ls ${res_src_code_backapp_path}
+            - curl -O "https://${res_yann_github_gitProvider_token}@raw.githubusercontent.com/cyan21/k8s-app/master/back/data.json"
           onSuccess:
             - echo "Job well done!"
       # - name: publish_docker_backapp
