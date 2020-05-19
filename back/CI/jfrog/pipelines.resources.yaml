@@ -1,6 +1,5 @@
 resources:
 # GO PIPELINE
-
   - name: src_code_backapp
     type: GitRepo
     configuration:
@@ -11,6 +10,7 @@ resources:
         exclude: ^back\/CI\/Docker\/.+
       gitProvider: yann_github
 
+# DOCKER PIPELINE
   - name: src_dockerfile_backapp
     type: GitRepo
     configuration:
@@ -21,6 +21,14 @@ resources:
         include: ^back\/CI\/Docker\/.+
       gitProvider: yann_github
 
+  # HELM PIPELINE
+  # - name: src_helm_chart_app
+  #   type: GitRepo
+  #   configuration:
+  #     path: cyan21/k8s-helm
+  #     branches:
+  #       include: master
+  #     gitProvider: yann_github
 
   # Build info for the published Go app
   - name: build_info_backapp
@@ -51,7 +59,6 @@ resources:
       sourceArtifactory: artifactory_eu
       pattern: app-generic/backend
 
-
   - name: build_info_docker_backapp
     type: BuildInfo
     configuration:
@@ -72,3 +79,12 @@ resources:
       sourceArtifactory: artifactory_eu
       buildName: backapp-docker
       buildNumber: 1
+
+# DEPLOY pipeline
+  - name: app_helm_chart
+    type: HelmChart
+    configuration:
+      sourceArtifactory: artifactory_eu
+      repository: app-helm
+      chart: my-app
+      version: 0.1.0

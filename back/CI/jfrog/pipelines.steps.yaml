@@ -1,6 +1,8 @@
 pipelines:
   - name: backapp_go_pipeline
     configuration:
+      environmentVariables:
+        "OFFLINE_MODE": "true"
       runtime:
         type: image
         image:
@@ -20,7 +22,7 @@ pipelines:
           inputResources:
             - name: src_code_backapp
           environmentVariables:
-            OFFLINE_MODE: "true"
+            "OFFLINE_MODE": "true"
           integrations:
             - name: artifactory_eu
         execution:
@@ -28,6 +30,7 @@ pipelines:
             - echo "Unit Testing ..." 
           onSuccess:
             - echo "Renaming with version" 
+            - env
 
       # Publish the Go app (binary) and Go Build Info to Artifactory 
       - name: publish_go_backapp
@@ -67,7 +70,7 @@ pipelines:
               trigger: true
           outputResources:
             - name: build_info_backapp_promoted
-
+  
   - name: backapp_docker_pipeline
     steps:
       - name: build_docker_backapp
@@ -94,7 +97,6 @@ pipelines:
             - ls -l ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker
           onSuccess:
             - echo "Job well done!"
-
       - name: publish_docker_backapp
         type: DockerPush
         configuration:
@@ -106,7 +108,6 @@ pipelines:
             - name: artifactory_eu
           outputResources:
             - name: build_info_docker_backapp
-
       - name: scan_docker_build_info_backapp
         type: XrayScan
         configuration:
@@ -116,7 +117,6 @@ pipelines:
               trigger: true
           outputResources:
             - name: build_info_docker_backapp_scanned
-
       - name: promote_docker_build_info_backapp
         type: PromoteBuild
         configuration:
@@ -130,3 +130,21 @@ pipelines:
               trigger: true
           outputResources:
             - name: build_info_docker_backapp_promoted
+
+  - name: app_deploy_pipeline
+    steps:
+      - name: deploy_helm_chart
+        type: HelmDeploy
+        configuration:
+          valueFilePaths:                       # optional
+            - <path and filename>
+          releaseName: yann-app
+          dryRun: true
+          lint: false
+          lintFlags: "--strict"
+          test: false
+          testFlags: "--parallel"
+          integrations:
+            - name: hza_k8s
+          inputResources:
+            - name: app_helm_chart
