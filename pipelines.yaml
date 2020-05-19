@@ -49,10 +49,10 @@ pipelines:
             - name: artifactory_eu
         execution:
           onStart:
-            - restore_run_files my_run_directory $step_tmp_dir
-            - pushd $step_tmp_dir
+            - restore_run_files my_run_directory "$step_tmp_dir/npmSourceState"
+            - pushd "$step_tmp_dir/npmSourceState"
             - npm run build
-            - add_run_files $step_tmp_dir npmBuildInputGitRepo
+            - add_run_files "$step_tmp_dir/npmSourceState/" npmBuildInputGitRepo
      
       - name: publish_frontend
         type: NpmPublish
