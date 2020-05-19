@@ -139,7 +139,7 @@ pipelines:
         configuration:
           flags: "--set images.back.repository=yannaws-app-docker.jfrog.io/backapp --set images.back.tag=15 --set images.front.repository=yannaws-app-docker.jfrog.io/frontapp --set images.back.tag=0.1"
           releaseName: yann-app
-          dryRun: true
+          dryRun: false
           lint: false
           lintFlags: "--strict"
           test: false
