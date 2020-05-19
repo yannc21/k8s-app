@@ -32,7 +32,7 @@ resources:
       buildNumber: 1
 
 # DOCKER PIPELINE 
-  - name: go_backapp
+  - name: backapp_exec
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory_eu
