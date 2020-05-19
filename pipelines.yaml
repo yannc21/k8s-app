@@ -64,7 +64,7 @@ pipelines:
             - name: artifactory_eu
         execution:
           onStart:
-            - export inputNpmBuildStepName="bld_frontend"
+            - export inputNpmBuildStepName="npm_build_frontend"
 
       - name: build_app
         type: Bash
