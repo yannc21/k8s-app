@@ -65,6 +65,7 @@ pipelines:
         execution:
           onStart:
             - export inputNpmBuildStepName="npm_build_frontend"
+            - restore_run_files npmBuildInputGitRepo .
 
       - name: build_app
         type: Bash
