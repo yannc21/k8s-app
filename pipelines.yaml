@@ -34,7 +34,7 @@ pipelines:
           integrations:
             - name: artifactory_eu
           inputResources:
-            - name: srcNpmRepo
+            - name: srcFrontRepo
         execution:
           onStart:
             - echo  "Preparing for work..."
@@ -67,7 +67,7 @@ pipelines:
           inputSteps:
             - name: pack_frontend
           integrations:
-            - name: myArtifactory
+            - name: artifactory_eu
         execution:
           onStart:
             - export inputNpmBuildStepName="bld_frontend"
