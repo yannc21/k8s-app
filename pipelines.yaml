@@ -66,9 +66,8 @@ pipelines:
         execution:
           onStart:
             - export inputNpmBuildStepName="npm_build_frontend"
-            - export tempStateLocation="$step_tmp_dir/npmSourceState"
-            - restore_run_files npmBuildInputGitRepo $tempStateLocation
-            - pushd $tempStateLocation
+            - restore_run_files npmBuildInputGitRepo $step_tmp_dir
+            - pushd $step_tmp_dir
 
       - name: build_app
         type: Bash
