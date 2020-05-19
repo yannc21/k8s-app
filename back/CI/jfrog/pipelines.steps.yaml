@@ -132,6 +132,6 @@ pipelines:
           copy: false
           inputResources:
             - name: build_info_docker_backapp_scanned
-              trigger: false
+              trigger: true
           outputResources:
             - name: build_info_docker_backapp_promoted

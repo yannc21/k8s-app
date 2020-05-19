@@ -7,6 +7,8 @@ resources:
       path: cyan21/k8s-app
       branches:
         include: master
+      files:
+        exclude: ^back\/CI\/Docker\/.+
       gitProvider: yann_github
 
   - name: src_dockerfile_backapp
