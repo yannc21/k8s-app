@@ -132,20 +132,19 @@ pipelines:
           outputResources:
             - name: build_info_docker_backapp_promoted
 
-  # - name: app_deploy_pipeline
-  #   steps:
-  #     - name: deploy_helm_chart
-  #       type: HelmDeploy
-  #       configuration:
-  #         valueFilePaths:                       # optional
-  #           - <path and filename>
-  #         releaseName: yann-app
-  #         dryRun: true
-  #         lint: false
-  #         lintFlags: "--strict"
-  #         test: false
-  #         testFlags: "--parallel"
-  #         integrations:
-  #           - name: hza_k8s
-  #         inputResources:
-  #           - name: app_helm_chart
+  - name: app_deploy_pipeline
+    steps:
+      - name: deploy_helm_chart
+        type: HelmDeploy
+        configuration:
+          flags: "--set images.back.repository=yannaws-app-docker.jfrog.io/backapp:15 --set images.back.repository=yannaws-app-docker.jfrog.io/frontapp:0.1"
+          releaseName: yann-app
+          dryRun: true
+          lint: false
+          lintFlags: "--strict"
+          test: false
+          testFlags: "--parallel"
+          integrations:
+            - name: hza_k8s
+          inputResources:
+            - name: app_helm_chart
