@@ -31,13 +31,14 @@ pipelines:
             - name: srcFrontRepo
         execution:
           onStart:
-            - echo  "Preparing for work..."
+            - restore_cache_files npm_build_frontend_step_cache ${res_srcFrontRepo_resourcePath}/front/
           onSuccess:
             - echo "Job well done!"
           onFailure:
             - echo "You Lose"
           onComplete:
-            - add_run_files ${res_srcFrontRepo_resourcePath}/front/ my_cache_directory
+            - add_run_files ${res_srcFrontRepo_resourcePath}/front/ my_run_directory
+            - add_cache_files ${res_srcFrontRepo_resourcePath}/front/ npm_build_frontend_step_cache
       
       - name: pack_frontend
         type: Bash
@@ -49,10 +50,10 @@ pipelines:
         execution:
           onStart:
             - export tempStateLocation="$step_tmp_dir/npmSourceState"
-            - restore_run_files my_cache_directory $tempStateLocation
+            - restore_run_files my_run_directory $tempStateLocation
             - pushd $tempStateLocation
             - npm run build
-            - add_run_files $tempStateLocation/. npmBuildInputGitRepo
+            - add_run_files $tempStateLocation/ npmBuildInputGitRepo
      
       - name: publish_frontend
         type: NpmPublish
