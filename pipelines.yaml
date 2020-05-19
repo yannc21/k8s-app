@@ -50,7 +50,7 @@ pipelines:
         execution:
           onStart:
             - restore_run_files my_run_directory $step_tmp_dir
-            - pushd $tempStateLocation
+            - pushd $step_tmp_dir
             - npm run build
             - add_run_files $step_tmp_dir npmBuildInputGitRepo
      
