@@ -37,7 +37,7 @@ pipelines:
           onFailure:
             - echo "You Lose"
           onComplete:
-            - add_run_files ${res_srcFrontRepo_resourcePath}/ my_cache_directory
+            - add_run_files ${res_srcFrontRepo_resourcePath}/front/ my_cache_directory
       
       - name: pack_frontend
         type: Bash
