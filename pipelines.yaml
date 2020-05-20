@@ -47,11 +47,14 @@ pipelines:
             - name: artifactory_eu
         execution:
           onStart:
+            - ls -la
             - restore_run_files built_npm .
-            - ls
+            - ls -la
             - npm run build                   
           onComplete:
+            - ls -la
             - add_run_files ${res_srcFrontRepo_resourcePath}/front/ packaged_npm    
+            - ls -la
 
       - name: publish_frontend
         type: NpmPublish
@@ -63,6 +66,7 @@ pipelines:
             - name: artifactory_eu
         execution:
           onStart:
+            - ls -la
             - restore_run_files packaged_npm .   
             - ls -la       
     
