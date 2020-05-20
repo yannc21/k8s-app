@@ -30,7 +30,7 @@ pipelines:
           inputResources:
             - name: srcFrontRepo
         execution:
-          onExecute:
+          onStart:
             - cd front && npm run build           
 
       - name: publish_frontend
