@@ -38,6 +38,10 @@ pipelines:
             - name: npm_build_frontend
           integrations:
             - name: artifactory_eu
+        execution:
+          onComplete:
+            - ls -la
+            - add_run_files . packaged_npm      
     
       - name: build_app
         type: Bash
@@ -53,6 +57,8 @@ pipelines:
             - name: artifactory_eu
         execution:
           onStart:
+            - restore_run_files packaged_npm .
+            - ls
             - retry_command jfrog rt c myart --url $int_artifactory_eu_url --user $int_artifactory_eu_user --apikey $int_artifactory_eu_apikey --interactive=false
             - retry_command jfrog rt ping
             - add_run_variables buildStepName=${step_name}
