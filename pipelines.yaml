@@ -49,9 +49,7 @@ pipelines:
           onStart:
             - restore_run_files built_npm .
             - ls
-          onExecute:
-            - npm run build
-            - ls                  
+            - npm run build                   
           onComplete:
             - add_run_files . packaged_npm               
 
@@ -86,7 +84,6 @@ pipelines:
           onStart:
             - restore_run_files packaged_npm .
             - ls
-          onExecute:
             - retry_command jfrog rt c myart --url $int_artifactory_eu_url --user $int_artifactory_eu_user --apikey $int_artifactory_eu_apikey --interactive=false
             - retry_command jfrog rt ping
             - add_run_variables buildStepName=${step_name}
@@ -96,7 +93,7 @@ pipelines:
             - cd $res_src_resourcePath
             - docker build --pull --no-cache -t $dockerImageName:$dockerImageTag --build-arg REGISTRY=${int_artifactory_eu_url} .
             - jfrog rt bce $pipeline_name $run_number
-            - jfrog rt docker-push artifactory-eu.soleng-emea-staging.jfrog.team/docker-local/app:$run_number docker-local --build-name=$pipeline_name --build-number=$run_number
+            - jfrog rt docker-push artifactory-eu.soleng-emea-staging.jfrog.team/docker-local/app:$run_number docker-local --build-name=$pipeline_name --build-number=$run_number            
 
       - name: publish_app_build
         type: PublishBuildInfo
