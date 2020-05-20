@@ -59,6 +59,7 @@ pipelines:
           onStart:
             - restore_run_files packaged_npm .
             - ls
+          onExecute:
             - retry_command jfrog rt c myart --url $int_artifactory_eu_url --user $int_artifactory_eu_user --apikey $int_artifactory_eu_apikey --interactive=false
             - retry_command jfrog rt ping
             - add_run_variables buildStepName=${step_name}
