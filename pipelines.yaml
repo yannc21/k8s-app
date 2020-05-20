@@ -36,7 +36,7 @@ pipelines:
           repositoryName: npm-dev-local
           autoPublishBuildInfo: true
           inputSteps:
-            - name: pack_frontend
+            - name: npm_build_frontend
           integrations:
             - name: artifactory_eu
     
