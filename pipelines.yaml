@@ -65,7 +65,7 @@ pipelines:
             - name: artifactory_eu
         execution:
           onStart:
-            - ls -lrt $step_tmp_dir
+            - restore_run_files my_run_directory "$step_tmp_dir/npmSourceState"
 
       - name: build_app
         type: Bash
