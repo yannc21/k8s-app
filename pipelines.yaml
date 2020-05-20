@@ -13,6 +13,13 @@ resources:
       buildName: FrontApp_Build
       buildNumber: ${run_number}
 
+  - name: publish_buildinfo
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: publish_build
+      buildNumber: ${run_number}
+
 pipelines:
   - name: k8s_pipeline
     configuration:
@@ -59,10 +66,13 @@ pipelines:
         type: NpmPublish
         configuration:
           repositoryName: npm-dev-local
+          autoPublishBuildInfo: true
           inputSteps:
             - name: pack_frontend
           integrations:
             - name: artifactory_eu
+          outputResources:
+            - name: publish_buildinfo
         execution:
           onStart:
             - restore_run_files my_run_directory "$step_tmp_dir/npmSourceState"
