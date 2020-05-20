@@ -68,7 +68,9 @@ pipelines:
           onStart:
             - ls -la
             - restore_run_files packaged_npm res   
-            - ls -la       
+            - ls -la     
+            - cd res
+            - ls -la  
     
       - name: build_app
         type: Bash
