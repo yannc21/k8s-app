@@ -30,7 +30,7 @@ pipelines:
           inputResources:
             - name: srcFrontRepo
         execution:
-          onStart:
+          onSuccess:
             - ls
             - npm run build           
 
