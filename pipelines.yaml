@@ -76,6 +76,7 @@ pipelines:
         execution:
           onStart:
             - restore_run_files my_run_directory "$step_tmp_dir/npmSourceState"
+            - cd my_run_directory
 
       - name: build_app
         type: Bash
