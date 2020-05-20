@@ -137,7 +137,7 @@ pipelines:
       - name: deploy_helm_chart
         type: HelmDeploy
         configuration:
-          flags: "--set images.back.repository=yannaws-app-docker.jfrog.io/backapp --set images.back.tag=15 --set images.front.repository=yannaws-app-docker.jfrog.io/frontapp --set images.back.tag=0.1"
+          flags: "--set images.back.repository=yannaws-app-docker.jfrog.io/backapp --set images.back.tag=15 --set images.front.repository=yannaws-app-docker.jfrog.io/frontapp --set images.back.tag=0.1 --force"
           releaseName: yann-app
           dryRun: false
           lint: false
