@@ -43,6 +43,7 @@ pipelines:
           onStart:
             - ls -la
             - restore_run_files $npm_build_frontend_sourceStateName .
+            - cd front
             - ls -la
             - npm run build                   
           onComplete:
