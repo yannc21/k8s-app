@@ -51,7 +51,7 @@ pipelines:
             - ls
             - npm run build                   
           onComplete:
-            - add_run_files . packaged_npm               
+            - add_run_files ${res_srcFrontRepo_resourcePath}/front/ packaged_npm    
 
       - name: publish_frontend
         type: NpmPublish
@@ -64,9 +64,6 @@ pipelines:
         execution:
           onStart:
             - restore_run_files packaged_npm .          
-          onComplete:
-            - ls -la
-            - add_run_files . packaged_npm      
     
       - name: build_app
         type: Bash
