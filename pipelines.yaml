@@ -50,11 +50,7 @@ pipelines:
             - restore_run_files built_npm .
             - ls
           onExecute:
-            - retry_command jfrog rt c myart --url $int_artifactory_eu_url --user $int_artifactory_eu_user --apikey $int_artifactory_eu_apikey --interactive=false
-            - retry_command jfrog rt ping
-            - add_run_variables buildStepName=${step_name}
-            - add_run_variables ${step_name}_buildNumber=${run_number}
-            - add_run_variables ${step_name}_buildName=${pipeline_name}
+            - npm run build
             - ls                  
           onComplete:
             - add_run_files . packaged_npm               
@@ -64,7 +60,7 @@ pipelines:
         configuration:
           repositoryName: npm-dev-local
           inputSteps:
-            - name: npm_build_frontend
+            - name: npm_package_frontend
           integrations:
             - name: artifactory_eu
         execution:
