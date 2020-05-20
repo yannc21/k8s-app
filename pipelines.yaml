@@ -49,14 +49,14 @@ pipelines:
           onComplete:
             - ls -la
             - cd ..
-            - add_run_files . $npm_build_frontend_sourceStateName    
+            - add_run_files . $npm_package_frontend_sourceStateName    
             - ls -la
 
       - name: publish_frontend
         type: NpmPublish
         configuration:
           environmentVariables:
-            inputNpmBuildStepName: npm_build_frontend
+            inputNpmBuildStepName: npm_package_frontend
           repositoryName: npm-dev-local
           inputSteps:
             - name: npm_package_frontend
