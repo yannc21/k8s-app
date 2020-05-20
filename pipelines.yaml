@@ -29,6 +29,9 @@ pipelines:
             - name: artifactory_eu
           inputResources:
             - name: srcFrontRepo
+        execution:
+          onComplete:
+            - npm run build           
 
       - name: publish_frontend
         type: NpmPublish
