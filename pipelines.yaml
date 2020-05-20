@@ -34,7 +34,6 @@ pipelines:
         type: NpmPublish
         configuration:
           repositoryName: npm-dev-local
-          autoPublishBuildInfo: true
           inputSteps:
             - name: npm_build_frontend
           integrations:
