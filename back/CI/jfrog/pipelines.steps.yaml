@@ -148,3 +148,6 @@ pipelines:
             - name: hza_k8s
           inputResources:
             - name: app_helm_chart
+        execution:
+          onStart:
+            - helm version
