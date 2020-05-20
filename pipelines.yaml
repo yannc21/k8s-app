@@ -29,16 +29,10 @@ pipelines:
             - name: artifactory_eu
           inputResources:
             - name: srcFrontRepo
-        execution:
-          onComplete:
-            - add_run_files ${res_srcFrontRepo_resourcePath}/front/ built_npm
 
       - name: npm_package_frontend
         type: Bash
         configuration:
-          environmentVariables:
-            dockerImageName: artifactory-eu.soleng-emea-staging.jfrog.team/docker-local/frontapp
-            dockerImageTag: ${run_number}
           inputResources:
             - name: srcFrontRepo
           inputSteps:
@@ -48,29 +42,24 @@ pipelines:
         execution:
           onStart:
             - ls -la
-            - restore_run_files built_npm .
+            - restore_run_files $npm_build_frontend_sourceStateName .
             - ls -la
             - npm run build                   
           onComplete:
             - ls -la
-            - add_run_files . packaged_npm    
+            - add_run_files . $npm_build_frontend_sourceStateName    
             - ls -la
 
       - name: publish_frontend
         type: NpmPublish
         configuration:
+          environmentVariables:
+            inputNpmBuildStepName: npm_build_frontend
           repositoryName: npm-dev-local
           inputSteps:
             - name: npm_package_frontend
           integrations:
-            - name: artifactory_eu
-        execution:
-          onStart:
-            - ls -la
-            - restore_run_files packaged_npm res   
-            - ls -la     
-            - cd res
-            - ls -la  
+            - name: artifactory_eu 
     
       - name: build_app
         type: Bash
