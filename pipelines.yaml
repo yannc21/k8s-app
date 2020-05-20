@@ -13,13 +13,6 @@ resources:
       buildName: FrontApp_Build
       buildNumber: ${run_number}
 
-  - name: publish_buildinfo
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: artifactory_eu
-      buildName: publish_build
-      buildNumber: ${run_number}
-
 pipelines:
   - name: k8s_pipeline
     configuration:
@@ -36,31 +29,6 @@ pipelines:
             - name: artifactory_eu
           inputResources:
             - name: srcFrontRepo
-        execution:
-          onStart:
-            - restore_cache_files npm_build_frontend_step_cache ${res_srcFrontRepo_resourcePath}/front/
-          onSuccess:
-            - echo "Job well done!"
-          onFailure:
-            - echo "You Lose"
-          onComplete:
-            - add_run_files ${res_srcFrontRepo_resourcePath}/front/ my_run_directory
-            - add_cache_files ${res_srcFrontRepo_resourcePath}/front/ npm_build_frontend_step_cache
-
-      - name: pack_frontend
-        type: Bash
-        configuration:
-          inputSteps:
-            - name: npm_build_frontend
-          integrations:
-            - name: artifactory_eu
-        execution:
-          onStart:
-            - restore_run_files my_run_directory "$step_tmp_dir/npmSourceState"
-            - pushd "$step_tmp_dir/npmSourceState"
-            - npm run build
-            - ls -lrt "$step_tmp_dir/npmSourceState"
-            - add_run_files "$step_tmp_dir/npmSourceState/" npmBuildInputGitRepo
 
       - name: publish_frontend
         type: NpmPublish
@@ -71,13 +39,7 @@ pipelines:
             - name: pack_frontend
           integrations:
             - name: artifactory_eu
-          outputResources:
-            - name: publish_buildinfo
-        execution:
-          onStart:
-            - restore_run_files my_run_directory "$step_tmp_dir/npmSourceState"
-            - cd my_run_directory
-
+    
       - name: build_app
         type: Bash
         configuration:
