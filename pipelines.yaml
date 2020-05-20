@@ -48,6 +48,7 @@ pipelines:
             - npm run build                   
           onComplete:
             - ls -la
+            - cd ..
             - add_run_files . $npm_build_frontend_sourceStateName    
             - ls -la
 
