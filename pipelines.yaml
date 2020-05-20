@@ -42,7 +42,7 @@ pipelines:
           inputResources:
             - name: srcFrontRepo
           inputSteps:
-            - name: publish_frontend
+            - name: npm_build_frontend
           integrations:
             - name: artifactory_eu
         execution:
