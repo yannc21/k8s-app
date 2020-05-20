@@ -52,6 +52,7 @@ pipelines:
             - restore_run_files my_run_directory "$step_tmp_dir/npmSourceState"
             - pushd "$step_tmp_dir/npmSourceState"
             - npm run build
+            - ls -lrt "$step_tmp_dir/npmSourceState"
             - add_run_files "$step_tmp_dir/npmSourceState/" npmBuildInputGitRepo
      
       - name: publish_frontend
@@ -64,7 +65,7 @@ pipelines:
             - name: artifactory_eu
         execution:
           onStart:
-            - export inputNpmBuildStepName="npm_build_frontend"
+            - restore_run_files npmBuildInputGitRepo "$step_tmp_dir"
 
       - name: build_app
         type: Bash
