@@ -53,7 +53,7 @@ pipelines:
             - npm run build                   
           onComplete:
             - ls -la
-            - add_run_files ${res_srcFrontRepo_resourcePath}/front/ packaged_npm    
+            - add_run_files ${res_srcFrontRepo_resourcePath}/front/build/ packaged_npm    
             - ls -la
 
       - name: publish_frontend
