@@ -31,7 +31,7 @@ pipelines:
             - name: srcFrontRepo
         execution:
           onComplete:
-            - add_run_files . built_npm   
+            - add_run_files ${res_srcFrontRepo_resourcePath}/front/ built_npm
 
       - name: npm_package_frontend
         type: Bash
