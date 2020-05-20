@@ -67,7 +67,7 @@ pipelines:
         execution:
           onStart:
             - ls -la
-            - restore_run_files packaged_npm .   
+            - restore_run_files packaged_npm res   
             - ls -la       
     
       - name: build_app
