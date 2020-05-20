@@ -31,7 +31,8 @@ pipelines:
             - name: srcFrontRepo
         execution:
           onStart:
-            - cd front && npm run build           
+            - ls
+            - npm run build           
 
       - name: publish_frontend
         type: NpmPublish
