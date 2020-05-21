@@ -20,16 +20,6 @@ pipelines:
         readOnly:
           art_url: "http://artifactory-eu.soleng-emea-staging.jfrog.team/artifactory"
     steps:
-      - name: npm_build_frontend
-        type: NpmBuild
-        configuration:
-          repositoryName: npm
-          sourceLocation: front/
-          integrations:
-            - name: artifactory_eu
-          inputResources:
-            - name: srcFrontRepo
-
       - name: npm_package_frontend
         type: Bash
         configuration:
@@ -42,30 +32,19 @@ pipelines:
         execution:
           onStart:
             - ls -la
-            - restore_run_files $npm_build_frontend_sourceStateName .
-            - cd front
+            - retry_command jfrog rt c myart --url $int_artifactory_eu_url --user $int_artifactory_eu_user --apikey $int_artifactory_eu_apikey --interactive=false
             - ls -la
-            - npm run build                   
+            - retry_command jfrog rt ping     
+            - ls -la
+            - retry_command jfrog rt npmc --repo-resolve npm --repo-deploy npm
+            - ls -la
+            - retry_command jfrog rt npm-ci         
+            - ls -la
+            - retry_command jfrog rt npmp  
+            - ls -la
           onComplete:
             - ls -la
-            - cd ..
-            - add_run_files . $npm_package_frontend_sourceStateName    
-            - ls -la
-
-      - name: publish_frontend
-        type: NpmPublish
-        configuration:
-          environmentVariables:
-            inputNpmBuildStepName: npm_build_frontend
-          repositoryName: npm-dev-local
-          inputSteps:
-            - name: npm_package_frontend
-          integrations:
-            - name: artifactory_eu 
-        execution:
-          onStart:
-            - restore_run_files $npm_package_frontend_sourceStateName res
-            - cd res       
+            
     
       - name: build_app
         type: Bash
