@@ -62,6 +62,9 @@ pipelines:
             - name: npm_package_frontend
           integrations:
             - name: artifactory_eu 
+        execution:
+          onStart:
+            - restore_run_files $npm_package_frontend_sourceStateName .         
     
       - name: build_app
         type: Bash
