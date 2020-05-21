@@ -67,7 +67,6 @@ pipelines:
               - ls -la
               - restore_run_files $npm_package_frontend_sourceStateName .
               - ls -la
-              
     
       - name: build_app
         type: Bash
