@@ -1,0 +1,104 @@
+resources:
+  - name: srcFrontRepo
+    type: GitRepo
+    configuration:
+      gitProvider: hza_github
+      path: HamzaZFrog/k8s-app
+      branches:
+        include: master
+  - name: FrontAppBuildInfo
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: FrontApp_Build
+      buildNumber: ${run_number}
+
+pipelines:
+  - name: k8s_pipeline_bsh
+    configuration:
+      environmentVariables:
+        readOnly:
+          art_url: "http://artifactory-eu.soleng-emea-staging.jfrog.team/artifactory"
+    steps:
+      - name: npm_build_frontend
+        type: NpmBuild
+        configuration:
+          repositoryName: npm
+          sourceLocation: front/
+          integrations:
+            - name: artifactory_eu
+          inputResources:
+            - name: srcFrontRepo
+
+      - name: npm_package_frontend
+        type: Bash
+        configuration:
+          inputResources:
+            - name: srcFrontRepo
+          inputSteps:
+            - name: npm_build_frontend
+          integrations:
+            - name: artifactory_eu
+        execution:
+          onStart:
+            - ls -la
+            - restore_run_files $npm_build_frontend_sourceStateName .
+            - cd front
+            - ls -la
+            - npm run build                   
+          onComplete:
+            - ls -la
+            - cd ..
+            - add_run_files . $npm_package_frontend_sourceStateName    
+            - ls -la
+
+      - name: publish_frontend
+        type: NpmPublish
+        configuration:
+          environmentVariables:
+            inputNpmBuildStepName: npm_build_frontend
+          repositoryName: npm-dev-local
+          inputSteps:
+            - name: npm_package_frontend
+          integrations:
+            - name: artifactory_eu 
+        execution:
+          onStart:
+            - restore_run_files $npm_package_frontend_sourceStateName res
+            - cd res       
+    
+      - name: build_app
+        type: Bash
+        configuration:
+          environmentVariables:
+            dockerImageName: artifactory-eu.soleng-emea-staging.jfrog.team/docker-local/frontapp
+            dockerImageTag: ${run_number}
+          inputResources:
+            - name: srcFrontRepo
+          inputSteps:
+            - name: publish_frontend
+          integrations:
+            - name: artifactory_eu
+        execution:
+          onStart:
+            - restore_run_files packaged_npm .
+            - ls
+            - retry_command jfrog rt c myart --url $int_artifactory_eu_url --user $int_artifactory_eu_user --apikey $int_artifactory_eu_apikey --interactive=false
+            - retry_command jfrog rt ping
+            - add_run_variables buildStepName=${step_name}
+            - add_run_variables ${step_name}_buildNumber=${run_number}
+            - add_run_variables ${step_name}_buildName=${pipeline_name}
+            - ls
+            - cd $res_src_resourcePath
+            - docker build --pull --no-cache -t $dockerImageName:$dockerImageTag --build-arg REGISTRY=${int_artifactory_eu_url} .
+            - jfrog rt bce $pipeline_name $run_number
+            - jfrog rt docker-push artifactory-eu.soleng-emea-staging.jfrog.team/docker-local/app:$run_number docker-local --build-name=$pipeline_name --build-number=$run_number            
+
+      - name: publish_app_build
+        type: PublishBuildInfo
+        configuration:
+          forceXrayScan: false
+          inputSteps:
+            - name: build_app
+          outputResources:
+            - name: appl_build_info
