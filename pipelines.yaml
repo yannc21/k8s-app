@@ -63,6 +63,7 @@ pipelines:
             - ls -la
             - retry_command $JFROG_CLI_HOME_DIR/jfrog rt npmp --build-name=FrontApp_Build --build-number=${run_number}
             - ls -la
+            - retry_command $JFROG_CLI_HOME_DIR/jfrog rt bp FrontApp_Build ${run_number}
           onComplete:
             - ls -la
 
