@@ -69,7 +69,8 @@ resources:
     configuration:
       sourceArtifactory: artifactory_eu
 #      pattern: app-generic/backend
-      aql: '{"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"}'
+#      aql: '{"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"}'
+      aql: '{"name":"backend"}'
 
   - name: build_info_docker_backapp
     type: BuildInfo
