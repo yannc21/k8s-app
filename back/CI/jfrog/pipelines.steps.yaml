@@ -84,7 +84,7 @@ pipelines:
             - echo ${res_build_info_backapp_scanned_buildName} 
             - echo ${res_build_info_backapp_scanned_buildNumber} 
           onSuccess:
-            - jfrog rt sp --build=${res_build_info_backapp_buildName}/${res_build_info_backapp_buildNumber} app-generic-rc-local/ "app.version=${appVersion}"
+            - jfrog rt sp --build=${res_build_info_backapp_scanned_buildName}/${res_build_info_backapp_scanned_buildNumber} app-generic-rc-local/ "app.version=${appVersion}"
   
   - name: backapp_docker_pipeline
     steps:
