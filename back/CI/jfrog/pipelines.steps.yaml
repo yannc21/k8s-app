@@ -29,7 +29,8 @@ pipelines:
             - echo "Run Unit Testing ..." 
             - if [ $OFFLINE_MODE == "true" ]; then echo "Offline mode turned on";fi
           onSuccess:
-            - add_pipeline_variables subPath `if [[ ${res_src_code_backapp_isGitTag} == "True"; then echo ${res_src_code_backapp_gitTagName}; else echo ${res_src_code_backapp_commitSha}; fi`
+            - subPath=`if [[ ${res_src_code_backapp_isGitTag} == "True"; then echo ${res_src_code_backapp_gitTagName}; else echo ${res_src_code_backapp_commitSha}; fi`
+            - echo $subPath && add_pipeline_variables subPath $subPath 
 
 
       # Publish the Go app (binary) and Go Build Info to Artifactory 
