@@ -49,7 +49,7 @@ pipelines:
             - echo $JFROG_CLI_HOME_DIR
             - retry_command $JFROG_CLI_HOME_DIR/jfrog rt npmc --repo-resolve npm --repo-deploy npm --server-id-resolve myart --server-id-deploy myart
             - ls -la
-            - retry_command ./jfrog rt npm-ci --build-name=FrontApp_Build --build-number=${run_number}
+            - retry_command $JFROG_CLI_HOME_DIR/jfrog rt npm-ci --build-name=FrontApp_Build --build-number=${run_number}
             - ls -la
             - retry_command $JFROG_CLI_HOME_DIR/jfrog rt npmp --build-name=FrontApp_Build --build-number=${run_number}
             - ls -la
