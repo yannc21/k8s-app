@@ -5,7 +5,7 @@ resources:
       gitProvider: hza_github
       path: HamzaZFrog/k8s-app
       branches:
-        include: hza-branch
+        include: master
   - name: FrontAppBuildInfo
     type: BuildInfo
     configuration:
@@ -14,7 +14,7 @@ resources:
       buildNumber: ${run_number}
 
 pipelines:
-  - name: k8s_pipeline_hza
+  - name: k8s_pipeline
     configuration:
       environmentVariables:
         readOnly:
@@ -49,7 +49,7 @@ pipelines:
           onComplete:
             - ls -la
             - cd ..
-            - add_run_files . $npm_package_frontend_sourceStateName    
+            - add_run_files . $npm_build_frontend_sourceStateName    
             - ls -la
 
       - name: publish_frontend
@@ -62,7 +62,3 @@ pipelines:
             - name: npm_package_frontend
           integrations:
             - name: artifactory_eu 
-        execution:
-          onStart:
-            - restore_run_files $npm_package_frontend_sourceStateName res
-            - cd res  
