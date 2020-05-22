@@ -30,24 +30,18 @@ pipelines:
             - name: artifactory_eu
         execution:
           onStart:
-            - echo "CLI version :"
-            - 'jfrog --version'
-            - echo "Installing CLI..."
+            - echo "CLI installation"
             - 'curl -fL https://getcli.jfrog.io | sh &&  chmod 755 jfrog'
             - >-
               ./jfrog rt c --interactive=false --url=${int_artifactory_eu_url}
               --user=${int_artifactory_eu_user} --apikey=${int_artifactory_eu_apikey} myart &&
               ./jfrog rt use myart && ./jfrog rt ping
             - >-
-            - echo "CLI version after install :" 
-            - 'jfrog --version'
-            - echo "CLI version after install :" 
-            - './jfrog --version'
-            - retry_command jfrog rt npmc --repo-resolve npm --repo-deploy npm --server-id-resolve myart --server-id-deploy myart 
+            - retry_command ./jfrog rt npmc --repo-resolve npm --repo-deploy npm --server-id-resolve myart --server-id-deploy myart 
             - ls -la
-            - retry_command jfrog rt npm-ci         
+            - retry_command ./jfrog rt npm-ci --build-name=FrontApp_Build --build-number=${run_number}      
             - ls -la
-            - retry_command jfrog rt npmp  
+            - retry_command ./jfrog rt npmp --build-name=FrontApp_Build --build-number=${run_number} 
             - ls -la
           onComplete:
             - ls -la
