@@ -38,6 +38,7 @@ pipelines:
               ./jfrog rt use myart && ./jfrog rt ping
             - >-
             - export JFROG_CLI_HOME_DIR=$(pwd)
+            - echo "JFROG CLI HOME DIRECTORY: ${JFROG_CLI_HOME_DIR"
             - cd "${res_src_resourcePath}/front"
             - ls -alrt
             - echo "JFROG CLI HOME DIRECTORY: ${JFROG_CLI_HOME_DIR"
