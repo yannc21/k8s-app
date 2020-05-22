@@ -49,7 +49,7 @@ pipelines:
           onComplete:
             - ls -la
             - cd ..
-            - add_run_files . $npm_package_frontend_sourceStateName    
+            - add_run_files . npm_package_frontend_sourceStateName    
             - ls -la
 
       - name: publish_frontend
@@ -64,4 +64,4 @@ pipelines:
             - name: artifactory_eu 
         execution:
           onStart:
-            - restore_run_files $npm_package_frontend_sourceStateName .         
+            - restore_run_files npm_package_frontend_sourceStateName .         
