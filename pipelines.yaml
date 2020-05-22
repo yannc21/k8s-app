@@ -34,11 +34,6 @@ pipelines:
             - "curl -fL https://getcli.jfrog.io | sh &&  chmod 755 jfrog"
             - pwd
             - ls -alrt
-            - >-
-              ./jfrog rt c --interactive=false --url=${int_artifactory_eu_url}
-              --user=${int_artifactory_eu_user} --apikey=${int_artifactory_eu_apikey} myart &&
-              ./jfrog rt use myart && ./jfrog rt ping
-            - >
 
           onExecute:
             - echo "${res_src_resourcePath}"
@@ -47,6 +42,11 @@ pipelines:
             - ls -ld $(find .)
             - export "JFROG_CLI_HOME_DIR=$(pwd)"
             - echo $JFROG_CLI_HOME_DIR
+            - >-
+              $JFROG_CLI_HOME_DIR/jfrog rt c --interactive=false --url=${int_artifactory_eu_url}
+              --user=${int_artifactory_eu_user} --apikey=${int_artifactory_eu_apikey} myart &&
+              $JFROG_CLI_HOME_DIR/jfrog rt use myart && $JFROG_CLI_HOME_DIR/jfrog rt ping
+            - >
             - retry_command $JFROG_CLI_HOME_DIR/jfrog rt npmc --repo-resolve npm --repo-deploy npm --server-id-resolve myart --server-id-deploy myart
             - ls -la
             - retry_command $JFROG_CLI_HOME_DIR/jfrog rt npm-ci --build-name=FrontApp_Build --build-number=${run_number}
