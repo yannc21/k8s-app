@@ -115,7 +115,9 @@ pipelines:
             - cd ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/ && curl -O "https://${int_yann_github_token}@raw.githubusercontent.com/cyan21/k8s-app/master/back/data.json"
             - ls -l ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker
             - echo  "items.find({\"name\":\"backend\",\"@build.name\":\"${res_build_info_backapp_promoted_buildName}\",\"@build.number\":\"${res_build_info_backapp_promoted_buildNumber}\"}).include(\"@app.version\")" 
-            - appVersion=`jfrog rt curl -XPOST api/search/aql -d "items.find({\"name\":\"backend\",\"@build.name\":\"${res_build_info_backapp_promoted_buildName}\",\"@build.number\":\"${res_build_info_backapp_promoted_buildNumber}\"}).include(\"@app.version\")" | jq .results[].properties[0].value`
+            - echo  "items.find({\"name\":\"backend\",\"@build.name\":\"${res_build_info_backapp_promoted_buildName}\",\"@build.number\":\"${res_build_info_backapp_promoted_buildNumber}\"}).include(\"@app.version\")" > aql.json
+            - cat aql.json
+            - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq .results[].properties[0].value`
             - echo $appVersion
           onSuccess:
             - echo "Job well done!"
