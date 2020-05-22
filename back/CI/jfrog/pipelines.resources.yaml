@@ -61,7 +61,8 @@ resources:
     type: Aql
     configuration:
       sourceArtifactory: artifactory_eu
-      query: items.find({"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"})
+#      query: items.find({"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"})
+      query: items.find({"name":"backend"})
 
   - name: backapp_exec
     type: FileSpec
