@@ -34,8 +34,11 @@ pipelines:
             - "curl -fL https://getcli.jfrog.io | sh &&  chmod 755 jfrog"
             - pwd
             - ls -alrt
+            - export "JFROG_CLI_HOME_DIR=$(pwd)"
+            - echo $JFROG_CLI_HOME_DIR
 
           onExecute:
+            - echo $JFROG_CLI_HOME_DIR
             - echo $step_tmp_dir
             - cd $step_tmp_dir
             - ls -ld $(find .)
@@ -46,8 +49,6 @@ pipelines:
             - cd "${res_src_resourcePath}"
             - pwd
             - ls -ld $(find .)
-            - export "JFROG_CLI_HOME_DIR=$(pwd)"
-            - echo $JFROG_CLI_HOME_DIR
             - >-
               $JFROG_CLI_HOME_DIR/jfrog rt c --interactive=false --url=${int_artifactory_eu_url}
               --user=${int_artifactory_eu_user} --apikey=${int_artifactory_eu_apikey} myart &&
