@@ -33,8 +33,6 @@ pipelines:
       - name: npm_package_frontend
         type: Bash
         configuration:
-          inputResources:
-            - name: srcFrontRepo
           inputSteps:
             - name: npm_build_frontend
           integrations:
@@ -42,7 +40,7 @@ pipelines:
         execution:
           onStart:
             - ls -la
-            - restore_run_files $npm_build_frontend_sourceStateName .
+            - restore_run_files npm_build_frontend_sourceStateName .
             - cd front
             - ls -la
             - npm run build                   
@@ -64,4 +62,5 @@ pipelines:
             - name: artifactory_eu 
         execution:
           onStart:
-            - restore_run_files npm_package_frontend_sourceStateName .         
+            - export inputNpmBuildStepName="npm_build_frontend"
+            - restore_run_files npm_build_frontend_sourceStateName .     
