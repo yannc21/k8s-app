@@ -12,7 +12,7 @@ resources:
     configuration:
       sourceArtifactory: artifactory_yannaws
       buildName: FrontApp_Build
-      buildNumber: ${run_number}
+      buildNumber: $run_number
 
 pipelines:
   - name: k8s_pipeline
