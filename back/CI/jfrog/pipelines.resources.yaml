@@ -57,7 +57,7 @@ resources:
       buildNumber: ${run_number}
 
 # DOCKER PIPELINE 
-  - name: aql_go_app
+  - name: aql_go
     type: Aql
     configuration:
       sourceArtifactory: artifactory_eu
@@ -68,7 +68,7 @@ resources:
     configuration:
       sourceArtifactory: artifactory_eu
 #      pattern: app-generic/backend
-      aql: aql_go_app
+      aql: aql_go
 
   - name: build_info_docker_backapp
     type: BuildInfo
