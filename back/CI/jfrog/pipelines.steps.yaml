@@ -99,8 +99,7 @@ pipelines:
             - echo "Git repo hash :" 
             - echo ${step_triggered_by_resource_name}
             - echo "Copying exec binary to specific location..."
-            - jfrog rt c show  
-            - jfrog rt dl --build-name=${res_build_info_backapp_promoted_buildName} --build-number=${res_build_info_backapp_promoted_buildNumber} app-generic/
+            - jfrog rt dl --build-name=${res_build_info_backapp_promoted_buildName} --build-number=${res_build_info_backapp_promoted_buildNumber} --flat=true app-generic/
             - cp backend ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
             - cd ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/ && curl -O "https://${int_yann_github_token}@raw.githubusercontent.com/cyan21/k8s-app/master/back/data.json"
             - ls -l ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker
