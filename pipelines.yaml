@@ -40,14 +40,13 @@ pipelines:
         execution:
           onStart:
             - ls -la
-            - restore_run_files npm_build_frontend_sourceStateName .
+            - restore_run_files $npm_build_frontend_sourceStateName .
             - cd front
             - ls -la
             - npm run build                   
           onComplete:
             - ls -la
-            - cd ..
-            - add_run_files . npm_package_frontend_sourceStateName    
+            - add_run_files . $npm_package_frontend_sourceStateName    
             - ls -la
 
       - name: publish_frontend
@@ -63,4 +62,4 @@ pipelines:
         execution:
           onStart:
             - export inputNpmBuildStepName="npm_build_frontend"
-            - restore_run_files npm_build_frontend_sourceStateName .     
+            - restore_run_files $npm_package_frontend_sourceStateName .     
