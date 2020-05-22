@@ -69,3 +69,27 @@ pipelines:
             - name: publish_frontend
           outputResources:
             - name: FrontAppBuildInfo
+
+      - name: scan_npm_frontapp
+        type: XrayScan
+        configuration:
+          failOnScan: false
+          inputResources:
+            - name: FrontAppBuildInfo
+              trigger: true
+          outputResources:
+            - name: FrontAppBuildInfo_scanned
+
+      - name: promote_build_info_npm_frontapp
+        type: PromoteBuild
+        configuration:
+          targetRepository: app-npm-rc-local
+          includeDependencies: false
+          status: SANDBOX_OK
+          comment: Unit testing and Xray scan passed succesfully
+          copy: false
+          inputResources:
+            - name: FrontAppBuildInfo_scanned
+              trigger: true
+          outputResources:
+            - name: FrontAppBuildInfo_promoted
