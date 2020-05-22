@@ -32,17 +32,18 @@ pipelines:
           onStart:
             - echo "CLI installation"
             - "curl -fL https://getcli.jfrog.io | sh &&  chmod 755 jfrog"
-            - cd "${step_tmp_dir}/srcFrontRepossh"
             - ls -alrt
             - >-
               ./jfrog rt c --interactive=false --url=${int_artifactory_eu_url}
               --user=${int_artifactory_eu_user} --apikey=${int_artifactory_eu_apikey} myart &&
               ./jfrog rt use myart && ./jfrog rt ping
-            - >-
-            - export "JFROG_CLI_HOME_DIR=$(pwd)"
-            - echo $JFROG_CLI_HOME_DIR
+            - >
+
+          onExecute:
             - cd ${res_src_resourcePath}
             - ls -alrt
+            - export "JFROG_CLI_HOME_DIR=$(pwd)"
+            - echo $JFROG_CLI_HOME_DIR
             - retry_command jfrog rt npmc --repo-resolve npm --repo-deploy npm --server-id-resolve myart --server-id-deploy myart
             - ls -la
             - retry_command jfrog rt npm-ci --build-name=FrontApp_Build --build-number=${run_number}
