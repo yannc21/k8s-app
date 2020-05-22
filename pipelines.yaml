@@ -24,6 +24,7 @@ pipelines:
       - name: npm_package_frontend
         type: Bash
         configuration:
+          sourceLocation: front/
           inputResources:
             - name: srcFrontRepo
           integrations:
