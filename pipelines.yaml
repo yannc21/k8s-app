@@ -10,11 +10,11 @@ resources:
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
-      buildName: FrontApp_Build
+      buildName: frontapp_npm_pipeline
       buildNumber: ${run_number}
 
 pipelines:
-  - name: front_app_npm_pipeline
+  - name: frontapp_npm_pipeline
     configuration:
       environmentVariables:
         readOnly:
