@@ -31,26 +31,25 @@ pipelines:
         execution:
           onStart:
             - echo "CLI installation"
-            - 'curl -fL https://getcli.jfrog.io | sh &&  chmod 755 jfrog'
+            - "curl -fL https://getcli.jfrog.io | sh &&  chmod 755 jfrog"
             - >-
               ./jfrog rt c --interactive=false --url=${int_artifactory_eu_url}
               --user=${int_artifactory_eu_user} --apikey=${int_artifactory_eu_apikey} myart &&
               ./jfrog rt use myart && ./jfrog rt ping
             - >-
             - export JFROG_CLI_HOME_DIR=$(pwd)
-            - cd ${res_src_resourcePath}/front
+            - cd "${res_src_resourcePath}/front"
             - ls -alrt
-            - echo "JFROG CLI HOME DIRECTORY : ${JFROG_CLI_HOME_DIR"
-            - retry_command jfrog rt npmc --repo-resolve npm --repo-deploy npm --server-id-resolve myart --server-id-deploy myart 
+            - echo "JFROG CLI HOME DIRECTORY: ${JFROG_CLI_HOME_DIR"
+            - retry_command jfrog rt npmc --repo-resolve npm --repo-deploy npm --server-id-resolve myart --server-id-deploy myart
             - ls -la
-            - retry_command jfrog rt npm-ci --build-name=FrontApp_Build --build-number=${run_number}      
+            - retry_command jfrog rt npm-ci --build-name=FrontApp_Build --build-number=${run_number}
             - ls -la
-            - retry_command jfrog rt npmp --build-name=FrontApp_Build --build-number=${run_number} 
+            - retry_command jfrog rt npmp --build-name=FrontApp_Build --build-number=${run_number}
             - ls -la
           onComplete:
             - ls -la
-            
-    
+
       - name: build_app
         type: Bash
         configuration:
@@ -76,4 +75,4 @@ pipelines:
             - cd $res_src_resourcePath
             - docker build --pull --no-cache -t $dockerImageName:$dockerImageTag --build-arg REGISTRY=${int_artifactory_eu_url} .
             - jfrog rt bce $pipeline_name $run_number
-            - jfrog rt docker-push artifactory-eu.soleng-emea-staging.jfrog.team/docker-local/app:$run_number docker-local --build-name=$pipeline_name --build-number=$run_number            
+            - jfrog rt docker-push artifactory-eu.soleng-emea-staging.jfrog.team/docker-local/app:$run_number docker-local --build-name=$pipeline_name --build-number=$run_number
