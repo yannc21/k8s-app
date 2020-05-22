@@ -57,19 +57,19 @@ resources:
       buildNumber: ${run_number}
 
 # DOCKER PIPELINE 
-  - name: aql_go
-    type: Aql
-    configuration:
-      sourceArtifactory: artifactory_eu
+#  - name: aql_go
+#    type: Aql
+#    configuration:
+#      sourceArtifactory: artifactory_eu
 #      query: items.find({"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"})
-      query: items.find({"name":"backend"})
+#      query: items.find({"name":"backend"})
 
   - name: backapp_exec
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory_eu
 #      pattern: app-generic/backend
-      query: items.find({"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"})
+      aql: items.find({"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"})
 
   - name: build_info_docker_backapp
     type: BuildInfo
