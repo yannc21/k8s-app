@@ -40,21 +40,21 @@ resources:
     configuration:
       sourceArtifactory: artifactory_eu
       buildName: backapp-go
-      buildNumber: 1
+      buildNumber: ${run_number}
 
   - name: build_info_backapp_scanned
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
       buildName: backapp-go
-      buildNumber: 1
+      buildNumber: ${run_number}
   
   - name: build_info_backapp_promoted
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
       buildName: backapp-go
-      buildNumber: 1
+      buildNumber: ${run_number}
 
 # DOCKER PIPELINE 
   - name: backapp_exec

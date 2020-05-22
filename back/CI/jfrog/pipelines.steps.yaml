@@ -14,7 +14,8 @@ pipelines:
         type: GoBuild
         configuration:
           sourceLocation: back/
-          repository: app-go
+          repository: app-go/${res_src_code_backapp_branchName}/${res_src_code_backapp_commitSha}/
+
           outputLocation: /tmp/dist
           outputFile: backend
           inputResources:
@@ -30,8 +31,7 @@ pipelines:
             - env
             - if [ $OFFLINE_MODE == "true" ]; then echo "OK";fi
           onSuccess:
-            - echo "Renaming with version" 
-            - env
+            - if [ ${res_src_code_backapp_isGitTag} ];then add_run_variables version="master" 
 
       # Publish the Go app (binary) and Go Build Info to Artifactory 
       - name: publish_go_backapp
@@ -48,8 +48,7 @@ pipelines:
 
       # Scan Build Info
       - name: scan_go_backapp
-        type: XrayScan
-        configuration:
+        type: XrayScan configuration:
           failOnScan: false
           inputResources:
             - name: build_info_backapp
@@ -91,8 +90,6 @@ pipelines:
         execution:
           onStart:
             - echo "Copying exec binary to specific location..."
-#            - pwd && ls -l && ls -l ${res_src_dockerfile_backapp_resourcePath}
-#            - ls ${res_backapp_exec_resourcePath} 
             - cp ${res_backapp_exec_resourcePath}/backend ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
             - cd ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/ && curl -O "https://${int_yann_github_token}@raw.githubusercontent.com/cyan21/k8s-app/master/back/data.json"
             - ls -l ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker
