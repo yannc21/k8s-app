@@ -30,9 +30,10 @@ pipelines:
             - if [ $OFFLINE_MODE == "true" ]; then echo "Offline mode turned on";fi
           onSuccess:
             - echo ${res_src_code_backapp_isGitTag}
-            - subPath=`if [[ ${res_src_code_backapp_isGitTag} == "True" ]]; then echo ${res_src_code_backapp_gitTagName}; else echo ${res_src_code_backapp_commitSha}; fi`
-            - echo $subPath && add_pipeline_variables subPath="${res_src_code_backapp_branchName}/$subPath"
-
+            - appVersion=`if [[ ${res_src_code_backapp_isGitTag} == "True" ]]; then echo ${res_src_code_backapp_gitTagName}; else echo ${res_src_code_backapp_commitSha}; fi`
+            - echo $appVersion 
+            - add_pipeline_variables appVersion="${appVersion}"
+            - add_pipeline_variables subPath="${res_src_code_backapp_branchName}/${appVersion}"
 
       # Publish the Go app (binary) and Go Build Info to Artifactory 
       - name: publish_go_backapp
@@ -49,6 +50,10 @@ pipelines:
         execution:
           onStart:
             - echo ${subPath} 
+          onSuccess:
+            - echo ${res_build_info_backapp_buildName} 
+            - echo ${res_build_info_backapp_buildNumber} 
+            - jfrog rt sp --build-name=${res_build_info_backapp_buildName} --build-number=${res_build_info_backapp_buildNumber} app-generic-dev-local/ "app.version=${appVersion}"
 
       # Scan Build Info
       - name: scan_go_backapp
@@ -84,11 +89,10 @@ pipelines:
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: back/CI/Docker/
           dockerImageName: 'yannaws-app-docker.jfrog.io/backapp'
-          dockerImageTag: ${run_number}
+          dockerImageTag: ${appVersion}-${res_src_dockerfile_backapp_commitSha}
           inputResources:
             - name: src_dockerfile_backapp
             - name: build_info_backapp_promoted
-              #            - name: backapp_exec
           integrations:
             - name: artifactory_eu
             - name: yann_github
@@ -97,7 +101,7 @@ pipelines:
             - echo "Go App Build number :" 
             - echo ${res_build_info_backapp_promoted_buildNumber}
             - echo "Git repo hash :" 
-            - echo ${step_triggered_by_resource_name}
+            - echo ${res_src_dockerfile_backapp_commitSha}
             - echo "Copying exec binary to specific location..."
             - jfrog rt dl --build-name=${res_build_info_backapp_promoted_buildName} --build-number=${res_build_info_backapp_promoted_buildNumber} --flat=true app-generic/
             - cp backend ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
