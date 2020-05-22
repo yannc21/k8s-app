@@ -117,7 +117,7 @@ pipelines:
             - echo  "items.find({\"name\":\"backend\",\"@build.name\":\"${res_build_info_backapp_promoted_buildName}\",\"@build.number\":\"${res_build_info_backapp_promoted_buildNumber}\"}).include(\"@app.version\")" 
             - echo  "items.find({\"name\":\"backend\",\"@build.name\":\"${res_build_info_backapp_promoted_buildName}\",\"@build.number\":\"${res_build_info_backapp_promoted_buildNumber}\"}).include(\"@app.version\")" > aql.json
             - cat aql.json
-            - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq .results[].properties[0].value`
+            - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq .results[].properties[].value`
             - echo $appVersion
           onSuccess:
             - echo "Job well done!"
