@@ -44,7 +44,7 @@ pipelines:
             - echo "${res_src_resourcePath}"
             - cd "${res_src_resourcePath}"
             - pwd
-            - ls -alrt
+            - ls -ld $(find .)
             - export "JFROG_CLI_HOME_DIR=$(pwd)"
             - echo $JFROG_CLI_HOME_DIR
             - retry_command $JFROG_CLI_HOME_DIR/jfrog rt npmc --repo-resolve npm --repo-deploy npm --server-id-resolve myart --server-id-deploy myart
