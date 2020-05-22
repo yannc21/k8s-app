@@ -37,7 +37,7 @@ pipelines:
               --user=${int_artifactory_eu_user} --apikey=${int_artifactory_eu_apikey} myart &&
               ./jfrog rt use myart && ./jfrog rt ping
             - >-
-            - retry_command jfrog rt npmc --repo-resolve npm --repo-deploy npm
+            - retry_command jfrog rt npmc --repo-resolve npm --repo-deploy npm --server-id-resolve myart --server-id-deploy myart 
             - ls -la
             - retry_command jfrog rt npm-ci         
             - ls -la
