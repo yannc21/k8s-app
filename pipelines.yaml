@@ -27,11 +27,11 @@ pipelines:
           inputResources:
             - name: srcFrontRepo
           integrations:
-            - name: artifactory_yannaws
+            - name: artifactory_eu
         execution:
           onStart:
             - ls -la
-            - retry_command jfrog rt c myart --url $int_artifactory_yannaws_url --user $int_artifactory_yannaws_user --apikey $int_artifactory_yannaws_apikey --interactive=false
+            - retry_command jfrog rt c myart --url $int_artifactory_eu_url --user $int_artifactory_eu_user --apikey $int_artifactory_eu_apikey --interactive=false
             - ls -la
             - retry_command jfrog rt ping     
             - ls -la
@@ -56,7 +56,7 @@ pipelines:
           inputSteps:
             - name: npm_package_frontend
           integrations:
-            - name: artifactory_yannaws
+            - name: artifactory_eu
         execution:
           onStart:
             - restore_run_files packaged_npm .
