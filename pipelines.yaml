@@ -41,7 +41,8 @@ pipelines:
             - >
 
           onExecute:
-            - cd ${res_src_resourcePath}
+            - echp "${res_src_resourcePath}"
+            - cd "${res_src_resourcePath}"
             - pwd
             - ls -alrt
             - export "JFROG_CLI_HOME_DIR=$(pwd)"
@@ -81,3 +82,4 @@ pipelines:
             - docker build --pull --no-cache -t $dockerImageName:$dockerImageTag --build-arg REGISTRY=${int_artifactory_eu_url} .
             - jfrog rt bce $pipeline_name $run_number
             - jfrog rt docker-push artifactory-eu.soleng-emea-staging.jfrog.team/docker-local/app:$run_number docker-local --build-name=$pipeline_name --build-number=$run_number
+
