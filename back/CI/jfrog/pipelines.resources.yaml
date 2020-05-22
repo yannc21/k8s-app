@@ -61,7 +61,9 @@ resources:
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory_eu
-      pattern: app-generic/backend
+#      pattern: app-generic/backend
+      buildName: backapp_go_pipeline
+      buildNumber: 43 
 
   - name: build_info_docker_backapp
     type: BuildInfo
