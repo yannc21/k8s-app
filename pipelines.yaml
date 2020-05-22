@@ -57,7 +57,7 @@ pipelines:
         configuration:
           environmentVariables:
             inputNpmBuildStepName: npm_build_frontend
-          repositoryName: npm-dev-local
+          repositoryName: npm
           inputSteps:
             - name: npm_package_frontend
           integrations:
