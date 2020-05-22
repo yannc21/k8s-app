@@ -65,7 +65,7 @@ pipelines:
       - name: promote_build_info_go_backapp
         type: PromoteBuild
         configuration:
-          targetRepository: app-generic-rc-local/${subPath}/
+          targetRepository: app-generic-rc-local/
           includeDependencies: false
           status: "SANDBOX_OK"
           comment: "Unit testing and Xray scan passed succesfully"
