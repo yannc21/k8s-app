@@ -6,12 +6,27 @@ resources:
       path: HamzaZFrog/k8s-app
       branches:
         include: master
+        
   - name: FrontAppBuildInfo
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
       buildName: frontapp_npm_pipeline
       buildNumber: ${run_number}
+
+  - name: FrontAppBuildInfo_scanned
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: frontapp_npm_pipeline
+      buildNumber: '${run_number}'
+
+  - name: FrontAppBuildInfo_promoted
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: frontapp_npm_pipeline
+      buildNumber: '${run_number}'
 
 pipelines:
   - name: frontapp_npm_pipeline
