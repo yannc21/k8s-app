@@ -95,7 +95,7 @@ pipelines:
         execution:
           onStart:
             - echo "Go App Build number :" 
-            - echo ${res_build_info_backapp_promoted_buildNumber}"
+            - echo ${res_build_info_backapp_promoted_buildNumber}
             - echo "Git repo hash :" 
             - echo ${step_triggered_by_resource_name}
             - echo "Copying exec binary to specific location..."
