@@ -94,8 +94,10 @@ pipelines:
             - name: yann_github
         execution:
           onStart:
-            - echo "Go App Build number :" ${res_build_info_backapp_promoted_buildNumber}"
-            - echo "Git repo hash :" ${step_triggered_by_resource_name}
+            - echo "Go App Build number :" 
+            - echo ${res_build_info_backapp_promoted_buildNumber}"
+            - echo "Git repo hash :" 
+            - echo ${step_triggered_by_resource_name}
             - echo "Copying exec binary to specific location..."
             - jfrog rt c show  
             - jfrog rt dl --build-name=${res_build_info_backapp_promoted_buildName} --build-number=${res_build_info_backapp_promoted_buildNumber} app-generic/
