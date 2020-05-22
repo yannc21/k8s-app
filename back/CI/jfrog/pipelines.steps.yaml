@@ -95,7 +95,7 @@ pipelines:
         execution:
           onStart:
             - echo "Build number which triggered the step : "
-            - echo "${res_build_info_backapp_promoted_buildnumber}"
+            - echo ${res_build_info_backapp_promoted_buildnumber}
             - echo "Copying exec binary to specific location..."
             - cp ${res_backapp_exec_resourcePath}/backend ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
             - cd ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/ && curl -O "https://${int_yann_github_token}@raw.githubusercontent.com/cyan21/k8s-app/master/back/data.json"
