@@ -33,8 +33,6 @@ pipelines:
       - name: npm_package_frontend
         type: Bash
         configuration:
-          inputResources:
-            - name: srcFrontRepo
           inputSteps:
             - name: npm_build_frontend
           integrations:
@@ -62,3 +60,12 @@ pipelines:
             - name: npm_package_frontend
           integrations:
             - name: artifactory_eu 
+
+      - name: publish_frontend_buildinfo
+        type: PublishBuildInfo
+        configuration:
+          forceXrayScan: false
+          inputSteps:
+            - name: publish_frontend
+          outputResources:
+            - name: FrontAppBuildInfo
