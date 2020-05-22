@@ -32,7 +32,7 @@ pipelines:
           onStart:
             - echo "CLI installation"
             - "curl -fL https://getcli.jfrog.io | sh &&  chmod 755 jfrog"
-            - cd ${step_tmp_dir}
+            - cd "${step_tmp_dir}/srcFrontRepossh"
             - ls -alrt
             - >-
               ./jfrog rt c --interactive=false --url=${int_artifactory_eu_url}
