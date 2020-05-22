@@ -6,10 +6,11 @@ resources:
       path: HamzaZFrog/k8s-app
       branches:
         include: master
+
   - name: FrontAppBuildInfo
     type: BuildInfo
     configuration:
-      sourceArtifactory: artifactory_eu
+      sourceArtifactory: artifactory_yannaws
       buildName: FrontApp_Build
       buildNumber: ${run_number}
 
@@ -25,14 +26,12 @@ pipelines:
         configuration:
           inputResources:
             - name: srcFrontRepo
-          inputSteps:
-            - name: npm_build_frontend
           integrations:
-            - name: artifactory_eu
+            - name: artifactory_yannaws
         execution:
           onStart:
             - ls -la
-            - retry_command jfrog rt c myart --url $int_artifactory_eu_url --user $int_artifactory_eu_user --apikey $int_artifactory_eu_apikey --interactive=false
+            - retry_command jfrog rt c myart --url $int_artifactory_yannaws_url --user $int_artifactory_yannaws_user --apikey $int_artifactory_yannaws_apikey --interactive=false
             - ls -la
             - retry_command jfrog rt ping     
             - ls -la
