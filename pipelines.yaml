@@ -37,11 +37,15 @@ pipelines:
               --user=${int_artifactory_eu_user} --apikey=${int_artifactory_eu_apikey} myart &&
               ./jfrog rt use myart && ./jfrog rt ping
             - >-
-            - retry_command ./jfrog rt npmc --repo-resolve npm --repo-deploy npm --server-id-resolve myart --server-id-deploy myart 
+            - export JFROG_CLI_HOME_DIR=$(pwd)
+            - cd ${res_src_resourcePath}/front
+            - ls -alrt
+            - echo "JFROG CLI HOME DIRECTORY : ${JFROG_CLI_HOME_DIR"
+            - retry_command jfrog rt npmc --repo-resolve npm --repo-deploy npm --server-id-resolve myart --server-id-deploy myart 
             - ls -la
-            - retry_command ./jfrog rt npm-ci --build-name=FrontApp_Build --build-number=${run_number}      
+            - retry_command jfrog rt npm-ci --build-name=FrontApp_Build --build-number=${run_number}      
             - ls -la
-            - retry_command ./jfrog rt npmp --build-name=FrontApp_Build --build-number=${run_number} 
+            - retry_command jfrog rt npmp --build-name=FrontApp_Build --build-number=${run_number} 
             - ls -la
           onComplete:
             - ls -la
