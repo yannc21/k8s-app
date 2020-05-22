@@ -24,7 +24,6 @@ pipelines:
       - name: npm_package_frontend
         type: Bash
         configuration:
-          sourceLocation: front/
           inputResources:
             - name: srcFrontRepo
           integrations:
@@ -55,8 +54,9 @@ pipelines:
               --user=${int_artifactory_eu_user} --apikey=${int_artifactory_eu_apikey} myart &&
               $JFROG_CLI_HOME_DIR/jfrog rt use myart && $JFROG_CLI_HOME_DIR/jfrog rt ping
             - >
-            - pushd $res_srcFrontRepo_resourcePath
+            - cd $res_srcFrontRepo_resourcePath
             - ls -alrt
+            - cd front
             - retry_command $JFROG_CLI_HOME_DIR/jfrog rt npmc --repo-resolve npm --repo-deploy npm --server-id-resolve myart --server-id-deploy myart
             - ls -la
             - retry_command $JFROG_CLI_HOME_DIR/jfrog rt npm-ci --build-name=FrontApp_Build --build-number=${run_number}
