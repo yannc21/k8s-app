@@ -14,8 +14,7 @@ pipelines:
         type: GoBuild
         configuration:
           sourceLocation: back/
-          repository: app-go/${res_src_code_backapp_branchName}/${res_src_code_backapp_commitSha}/
-
+          repository: app-go
           outputLocation: /tmp/dist
           outputFile: backend
           inputResources:
@@ -27,24 +26,27 @@ pipelines:
             - name: artifactory_eu
         execution:
           onStart:
-            - echo "Unit Testing ..." 
-            - env
-            - if [ $OFFLINE_MODE == "true" ]; then echo "OK";fi
+            - echo "Run Unit Testing ..." 
+            - if [ $OFFLINE_MODE == "true" ]; then echo "Offline mode turned on";fi
           onSuccess:
-            - if [ ${res_src_code_backapp_isGitTag} ];then add_run_variables version="master" 
+            - add_pipeline_variables subPath `if [[ ${res_src_code_backapp_isGitTag} == "True"; then echo ${res_src_code_backapp_gitTagName}; else echo ${res_src_code_backapp_commitSha}; fi`
+
 
       # Publish the Go app (binary) and Go Build Info to Artifactory 
       - name: publish_go_backapp
         type: GoPublishBinary
         configuration:
           autoPublishBuildInfo: true
-          targetRepository: app-generic-dev-local
+          targetRepository: app-generic-dev-local/${subPath}/
           inputSteps:
             - name: build_go_backapp
           integrations:
             - name: artifactory_eu
           outputResources:
             - name: build_info_backapp
+        execution:
+          onStart:
+            - echo ${subPath} 
 
       # Scan Build Info
       - name: scan_go_backapp
@@ -61,7 +63,7 @@ pipelines:
       - name: promote_build_info_go_backapp
         type: PromoteBuild
         configuration:
-          targetRepository: app-generic-rc-local
+          targetRepository: app-generic-rc-local/${subPath}/
           includeDependencies: false
           status: "SANDBOX_OK"
           comment: "Unit testing and Xray scan passed succesfully"
