@@ -41,7 +41,7 @@ pipelines:
             - >
 
           onExecute:
-            - echp "${res_src_resourcePath}"
+            - echo "${res_src_resourcePath}"
             - cd "${res_src_resourcePath}"
             - pwd
             - ls -alrt
