@@ -53,7 +53,6 @@ pipelines:
           onSuccess:
             - echo ${res_build_info_backapp_buildName} 
             - echo ${res_build_info_backapp_buildNumber} 
-            - jfrog rt sp --build-name=${res_build_info_backapp_buildName} --build-number=${res_build_info_backapp_buildNumber} app-generic-dev-local/ "app.version=${appVersion}"
 
       # Scan Build Info
       - name: scan_go_backapp
@@ -80,6 +79,12 @@ pipelines:
               trigger: true
           outputResources:
             - name: build_info_backapp_promoted
+        execution:
+          onStart:
+            - echo ${res_build_info_backapp_scanned_buildName} 
+            - echo ${res_build_info_backapp_scanned_buildNumber} 
+          onSuccess:
+            - jfrog rt sp --build=${res_build_info_backapp_buildName}/${res_build_info_backapp_buildNumber} app-generic-dev-local/ "app.version=${appVersion}"
   
   - name: backapp_docker_pipeline
     steps:
