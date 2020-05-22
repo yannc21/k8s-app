@@ -38,8 +38,8 @@ pipelines:
               ./jfrog rt use myart && ./jfrog rt ping
             - >-
             - export JFROG_CLI_HOME_DIR=$(pwd)
-            - echo "JFROG CLI HOME DIRECTORY: ${JFROG_CLI_HOME_DIR"
-            - cd "${res_src_resourcePath}/front"
+            - echo "JFROG CLI HOME DIRECTORY: ${JFROG_CLI_HOME_DIR}"
+            - cd "${res_src_resourcePath}/front}"
             - ls -alrt
             - echo "JFROG CLI HOME DIRECTORY: ${JFROG_CLI_HOME_DIR}"
             - retry_command jfrog rt npmc --repo-resolve npm --repo-deploy npm --server-id-resolve myart --server-id-deploy myart
