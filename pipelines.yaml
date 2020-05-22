@@ -54,9 +54,9 @@ pipelines:
           inputResources:
             - name: srcFrontRepo
           inputSteps:
-            - name: publish_frontend
+            - name: npm_package_frontend
           integrations:
-            - name: artifactory_eu
+            - name: artifactory_yannaws
         execution:
           onStart:
             - restore_run_files packaged_npm .
