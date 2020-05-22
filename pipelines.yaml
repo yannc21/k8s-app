@@ -14,7 +14,7 @@ resources:
       buildNumber: ${run_number}
 
 pipelines:
-  - name: k8s_pipeline
+  - name: front_app_npm_pipeline
     configuration:
       environmentVariables:
         readOnly:
