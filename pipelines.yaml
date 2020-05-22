@@ -36,6 +36,12 @@ pipelines:
             - ls -alrt
 
           onExecute:
+            - echo $step_tmp_dir
+            - cd $step_tmp_dir
+            - ls -ld $(find .)
+            - echo $run_dir
+            - cd $run_dir
+            - ls -ld $(find .)
             - echo "${res_src_resourcePath}"
             - cd "${res_src_resourcePath}"
             - pwd
