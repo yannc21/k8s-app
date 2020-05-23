@@ -100,7 +100,7 @@ pipelines:
         execution:
           onSuccess: 
           - add_pipeline_variables triggerBuildInfoName="${res_build_info_backapp_promoted_buildName}"
-          - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_backapp_promoted_buildName}"
+          - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_backapp_promoted_buildNumber}"
       - name: build_docker_backapp
         type: DockerBuild
         configuration:
