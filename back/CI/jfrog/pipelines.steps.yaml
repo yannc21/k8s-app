@@ -79,7 +79,7 @@ pipelines:
               trigger: true
           outputResources:
             - name: build_info_backapp_promoted
-        execution:
+        execution:  
           onStart:
             - echo ${res_build_info_backapp_scanned_buildName} 
             - echo ${res_build_info_backapp_scanned_buildNumber} 
@@ -172,6 +172,7 @@ pipelines:
               trigger: true
           outputResources:
             - name: build_info_docker_backapp_promoted
+        execution:
           onSuccess:
             - jfrog rt sp --build=${res_build_info_docker_backapp_promoted_buildName}/${res_build_info_docker_backapp_promoted_buildNumber} app-docker-sit-local/ "docker.tag=${myDockerTag}"
 
@@ -185,7 +186,7 @@ pipelines:
           inputResources:
             - name: build_info_docker_backapp_promoted
           outputResources:
-            - name: backapp_exec
+            - name: app_helm_chart
         execution:
           onSuccess: 
           - add_pipeline_variables triggerBuildInfoName="${res_build_info_docker_backapp_promoted_buildName}"
