@@ -195,7 +195,7 @@ pipelines:
       - name: deploy_helm_chart
         type: HelmDeploy
         configuration:
-          flags: "--set images.back.repository=yannaws-app-docker.jfrog.io/backapp --set images.back.tag=${backDockerTag} --set images.front.repository=yannaws-app-docker.jfrog.io/frontapp --set images.back.tag=0.1 --force"
+          flags: "--set images.back.repository=yannaws-app-docker.jfrog.io/backapp --set images.back.tag=${backDockerTag} --set images.front.repository=yannaws-app-docker.jfrog.io/frontapp --set images.front.tag=0.1 --force"
           releaseName: yann-app
           dryRun: false
           lint: false
@@ -218,8 +218,11 @@ pipelines:
             - echo ${res_ych_secret_registry_accessKeyId} > ~/.aws/credentials
             - echo ${res_ych_secret_registry_secretAccessKey} >> ~/.aws/credentials
             - aws --version
+            - jfrog --version 
+            - jfrog rt c show && jfrog rt ping
             - echo "items.find({\"name\":\"manifest.json\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@docker.tag\")" > aql.json
             - cat aql.json
+            - jfrog rt curl -XPOST api/search/aql -T aql.json
             - backDockerTag=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
             - echo $backDockerTag
             - env
