@@ -88,6 +88,19 @@ pipelines:
   
   - name: backapp_docker_pipeline
     steps:
+      - name: export_var
+        type: Bash
+        configuration:
+          integrations:
+            - name: artifactory_eu
+          inputResources:
+            - name: build_info_backapp_promoted
+          outputResources:
+            - name: backapp_exec
+        execution:
+          onSuccess: 
+          - add_pipeline_variables triggerBuildInfoName="${res_build_info_backapp_promoted_buildName}"
+          - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_backapp_promoted_buildName}"
       - name: build_docker_backapp
         type: DockerBuild
         configuration:
@@ -97,7 +110,6 @@ pipelines:
           dockerImageTag: ${appVersion}-${res_src_dockerfile_backapp_commitSha}
           inputResources:
             - name: src_dockerfile_backapp
-            - name: build_info_backapp_promoted
             - name: backapp_exec
           integrations:
             - name: artifactory_eu
