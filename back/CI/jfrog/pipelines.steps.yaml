@@ -99,8 +99,13 @@ pipelines:
             - name: backapp_exec
         execution:
           onSuccess: 
+          - echo "items.find({\"name\":\"backend\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
+          - cat aql.json
+          - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
+          - add_pipeline_variables appVersion="${appVersion}"
           - add_pipeline_variables triggerBuildInfoName="${res_build_info_backapp_promoted_buildName}"
           - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_backapp_promoted_buildNumber}"
+          
       - name: build_docker_backapp
         type: DockerBuild
         configuration:
@@ -128,9 +133,9 @@ pipelines:
             - cp ${res_backapp_exec_resourcePath}/backend ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
             - cd ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/ && curl -O "https://${int_yann_github_token}@raw.githubusercontent.com/cyan21/k8s-app/master/back/data.json"
             - ls -l ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker
-            - echo "items.find({\"name\":\"backend\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
-            - cat aql.json
-            - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
+#            - echo "items.find({\"name\":\"backend\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
+#            - cat aql.json
+#            - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
             - echo $appVersion
             - add_pipeline_variables myDockerTag="${appVersion}-${res_src_dockerfile_backapp_commitSha}"
           onSuccess:
