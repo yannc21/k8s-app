@@ -205,6 +205,7 @@ pipelines:
           integrations:
             - name: ych_eks
             - name: ych_secret
+            - name: artifactory_eu
           inputResources:
             - name: app_helm_chart
         execution:
