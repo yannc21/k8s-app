@@ -8,7 +8,8 @@ resources:
         include: master
       files:
         include: ^back\/.+
-        exclude: ^back\/CI\/Docker\/.+
+        exclude: ^back\/CI\/.+
+#        exclude: ^back\/CI\/Docker\/.+
       gitProvider: yann_github
       buildOn:
         commit: true
