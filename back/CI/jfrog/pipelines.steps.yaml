@@ -123,9 +123,10 @@ pipelines:
             - echo ${appVersion} 
             - echo "Git repo hash :" 
             - echo ${res_src_dockerfile_backapp_commitSha}
-            - echo "Copying exec binary to specific location..." && ls -l 
+            - echo "Copying exec binary to specific location..." && ls -l
+            - echo "Filespec location :" && echo ${res_backapp_exec_resourcePath} && ls -l ${res_backapp_exec_resourcePath}
 #            - jfrog rt dl --build-name=${res_build_info_backapp_promoted_buildName} --build-number=${res_build_info_backapp_promoted_buildNumber} --flat=true app-generic/
-            - cp backend ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
+            - cp ${res_backapp_exec_resourcePath}/backend ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
             - cd ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/ && curl -O "https://${int_yann_github_token}@raw.githubusercontent.com/cyan21/k8s-app/master/back/data.json"
             - ls -l ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker
 #            - echo "items.find({\"name\":\"backend\",\"@build.name\":\"${res_build_info_backapp_promoted_buildName}\",\"@build.number\":\"${res_build_info_backapp_promoted_buildNumber}\"}).include(\"@app.version\")" > aql.json
