@@ -71,6 +71,7 @@ resources:
       pattern: app-generic/**/backend
       buildName: ${triggerBuildInfoName}
       buildNumber: ${triggerBuildInfoNumber}
+      flat: true
 #      pattern: app-generic/backend
 #      aql: '{"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"}'
 #      aql: "({\"name\":\"backend\"})"
