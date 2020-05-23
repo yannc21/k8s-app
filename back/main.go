@@ -96,6 +96,7 @@ func main() {
 			}
 		}
 	}
+	fmt.Println("will listen on " + fqdn + ":" +port)
 	http.HandleFunc("/quote", quoteOfTheDay)
 	http.ListenAndServe(fqdn+":"+port, nil)
 }
