@@ -118,7 +118,7 @@ pipelines:
           onStart:
             - echo ${res_backapp_exec_resourcePath}
             - echo "Go App Build number :" 
-            - echo ${res_build_info_backapp_promoted_buildNumber}
+            - echo ${triggerBuildInfoNumber}
             - echo "Go App version :" 
             - echo ${appVersion} 
             - echo "Git repo hash :" 
