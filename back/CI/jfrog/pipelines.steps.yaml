@@ -124,11 +124,12 @@ pipelines:
             - echo "Git repo hash :" 
             - echo ${res_src_dockerfile_backapp_commitSha}
             - echo "Copying exec binary to specific location..." && ls -l 
-            - jfrog rt dl --build-name=${res_build_info_backapp_promoted_buildName} --build-number=${res_build_info_backapp_promoted_buildNumber} --flat=true app-generic/
+#            - jfrog rt dl --build-name=${res_build_info_backapp_promoted_buildName} --build-number=${res_build_info_backapp_promoted_buildNumber} --flat=true app-generic/
             - cp backend ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
             - cd ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/ && curl -O "https://${int_yann_github_token}@raw.githubusercontent.com/cyan21/k8s-app/master/back/data.json"
             - ls -l ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker
-            - echo "items.find({\"name\":\"backend\",\"@build.name\":\"${res_build_info_backapp_promoted_buildName}\",\"@build.number\":\"${res_build_info_backapp_promoted_buildNumber}\"}).include(\"@app.version\")" > aql.json
+#            - echo "items.find({\"name\":\"backend\",\"@build.name\":\"${res_build_info_backapp_promoted_buildName}\",\"@build.number\":\"${res_build_info_backapp_promoted_buildNumber}\"}).include(\"@app.version\")" > aql.json
+            - echo "items.find({\"name\":\"backend\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
             - cat aql.json
             - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
             - echo $appVersion
