@@ -74,21 +74,21 @@ resources:
     configuration:
       sourceArtifactory: artifactory_eu
       buildName: backapp-docker
-      buildNumber: 1
+      buildNumber: ${run_number}
 
   - name: build_info_docker_backapp_scanned
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
       buildName: backapp-docker
-      buildNumber: 1
+      buildNumber: ${run_number}
 
   - name: build_info_docker_backapp_promoted
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
       buildName: backapp-docker
-      buildNumber: 1
+      buildNumber: ${run_number}
 
 # DEPLOY pipeline
   - name: app_helm_chart
