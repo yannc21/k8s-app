@@ -179,7 +179,7 @@ pipelines:
             - name: build_info_docker_backapp_promoted
         execution:
           onSuccess:
-            - jfrog rt sp --build=${res_build_info_docker_backapp_promoted_buildName}/${res_build_info_docker_backapp_promoted_buildNumber} app-docker-sit-local/manifest.json "docker.tag=${myDockerTag}"
+            - jfrog rt sp --build=${res_build_info_docker_backapp_promoted_buildName}/${res_build_info_docker_backapp_promoted_buildNumber}/manifest.json app-docker-sit-local/ "docker.tag=${myDockerTag}"
 
   - name: app_deploy_pipeline
     steps:
