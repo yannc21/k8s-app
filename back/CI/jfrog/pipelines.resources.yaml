@@ -62,7 +62,7 @@ resources:
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory_eu
-      pattern: app-generic/**/backend
+      pattern: app-generic/**/${appVersion}/backend
       buildName: ${triggerBuildInfoName}
       buildNumber: ${triggerBuildInfoNumber}
       flat: true
