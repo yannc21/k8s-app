@@ -7,10 +7,11 @@ resources:
       branches:
         include: master
       files:
+        include: ^back\/.+
         exclude: ^back\/CI\/Docker\/.+
       gitProvider: yann_github
       buildOn:
-        commit: false
+        commit: true
 
 # DOCKER PIPELINE
   - name: src_dockerfile_backapp
