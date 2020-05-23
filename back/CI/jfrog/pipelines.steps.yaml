@@ -211,6 +211,7 @@ pipelines:
         execution:
           onStart:
             - helm version
+            - aws --version
             - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" 
             - unzip awscliv2.zip 
             - ./aws/install
@@ -219,13 +220,9 @@ pipelines:
             - echo ${res_ych_secret_registry_accessKeyId} > ~/.aws/credentials
             - echo ${res_ych_secret_registry_secretAccessKey} >> ~/.aws/credentials
             - aws --version
-            - jfrog --version 
-            - jfrog rt c show && jfrog rt ping
             - echo "items.find({\"name\":\"manifest.json\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@docker.tag\")" > aql.json
             - cat aql.json
             - jfrog rt curl -XPOST api/search/aql -T aql.json
             - backDockerTag=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
             - echo $backDockerTag
-            - env
-          onComplete:
             - env
