@@ -1,0 +1,88 @@
+resources:
+
+# NPM PIPELINE
+  - name: src_code_frontapp
+    type: GitRepo
+    configuration:
+      files:
+        include: ^front\/.+
+        exclude: ^front\/CI\/.+
+#        exclude: ^back\/CI\/Docker\/.+
+      gitProvider: hza_github
+      path: HamzaZFrog/k8s-app
+      branches:
+        include: master
+
+# DOCKER PIPELINE
+  - name: src_dockerfile_frontapp
+    type: GitRepo
+    configuration:
+      files:
+        include: ^front\/CI\/Docker\/.+
+      path: HamzaZFrog/k8s-app
+      branches:
+        include: master
+      gitProvider: hza_github
+
+  # Build info for the published Npm App
+  - name: FrontAppBuildInfo
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: frontapp_npm_pipeline
+      buildNumber: ${run_number}
+
+  - name: FrontAppBuildInfo_scanned
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: frontapp_npm_pipeline
+      buildNumber: '${run_number}'
+  
+  - name: FrontAppBuildInfo_promoted
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: frontapp_npm_pipeline
+      buildNumber: '${run_number}'
+
+# DOCKER PIPELINE 
+#  - name: aql_go
+#    type: Aql
+#    configuration:
+#      sourceArtifactory: artifactory_eu
+#      query: items.find({"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"})
+#      query: items.find({"name":"backend"})
+
+  - name: frontapp_exec
+    type: FileSpec
+    configuration:
+      sourceArtifactory: artifactory_eu
+      pattern: app-npm-rc-local/front/**/front**
+      buildName: ${triggerBuildInfoName}
+      buildNumber: ${triggerBuildInfoNumber}
+      flat: true
+#      pattern: app-generic/backend
+#      aql: '{"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"}'
+#      aql: "({\"name\":\"backend\"})"
+
+  - name: build_info_docker_frontapp
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: frontapp-docker
+      buildNumber: '${run_number}'
+
+  - name: build_info_docker_frontapp_scanned
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: frontapp-docker
+      buildNumber: '${run_number}'
+
+  - name: build_info_docker_frontapp_promoted
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: frontapp-docker
+      buildNumber: '${run_number}'
