@@ -147,6 +147,7 @@ pipelines:
             - echo "Filespec location :" && echo ${res_frontapp_exec_resourcePath} && ls -l ${res_frontapp_exec_resourcePath}
             - cp ${res_frontapp_exec_resourcePath}/front* ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker/
             - cd ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker/
+            - tar xvf front*.tgz
             - ls -l ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker
             - echo $appVersion
             - add_pipeline_variables myDockerTag="${appVersion}-${res_src_dockerfile_backapp_commitSha}"
