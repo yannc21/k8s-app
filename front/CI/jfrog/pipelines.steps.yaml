@@ -128,7 +128,7 @@ pipelines:
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: front/CI/Docker/
           dockerImageName: 'yannaws-app-docker.jfrog.io/frontapp'
-          dockerImageTag: ${appVersion}-${res_src_dockerfile_frontapp_commitSha}
+          dockerImageTag: 1.0-1
           inputResources:
             - name: src_dockerfile_frontapp
             - name: frontapp_exec
