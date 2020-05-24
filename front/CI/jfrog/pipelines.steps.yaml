@@ -88,12 +88,12 @@ pipelines:
               trigger: true
           outputResources:
             - name: build_info_frontapp_promoted
-          execution:  
-            onStart:
-              - echo ${res_FrontAppBuildInfo_scanned_buildName} 
-              - echo ${res_FrontAppBuildInfo_scanned_buildNumber} 
-            onSuccess:
-              - jfrog rt sp --build=${res_FrontAppBuildInfo_scanned_buildName}/${res_FrontAppBuildInfo_scanned_buildNumber} app-npm-rc-local/ "app.version=${appVersion}"
+        execution:  
+          onStart:
+            - echo ${res_FrontAppBuildInfo_scanned_buildName} 
+            - echo ${res_FrontAppBuildInfo_scanned_buildNumber} 
+          onSuccess:
+            - jfrog rt sp --build=${res_FrontAppBuildInfo_scanned_buildName}/${res_FrontAppBuildInfo_scanned_buildNumber} app-npm-rc-local/ "app.version=${appVersion}"
 
   - name: frontapp_docker_pipeline
     steps:
