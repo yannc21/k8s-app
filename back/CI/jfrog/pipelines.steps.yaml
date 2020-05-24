@@ -99,12 +99,12 @@ pipelines:
             - name: backapp_exec
         execution:
           onSuccess: 
-          - add_pipeline_variables appVersion="${appVersion}"
           - add_pipeline_variables triggerBuildInfoName="${res_build_info_backapp_promoted_buildName}"
           - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_backapp_promoted_buildNumber}"
           - echo "items.find({\"name\":\"backend\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
           - cat aql.json
           - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
+          - add_pipeline_variables appVersion="${appVersion}"
           
       - name: build_docker_backapp
         type: DockerBuild
