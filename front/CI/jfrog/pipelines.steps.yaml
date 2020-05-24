@@ -108,7 +108,7 @@ pipelines:
         type: DockerBuild
         configuration:
           dockerFileName: jfrog-Dockerfile
-          dockerFileLocation: back/CI/Docker/
+          dockerFileLocation: front/CI/Docker/
           dockerImageName: 'yannaws-app-docker.jfrog.io/frontapp'
           dockerImageTag: ${appVersion}-${res_src_dockerfile_frontapp_commitSha}
           inputResources:
@@ -128,9 +128,9 @@ pipelines:
             - echo "Copying exec binary to specific location..." && ls -l
             - echo "Filespec location :" && echo ${res_frontapp_exec_resourcePath} && ls -l ${res_frontapp_exec_resourcePath}
 #            - jfrog rt dl --build-name=${res_build_info_frontapp_promoted_buildName} --build-number=${res_build_info_frontapp_promoted_buildNumber} --flat=true app-generic/
-            - cp ${res_frontapp_exec_resourcePath}/front* ${res_src_dockerfile_frontapp_resourcePath}/back/CI/Docker/
-            - cd ${res_src_dockerfile_frontapp_resourcePath}/back/CI/Docker/
-            - ls -l ${res_src_dockerfile_frontapp_resourcePath}/back/CI/Docker
+            - cp ${res_frontapp_exec_resourcePath}/front* ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker/
+            - cd ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker/
+            - ls -l ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker
 #            - echo "items.find({\"name\":\"front*\",\"@build.name\":\"${res_build_info_frontapp_promoted_buildName}\",\"@build.number\":\"${res_build_info_frontapp_promoted_buildNumber}\"}).include(\"@app.version\")" > aql.json
             - echo "items.find({\"name\":\"front*\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
             - cat aql.json
