@@ -191,6 +191,8 @@ pipelines:
           status: "DOCKER_SCAN_OK"
           comment: "Xray scan passed succesfully"
           copy: false
+          integrations:
+            - name: artifactory_eu
           inputResources:
             - name: build_info_docker_frontapp_scanned
               trigger: true
