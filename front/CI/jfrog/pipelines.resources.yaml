@@ -39,7 +39,7 @@ resources:
       buildName: frontapp_npm_pipeline
       buildNumber: '${run_number}'
   
-  - name: FrontAppBuildInfo_promoted
+  - name: build_info_frontapp_promoted
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
