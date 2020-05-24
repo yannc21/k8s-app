@@ -130,7 +130,7 @@ pipelines:
         configuration:
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: front/CI/Docker/
-          dockerImageName: 'yannaws-docker-prod-local.jfrog.io/frontapp'
+          dockerImageName: 'yannaws-app-docker.jfrog.io/frontapp'
           dockerImageTag: ${appVersion}-${res_src_dockerfile_frontapp_commitSha}
           inputResources:
             - name: src_dockerfile_frontapp
@@ -160,7 +160,7 @@ pipelines:
       - name: publish_docker_frontapp
         type: DockerPush
         configuration:
-          targetRepository: docker-prod-local
+          targetRepository: app-docker
           autoPublishBuildInfo: true
           inputSteps:
             - name: build_docker_frontapp
@@ -191,8 +191,6 @@ pipelines:
           status: "DOCKER_SCAN_OK"
           comment: "Xray scan passed succesfully"
           copy: false
-          integrations:
-            - name: artifactory_eu
           inputResources:
             - name: build_info_docker_frontapp_scanned
               trigger: true
@@ -200,7 +198,5 @@ pipelines:
             - name: build_info_docker_frontapp_promoted
         execution:
           onStart:
-            - jfrog rt s --build=frontapp_docker_pipeline/26
-            - jfrog rt bpr frontapp_docker_pipeline 26 app-docker-sit-local
           onSuccess:
             - jfrog rt sp --build=${res_build_info_docker_frontapp_scanned_buildName}/${build_info_docker_frontapp_scanned_buildNumber} app-docker-sit-local/**/manifest.json "docker.tag=${myDockerTag}"
