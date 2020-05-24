@@ -87,7 +87,7 @@ pipelines:
             - name: FrontAppBuildInfo_scanned
               trigger: true
           outputResources:
-            - name: FrontAppBuildInfo_promoted
+            - name: build_info_frontapp_promoted
   
   - name: frontapp_docker_pipeline
     steps:
