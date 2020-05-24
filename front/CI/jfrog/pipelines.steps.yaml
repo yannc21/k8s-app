@@ -110,7 +110,7 @@ pipelines:
         execution:
           onSuccess:
           - echo $triggerBuildInfoName
-          - echo "items.find({\"name\":\"front*\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
+          - echo "items.find({\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
           - cat aql.json
           - jfrog rt curl -XPOST api/search/aql -T aql.json
           - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
