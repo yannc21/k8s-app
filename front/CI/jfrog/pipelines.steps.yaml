@@ -112,13 +112,15 @@ pipelines:
           - echo $triggerBuildInfoName
           - echo "items.find({\"name\":\"front*\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
           - cat aql.json
+          - jfrog rt curl -XPOST api/search/aql -T aql.json
           - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
+          - echo $appVersion
           - add_pipeline_variables appVersion="${appVersion}" 
           - echo ${appVersion}
           - add_pipeline_variables triggerBuildInfoName="${res_build_info_frontapp_promoted_buildName}"
           - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_frontapp_promoted_buildNumber}"
           - echo $triggerBuildInfoName
-          - echo ${triggerBuildInfoName}
+          - echo ${triggerBuildInfoNumber}
       
       - name: build_docker_frontapp
         type: DockerBuild
@@ -143,14 +145,10 @@ pipelines:
             - echo ${res_src_dockerfile_frontapp_commitSha}
             - echo "Copying exec binary to specific location..." && ls -l
             - echo "Filespec location :" && echo ${res_frontapp_exec_resourcePath} && ls -l ${res_frontapp_exec_resourcePath}
-#            - jfrog rt dl --build-name=${res_build_info_frontapp_promoted_buildName} --build-number=${res_build_info_frontapp_promoted_buildNumber} --flat=true app-generic/
             - cp ${res_frontapp_exec_resourcePath}/front* ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker/
             - cd ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker/
             - ls -l ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker
-#            - echo "items.find({\"name\":\"front*\",\"@build.name\":\"${res_build_info_frontapp_promoted_buildName}\",\"@build.number\":\"${res_build_info_frontapp_promoted_buildNumber}\"}).include(\"@app.version\")" > aql.json
-            - echo "items.find({\"name\":\"front*\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
-            - cat aql.json
-            - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
             - echo $appVersion
+            - add_pipeline_variables myDockerTag="${appVersion}-${res_src_dockerfile_backapp_commitSha}"
           onSuccess:
             - echo "Job well done!"
