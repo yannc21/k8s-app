@@ -130,7 +130,7 @@ pipelines:
         configuration:
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: front/CI/Docker/
-          dockerImageName: 'yannaws-app-docker.jfrog.io/frontapp'
+          dockerImageName: 'yannaws-docker-prod-local.jfrog.io/frontapp'
           dockerImageTag: ${appVersion}-${res_src_dockerfile_frontapp_commitSha}
           inputResources:
             - name: src_dockerfile_frontapp
@@ -160,7 +160,7 @@ pipelines:
       - name: publish_docker_frontapp
         type: DockerPush
         configuration:
-          targetRepository: app-docker
+          targetRepository: docker-prod-local
           autoPublishBuildInfo: true
           inputSteps:
             - name: build_docker_frontapp
