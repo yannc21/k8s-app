@@ -108,7 +108,11 @@ pipelines:
           outputResources:
             - name: frontapp_exec
         execution:
-          onSuccess: 
+          onSuccess:
+          - echo "items.find({\"name\":\"front*\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
+          - cat aql.json
+          - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
+          - add_pipeline_variables appVersion="${appVersion}" 
           - add_pipeline_variables triggerBuildInfoName="${res_build_info_frontapp_promoted_buildName}"
           - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_frontapp_promoted_buildNumber}"
       - name: build_docker_frontapp
