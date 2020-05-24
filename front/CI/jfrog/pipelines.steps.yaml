@@ -150,6 +150,49 @@ pipelines:
             - tar xvf front*.tgz
             - ls -l ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker
             - echo $appVersion
-            - add_pipeline_variables myDockerTag="${appVersion}-${res_src_dockerfile_backapp_commitSha}"
+            - add_pipeline_variables myDockerTag="${appVersion}-${res_src_dockerfile_frontapp_commitSha}"
           onSuccess:
             - echo "Job well done!"
+
+      - name: publish_docker_frontapp
+        type: DockerPush
+        configuration:
+          targetRepository: app-docker
+          autoPublishBuildInfo: true
+          inputSteps:
+            - name: build_docker_frontapp
+          integrations:
+            - name: artifactory_eu
+          outputResources:
+            - name: build_info_docker_frontapp
+        execution:
+          onSuccess:
+            - echo "Job well done!"
+            - echo $appVersion
+
+      - name: scan_docker_build_info_frontapp
+        type: XrayScan
+        configuration:
+          failOnScan: false
+          inputResources:
+            - name: build_info_docker_frontapp
+              trigger: true
+          outputResources:
+            - name: build_info_docker_frontapp_scanned
+
+      - name: promote_docker_build_info_frontapp
+        type: PromoteBuild
+        configuration:
+          targetRepository: app-docker-sit-local
+          includeDependencies: false
+          status: "DOCKER_SCAN_OK"
+          comment: "Xray scan passed succesfully"
+          copy: false
+          inputResources:
+            - name: build_info_docker_frontapp_scanned
+              trigger: true
+          outputResources:
+            - name: build_info_docker_frontapp_promoted
+        execution:
+          onSuccess:
+            - jfrog rt sp --build=${res_build_info_docker_frontapp_promoted_buildName}/${res_build_info_docker_frontapp_promoted_buildNumber}  app-docker-sit-local/**/manifest.json "docker.tag=${myDockerTag}"
