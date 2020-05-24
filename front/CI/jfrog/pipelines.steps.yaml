@@ -110,6 +110,11 @@ pipelines:
         execution:
           onSuccess:
           - echo $triggerBuildInfoName
+          - echo $triggerBuildInfoNumber
+          - add_pipeline_variables triggerBuildInfoName="${res_build_info_frontapp_promoted_buildName}"
+          - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_frontapp_promoted_buildNumber}"
+          - echo $triggerBuildInfoName
+          - echo $triggerBuildInfoNumber
           - echo "items.find({\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
           - cat aql.json
           - jfrog rt curl -XPOST api/search/aql -T aql.json
@@ -117,8 +122,6 @@ pipelines:
           - echo $appVersion
           - add_pipeline_variables appVersion="${appVersion}" 
           - echo ${appVersion}
-          - add_pipeline_variables triggerBuildInfoName="${res_build_info_frontapp_promoted_buildName}"
-          - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_frontapp_promoted_buildNumber}"
           - echo $triggerBuildInfoName
           - echo ${triggerBuildInfoNumber}
       
@@ -195,4 +198,4 @@ pipelines:
             - name: build_info_docker_frontapp_promoted
         execution:
           onSuccess:
-            - jfrog rt sp --build=${res_build_info_docker_frontapp_promoted_buildName}/${res_build_info_docker_frontapp_promoted_buildNumber}  app-docker-sit-local/**/manifest.json "docker.tag=${myDockerTag}"
+            - jfrog rt sp --build=${res_build_info_docker_frontapp_scanned_buildName}/${build_info_docker_frontapp_scanned_buildNumber} app-docker-sit-local/**/manifest.json "docker.tag=${myDockerTag}"
