@@ -197,6 +197,5 @@ pipelines:
           outputResources:
             - name: build_info_docker_frontapp_promoted
         execution:
-          onStart:
           onSuccess:
             - jfrog rt sp --build=${res_build_info_docker_frontapp_scanned_buildName}/${build_info_docker_frontapp_scanned_buildNumber} app-docker-sit-local/**/manifest.json "docker.tag=${myDockerTag}"
