@@ -234,7 +234,7 @@ pipelines:
       - name: non_regression_testing
         type: Bash
         configuration:
-          inputResources:
+          inputSteps:
             - name: deploy_helm_chart
         execution:
           onStart: 
@@ -244,7 +244,7 @@ pipelines:
       - name: feature_testing
         type: Bash
         configuration:
-          inputResources:
+          inputSteps:
             - name: deploy_helm_chart
         execution:
           onStart: 
@@ -254,7 +254,7 @@ pipelines:
       - name: performance_testing
         type: Bash
         configuration:
-          inputResources:
+          inputSteps:
             - name: deploy_helm_chart
         execution:
           onStart: 
