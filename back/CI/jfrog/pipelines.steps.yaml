@@ -231,3 +231,33 @@ pipelines:
             - backDockerTag=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
             - echo $backDockerTag
             - env
+      - name: non_regression_testing
+        type: Bash
+        configuration:
+          inputResources:
+            - name: deploy_helm_chart
+        execution:
+          onStart: 
+            - echo "Running non regression tests"
+          onSuccess: 
+            - echo "non regression tests done !"
+      - name: feature_testing
+        type: Bash
+        configuration:
+          inputResources:
+            - name: deploy_helm_chart
+        execution:
+          onStart: 
+            - echo "Running feature_1 tests"
+          onSuccess: 
+            - echo "feature_1 tests done !"
+      - name: performance_testing
+        type: Bash
+        configuration:
+          inputResources:
+            - name: deploy_helm_chart
+        execution:
+          onStart: 
+            - echo "Running performance tests"
+          onSuccess: 
+            - echo "performance tests done !"
