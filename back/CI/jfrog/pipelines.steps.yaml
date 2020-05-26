@@ -111,6 +111,7 @@ pipelines:
       - name: build_docker_backapp
         type: DockerBuild
         configuration:
+          affinityGroup: build_docker 
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: back/CI/Docker/
           dockerImageName: 'yannaws-app-docker.jfrog.io/backapp'
@@ -145,6 +146,7 @@ pipelines:
       - name: publish_docker_backapp
         type: DockerPush
         configuration:
+          affinityGroup: build_docker 
           targetRepository: app-docker
           autoPublishBuildInfo: true
           inputSteps:
