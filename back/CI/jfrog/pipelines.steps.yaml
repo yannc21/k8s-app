@@ -28,6 +28,8 @@ pipelines:
           onStart:
             - echo "Run Unit Testing ..." 
             - if [ $OFFLINE_MODE == "true" ]; then echo "Offline mode turned on";fi
+            - env
+            - echo ${res_src_code_backapp_isGitTag}
           onSuccess:
             - echo ${res_src_code_backapp_isGitTag}
             - appVersion=`if [[ ${res_src_code_backapp_isGitTag} == "True" ]]; then echo ${res_src_code_backapp_gitTagName}; else echo ${res_src_code_backapp_commitSha}; fi`
