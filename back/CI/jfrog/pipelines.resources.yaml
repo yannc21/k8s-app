@@ -13,6 +13,8 @@ resources:
       gitProvider: yann_github
       buildOn:
         commit: true
+        tagCreate: true
+
 
 # DOCKER PIPELINE
   - name: src_dockerfile_backapp
