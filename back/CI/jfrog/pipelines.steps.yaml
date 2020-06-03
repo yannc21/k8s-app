@@ -49,6 +49,7 @@ pipelines:
             - ls -la
             - retry_command $JFROG_CLI_HOME_DIR/jfrog rt gradle clean artifactoryPublish -b ./build.gradle --build-name=back_app_Build --build-number=${run_number}
             - ls -la
+            - add_run_files /tmp/jfrog/. jfrog
           onSuccess:
             - echo ${res_src_code_back_app_isGitTag}
             - appVersion=`if [[ ${res_src_code_back_app_isGitTag} == "True" ]]; then echo ${res_src_code_back_app_gitTagName}; else echo ${res_src_code_back_app_commitSha}; fi`
