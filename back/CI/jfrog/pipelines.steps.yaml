@@ -8,7 +8,6 @@ pipelines:
       - name: build_gradle_backend
         type: Bash
         configuration:
-          sourceLocation: back/src/
           integrations:
             - name: artifactory_eu
           inputResources:
