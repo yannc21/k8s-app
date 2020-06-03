@@ -8,6 +8,12 @@ pipelines:
       - name: build_gradle_backend
         type: Bash
         configuration:
+          runtime:
+            type: image
+            image:
+              custom:
+                name: drydock/u18java
+                tag: master
           integrations:
             - name: artifactory_eu
           inputResources:
