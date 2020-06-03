@@ -37,7 +37,7 @@ pipelines:
               --user=${int_artifactory_eu_user} --apikey=${int_artifactory_eu_apikey} artifactory-eu &&
               $JFROG_CLI_HOME_DIR/jfrog rt use artifactory-eu && $JFROG_CLI_HOME_DIR/jfrog rt ping
             - >
-            - pushd $res_src_code_back_app_resourcePath
+            - pushd "${res_src_code_back_app_resourcePath}/back/src"
             - ls -alrt
             - retry_command $JFROG_CLI_HOME_DIR/rt gradlec --server-id-resolve=artifactory-eu --server-id-deploy=artifactory-eu --repo-resolve=jcenter --repo-deploy=gradle-app-virtual
             - ls -la
