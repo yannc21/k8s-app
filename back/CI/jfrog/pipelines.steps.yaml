@@ -6,9 +6,8 @@ pipelines:
           art_url: "http://artifactory-eu.soleng-emea-staging.jfrog.team/artifactory"
     steps:
       - name: build_gradle_backend
-        type: gradleBuild
+        type: Bash
         configuration:
-          repositoryName: gradle
           sourceLocation: back/src/
           integrations:
             - name: artifactory_eu
