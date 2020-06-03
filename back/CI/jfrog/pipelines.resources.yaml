@@ -10,7 +10,7 @@ resources:
       gitProvider: hza_github
       path: HamzaZFrog/k8s-app
       branches:
-        include: master
+        include: swampup2020
 
 # DOCKER PIPELINE
   - name: src_dockerfile_back_app
@@ -20,7 +20,7 @@ resources:
         include: ^back\/CI\/Docker\/.+
       path: HamzaZFrog/k8s-app
       branches:
-        include: master
+        include: swampup2020
       gitProvider: hza_github
 
   # Build info for the published gradle App
