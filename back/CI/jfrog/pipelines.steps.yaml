@@ -1,5 +1,5 @@
 pipelines:
-  - name: backapp_gradle_pipeline
+  - name: back_app_gradle_pipeline
     configuration:
       environmentVariables:
         readOnly:
@@ -13,7 +13,7 @@ pipelines:
           integrations:
             - name: artifactory_eu
           inputResources:
-            - name: src_code_backapp
+            - name: src_code_back_app
         execution:
           onStart:
             - echo "CLI installation"
@@ -43,14 +43,14 @@ pipelines:
             - ls -alrt
             - retry_command $JFROG_CLI_HOME_DIR/rt gradlec --server-id-resolve=artifactory-eu --server-id-deploy=artifactory-eu --repo-resolve=jcenter --repo-deploy=gradle-app-virtual
             - ls -la
-            - retry_command $JFROG_CLI_HOME_DIR/jfrog rt gradle clean artifactoryPublish -b ./build.gradle --build-name=backApp_Build --build-number=${run_number}
+            - retry_command $JFROG_CLI_HOME_DIR/jfrog rt gradle clean artifactoryPublish -b ./build.gradle --build-name=back_app_Build --build-number=${run_number}
             - ls -la
           onSuccess:
-            - echo ${res_src_code_backapp_isGitTag}
-            - appVersion=`if [[ ${res_src_code_backapp_isGitTag} == "True" ]]; then echo ${res_src_code_backapp_gitTagName}; else echo ${res_src_code_backapp_commitSha}; fi`
+            - echo ${res_src_code_back_app_isGitTag}
+            - appVersion=`if [[ ${res_src_code_back_app_isGitTag} == "True" ]]; then echo ${res_src_code_back_app_gitTagName}; else echo ${res_src_code_back_app_commitSha}; fi`
             - echo $appVersion
             - add_pipeline_variables appVersion="${appVersion}"
-            - add_pipeline_variables subPath="${res_src_code_backapp_branchName}/${appVersion}"      
+            - add_pipeline_variables subPath="${res_src_code_back_app_branchName}/${appVersion}"      
           onComplete:
             - ls -la
 
@@ -61,19 +61,19 @@ pipelines:
           inputSteps:
             - name: build_gradle_backend
           outputResources:
-            - name: backappBuildInfo
+            - name: back_appBuildInfo
 
-      - name: scan_gradle_backapp
+      - name: scan_gradle_back_app
         type: XrayScan
         configuration:
           failOnScan: false
           inputResources:
-            - name: backappBuildInfo
+            - name: back_appBuildInfo
               trigger: true
           outputResources:
-            - name: backappBuildInfo_scanned
+            - name: back_appBuildInfo_scanned
 
-      - name: promote_build_info_gradle_backapp
+      - name: promote_build_info_gradle_back_app
         type: PromoteBuild
         configuration:
           targetRepository: app-gradle-rc-local
@@ -82,13 +82,13 @@ pipelines:
           comment: Unit testing and Xray scan passed succesfully
           copy: false
           inputResources:
-            - name: backappBuildInfo_scanned
+            - name: back_appBuildInfo_scanned
               trigger: true
           outputResources:
-            - name: build_info_backapp_promoted
+            - name: build_info_back_app_promoted
         execution:  
           onStart:
-            - echo ${res_backappBuildInfo_scanned_buildName} 
-            - echo ${res_backappBuildInfo_scanned_buildNumber} 
+            - echo ${res_back_appBuildInfo_scanned_buildName} 
+            - echo ${res_back_appBuildInfo_scanned_buildNumber} 
           onSuccess:
-            - jfrog rt sp --build=${res_backappBuildInfo_scanned_buildName}/${res_backappBuildInfo_scanned_buildNumber} app-gradle-rc-local/ "app.version=${appVersion}"
+            - jfrog rt sp --build=${res_back_appBuildInfo_scanned_buildName}/${res_back_appBuildInfo_scanned_buildNumber} app-gradle-rc-local/ "app.version=${appVersion}"
