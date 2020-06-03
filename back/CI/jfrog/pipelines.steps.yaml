@@ -19,15 +19,15 @@ pipelines:
           inputResources:
             - name: src_code_back_app
         execution:
-          onStart:
-            - echo "CLI installation"
-            - "curl -fL https://getcli.jfrog.io | sh &&  chmod 755 jfrog"
-            - pwd
-            - ls -alrt
-            - export "JFROG_CLI_HOME_DIR=$(pwd)"
-            - echo $JFROG_CLI_HOME_DIR
+          #onStart:
+            #- echo "CLI installation"
+            #- "curl -fL https://getcli.jfrog.io | sh &&  chmod 755 jfrog"
+            #- pwd
+            #- ls -alrt
+            #- export "JFROG_CLI_HOME_DIR=$(pwd)"
+            #- echo $JFROG_CLI_HOME_DIR
           onExecute:
-            - echo $JFROG_CLI_HOME_DIR
+            #- echo $JFROG_CLI_HOME_DIR
             - echo $step_tmp_dir
             - cd $step_tmp_dir
             - ls -ld $(find .)
@@ -39,15 +39,15 @@ pipelines:
             - pwd
             - ls -ld $(find .)
             - >-
-              $JFROG_CLI_HOME_DIR/jfrog rt c --interactive=false --url=${int_artifactory_eu_url}
+              jfrog rt c --interactive=false --url=${int_artifactory_eu_url}
               --user=${int_artifactory_eu_user} --apikey=${int_artifactory_eu_apikey} artifactory-eu &&
-              $JFROG_CLI_HOME_DIR/jfrog rt use artifactory-eu && $JFROG_CLI_HOME_DIR/jfrog rt ping
+              jfrog rt use artifactory-eu && jfrog rt ping
             - >
             - pushd "${res_src_code_back_app_resourcePath}/back/src/"
             - ls -alrt
-            - retry_command $JFROG_CLI_HOME_DIR/jfrog rt gradlec --server-id-resolve=artifactory-eu --server-id-deploy=artifactory-eu --repo-resolve=jcenter --repo-deploy=gradle-app-virtual
+            - retry_command jfrog rt gradlec --server-id-resolve=artifactory-eu --server-id-deploy=artifactory-eu --repo-resolve=jcenter --repo-deploy=gradle-app-virtual
             - ls -la
-            - retry_command $JFROG_CLI_HOME_DIR/jfrog rt gradle clean artifactoryPublish -b ./build.gradle --build-name=back_app_Build --build-number=${run_number}
+            - retry_command jfrog rt gradle clean artifactoryPublish -b ./build.gradle --build-name=back_app_Build --build-number=${run_number}
             - ls -la
             - add_run_files /tmp/jfrog/. jfrog
           onSuccess:
