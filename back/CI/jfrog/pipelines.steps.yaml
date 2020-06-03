@@ -1,0 +1,94 @@
+pipelines:
+  - name: backapp_gradle_pipeline
+    configuration:
+      environmentVariables:
+        readOnly:
+          art_url: "http://artifactory-eu.soleng-emea-staging.jfrog.team/artifactory"
+    steps:
+      - name: build_gradle_backend
+        type: gradleBuild
+        configuration:
+          repositoryName: gradle
+          sourceLocation: back/src/
+          integrations:
+            - name: artifactory_eu
+          inputResources:
+            - name: src_code_backapp
+        execution:
+          onStart:
+            - echo "CLI installation"
+            - "curl -fL https://getcli.jfrog.io | sh &&  chmod 755 jfrog"
+            - pwd
+            - ls -alrt
+            - export "JFROG_CLI_HOME_DIR=$(pwd)"
+            - echo $JFROG_CLI_HOME_DIR
+          onExecute:
+            - echo $JFROG_CLI_HOME_DIR
+            - echo $step_tmp_dir
+            - cd $step_tmp_dir
+            - ls -ld $(find .)
+            - echo $run_dir
+            - cd $run_dir
+            - ls -ld $(find .)
+            - echo "${res_src_resourcePath}"
+            - cd "${res_src_resourcePath}"
+            - pwd
+            - ls -ld $(find .)
+            - >-
+              $JFROG_CLI_HOME_DIR/jfrog rt c --interactive=false --url=${int_artifactory_eu_url}
+              --user=${int_artifactory_eu_user} --apikey=${int_artifactory_eu_apikey} artifactory-eu &&
+              $JFROG_CLI_HOME_DIR/jfrog rt use artifactory-eu && $JFROG_CLI_HOME_DIR/jfrog rt ping
+            - >
+            - pushd $res_srcbackRepo_resourcePath
+            - ls -alrt
+            - retry_command $JFROG_CLI_HOME_DIR/rt gradlec --server-id-resolve=artifactory-eu --server-id-deploy=artifactory-eu --repo-resolve=jcenter --repo-deploy=gradle-app-virtual
+            - ls -la
+            - retry_command $JFROG_CLI_HOME_DIR/jfrog rt gradle clean artifactoryPublish -b ./build.gradle --build-name=backApp_Build --build-number=${run_number}
+            - ls -la
+          onSuccess:
+            - echo ${res_src_code_backapp_isGitTag}
+            - appVersion=`if [[ ${res_src_code_backapp_isGitTag} == "True" ]]; then echo ${res_src_code_backapp_gitTagName}; else echo ${res_src_code_backapp_commitSha}; fi`
+            - echo $appVersion
+            - add_pipeline_variables appVersion="${appVersion}"
+            - add_pipeline_variables subPath="${res_src_code_backapp_branchName}/${appVersion}"      
+          onComplete:
+            - ls -la
+
+      - name: publish_backend_buildinfo
+        type: PublishBuildInfo
+        configuration:
+          forceXrayScan: false
+          inputSteps:
+            - name: build_gradle_backend
+          outputResources:
+            - name: backappBuildInfo
+
+      - name: scan_gradle_backapp
+        type: XrayScan
+        configuration:
+          failOnScan: false
+          inputResources:
+            - name: backappBuildInfo
+              trigger: true
+          outputResources:
+            - name: backappBuildInfo_scanned
+
+      - name: promote_build_info_gradle_backapp
+        type: PromoteBuild
+        configuration:
+          targetRepository: app-gradle-rc-local
+          includeDependencies: false
+          status: SANDBOX_OK
+          comment: Unit testing and Xray scan passed succesfully
+          copy: false
+          inputResources:
+            - name: backappBuildInfo_scanned
+              trigger: true
+          outputResources:
+            - name: build_info_backapp_promoted
+        execution:  
+          onStart:
+            - echo ${res_backappBuildInfo_scanned_buildName} 
+            - echo ${res_backappBuildInfo_scanned_buildNumber} 
+          onSuccess:
+            - jfrog rt sp --build=${res_backappBuildInfo_scanned_buildName}/${res_backappBuildInfo_scanned_buildNumber} app-gradle-rc-local/ "app.version=${appVersion}"
