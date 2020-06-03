@@ -6,7 +6,7 @@ resources:
     configuration:
       files:
         include: ^back\/.+
-        exclude: ^back\/CI\/.+
+        #exclude: ^back\/CI\/.+
       gitProvider: hza_github
       path: HamzaZFrog/k8s-app
       branches:
