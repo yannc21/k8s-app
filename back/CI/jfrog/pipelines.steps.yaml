@@ -5,7 +5,7 @@ pipelines:
         readOnly:
           art_url: "http://artifactory-eu.soleng-emea-staging.jfrog.team/artifactory"
     steps:
-      - name: build_gradle_backend
+      - name: build_app_gradle_backend
         type: GradleBuild
         configuration: 
           runtime:
@@ -43,7 +43,7 @@ pipelines:
         configuration:
           forceXrayScan: false
           inputSteps:
-            - name: build_gradle_backend
+            - name: build_app_gradle_backend
           outputResources:
             - name: back_appBuildInfo
 
