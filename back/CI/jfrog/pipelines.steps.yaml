@@ -55,33 +55,6 @@ pipelines:
           onComplete: #always
             - echo "Cleaning up some stuff"
 
-      - name: scan_gradle_back_app
-        type: Bash
-        configuration:
-          integrations:
-            - name: artifactory_eu
-          inputResources:
-            - name: back_appBuildInfo
-              trigger: true
-          outputResources:
-            - name: back_appBuildInfo_scanned
-        execution:
-          onStart:
-            - echo build name / build number ${res_back_appBuildInfo_buildName} ${res_back_appBuildInfo_buildNumber}
-            - jfrog rt bs ${res_back_appBuildInfo_buildName} ${res_back_appBuildInfo_buildNumber} --fail=false
-          #onExecute:
-            #- echo "In progress!"
-            #- echo build name / build number ${res_back_appBuildInfo_buildName} ${res_back_appBuildInfo_buildNumber}
-            #- jfrog rt s gradle-release-local/*
-            #- jfrog rt bs ${res_back_appBuildInfo_buildName} ${res_back_appBuildInfo_buildNumber}
-            #- jfrog rt bs ${res_back_appBuildInfo_buildName} ${res_back_appBuildInfo_buildNumber} --fail=false
-          onSuccess:
-            - echo "Job well done!"
-          onFailure:
-            - echo "uh oh, something went wrong"
-          onComplete: #always
-            - echo "Cleaning up some stuff"
-
       - name: promote_build_info_gradle_back_app
         type: PromoteBuild
         configuration:
@@ -91,13 +64,13 @@ pipelines:
           comment: Unit testing and Xray scan passed succesfully
           copy: false
           inputResources:
-            - name: back_appBuildInfo_scanned
+            - name: back_appBuildInfo
               trigger: true
           outputResources:
             - name: build_info_back_app_promoted
         execution:  
           onStart:
-            - echo ${res_back_appBuildInfo_scanned_buildName} 
-            - echo ${res_back_appBuildInfo_scanned_buildNumber} 
+            - echo ${res_back_appBuildInfo_buildName} 
+            - echo ${res_back_appBuildInfo_buildNumber} 
           onSuccess:
-            - jfrog rt sp --build=${res_back_appBuildInfo_scanned_buildName}/${res_back_appBuildInfo_scanned_buildNumber} app-gradle-rc-local/ "app.version=${appVersion}"
+            - jfrog rt sp --build=${res_back_appBuildInfo_buildName}/${res_back_appBuildInfo_buildNumber} app-gradle-rc-local/ "app.version=${appVersion}"
