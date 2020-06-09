@@ -5,6 +5,7 @@ pipelines:
       - name: build_npm_frontend_swampup
         type: NpmBuild
         configuration:
+          affinityGroup: together
           repositoryName: npm
           sourceLocation: front/
           integrations:
@@ -22,6 +23,7 @@ pipelines:
       - name: npm_package_frontend_swampup
         type: Bash
         configuration:
+          affinityGroup: together
           environmentVariables:
             OFFLINE_MODE: "true"
           inputSteps:
@@ -46,6 +48,7 @@ pipelines:
       - name: publish_frontend
         type: NpmPublish
         configuration:
+          affinityGroup: together
           environmentVariables:
             inputNpmBuildStepName: build_npm_frontend_swampup
           repositoryName: npm
@@ -57,6 +60,7 @@ pipelines:
       - name: publish_frontend_buildinfo
         type: PublishBuildInfo
         configuration:
+          affinityGroup: together
           forceXrayScan: false
           inputSteps:
             - name: publish_frontend
@@ -66,6 +70,7 @@ pipelines:
       - name: scan_npm_frontapp
         type: XrayScan
         configuration:
+          affinityGroup: together
           failOnScan: false
           inputResources:
             - name: FrontAppBuildInfo
@@ -76,6 +81,7 @@ pipelines:
       - name: promote_build_info_npm_frontapp
         type: PromoteBuild
         configuration:
+          affinityGroup: together
           targetRepository: app-npm-rc-local
           includeDependencies: false
           status: SANDBOX_OK
