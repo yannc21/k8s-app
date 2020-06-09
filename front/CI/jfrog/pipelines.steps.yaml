@@ -1,11 +1,8 @@
 pipelines:
-  - name: frontapp_npm_pipeline
-    configuration:
-      environmentVariables:
-        readOnly:
-          art_url: "http://artifactory-eu.soleng-emea-staging.jfrog.team/artifactory"
+  - name: frontapp_npm_pipeline_swampup
+
     steps:
-      - name: build_npm_frontend
+      - name: build_npm_frontend_swampup
         type: NpmBuild
         configuration:
           repositoryName: npm
@@ -22,13 +19,13 @@ pipelines:
             - add_pipeline_variables appVersion="${appVersion}"
             - add_pipeline_variables subPath="${res_src_code_frontapp_branchName}/${appVersion}"      
 
-      - name: npm_package_frontend
+      - name: npm_package_frontend_swampup
         type: Bash
         configuration:
           environmentVariables:
             OFFLINE_MODE: "true"
           inputSteps:
-            - name: build_npm_frontend
+            - name: build_npm_frontend_swampup
           integrations:
             - name: artifactory_eu
         execution:
@@ -50,10 +47,10 @@ pipelines:
         type: NpmPublish
         configuration:
           environmentVariables:
-            inputNpmBuildStepName: build_npm_frontend
+            inputNpmBuildStepName: build_npm_frontend_swampup
           repositoryName: npm
           inputSteps:
-            - name: npm_package_frontend
+            - name: npm_package_frontend_swampup
           integrations:
             - name: artifactory_eu 
 
