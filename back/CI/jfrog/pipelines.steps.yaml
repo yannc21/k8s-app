@@ -69,6 +69,7 @@ pipelines:
           onStart:
             - echo build name / build number ${res_back_appBuildInfo_buildName} ${res_back_appBuildInfo_buildNumber}
             - jfrog rt s gradle-release-local/*
+            - jfrog rt bs back_app_gradle_pipeline 25
           onExecute:
             - jfrog rt s gradle-release-local/*
             #- jfrog rt bs ${res_back_appBuildInfo_buildName} ${res_back_appBuildInfo_buildNumber}
