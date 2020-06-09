@@ -45,6 +45,15 @@ pipelines:
             - name: build_app_gradle_backend
           outputResources:
             - name: back_appBuildInfo
+        execution:
+          onStart:
+            - echo "Preparing for Xray scan..."
+          onSuccess:
+            - echo build name / build number ${res_back_appBuildInfo_buildName} ${res_back_appBuildInfo_buildNumber}
+          onFailure:
+            - echo "uh oh, something went wrong"
+          onComplete: #always
+            - echo "Cleaning up some stuff"
 
       - name: scan_gradle_back_app
         type: Bash
