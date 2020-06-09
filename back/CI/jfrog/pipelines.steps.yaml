@@ -58,8 +58,6 @@ pipelines:
       - name: scan_gradle_back_app
         type: Bash
         configuration:
-          integrations:
-            - name: artifactory_eu
           inputResources:
             - name: back_appBuildInfo
               trigger: true
