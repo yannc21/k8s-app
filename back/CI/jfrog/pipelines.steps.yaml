@@ -65,7 +65,7 @@ pipelines:
             - name: back_appBuildInfo_scanned
         execution:
           onStart:
-            - echo "Preparing for Xray scan..."
+            - echo build name / build number ${res_back_appBuildInfo_buildName} ${res_back_appBuildInfo_buildNumber}
           onExecute:
             - jfrog rt bs ${res_back_appBuildInfo_buildName} ${res_back_appBuildInfo_buildNumber}
           onSuccess:
