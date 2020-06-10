@@ -74,9 +74,10 @@ pipelines:
             - echo ${res_back_appBuildInfo_buildNumber} 
           onSuccess:
             - jfrog rt sp --build=${res_back_appBuildInfo_buildName}/${res_back_appBuildInfo_buildNumber} app-gradle-rc-local/ "app.version=${appVersion}"
+            - write_output build_info_back_app_promoted myversion=${appVersion}
 
 
-  - name: backapp_docker_pipeline
+  - name: backapp_docker_pip
     steps:
       - name: build_docker_backapp
         type: DockerBuild
@@ -85,16 +86,16 @@ pipelines:
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: back/CI/Docker/
           dockerImageName: docker.artifactory-eu.soleng-emea-staging.jfrog.team/backapp
-          dockerImageTag: '${appVersion}-${res_src_dockerfile_back_app_commitSha}'
+          dockerImageTag: '1.0-${res_src_dockerfile_back_app_commitSha}'
           inputResources:
             - name: src_dockerfile_back_app
-            - name: back_app_exec
             - name: build_info_back_app_promoted
           integrations:
             - name: artifactory_eu
             - name: hza_github
         execution:
           onStart:
+            - echo ${res_build_info_back_app_promoted_myversion}
             - echo $triggerBuildInfoName
             - echo $triggerBuildInfoNumber
             - add_pipeline_variables triggerBuildInfoName="${res_build_info_back_app_promoted_buildName}"
