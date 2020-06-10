@@ -17,88 +17,88 @@ resources:
 
 
 # DOCKER PIPELINE
-  - name: src_dockerfile_backapp
-    type: GitRepo
-    configuration:
-      path: cyan21/k8s-app
-      branches:
-        include: master
-      files:
-        include: ^back\/CI\/Docker\/.+
-      gitProvider: yann_github
-      buildOn:
-        commit: false
+#   - name: src_dockerfile_backapp
+#     type: GitRepo
+#     configuration:
+#       path: cyan21/k8s-app
+#       branches:
+#         include: master
+#       files:
+#         include: ^back\/CI\/Docker\/.+
+#       gitProvider: yann_github
+#       buildOn:
+#         commit: false
         
-  # HELM PIPELINE
-  # - name: src_helm_chart_app
-  #   type: GitRepo
-  #   configuration:
-  #     path: cyan21/k8s-helm
-  #     branches:
-  #       include: master
-  #     gitProvider: yann_github
+#   # HELM PIPELINE
+#   # - name: src_helm_chart_app
+#   #   type: GitRepo
+#   #   configuration:
+#   #     path: cyan21/k8s-helm
+#   #     branches:
+#   #       include: master
+#   #     gitProvider: yann_github
 
-  # Build info for the published Go app
-  - name: build_info_backapp
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: artifactory_eu
-      buildName: backapp-go
-      buildNumber: ${run_number}
+#   # Build info for the published Go app
+#   - name: build_info_backapp
+#     type: BuildInfo
+#     configuration:
+#       sourceArtifactory: artifactory_eu
+#       buildName: backapp-go
+#       buildNumber: ${run_number}
 
-  - name: build_info_backapp_scanned
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: artifactory_eu
-      buildName: backapp-go
-      buildNumber: ${run_number}
+#   - name: build_info_backapp_scanned
+#     type: BuildInfo
+#     configuration:
+#       sourceArtifactory: artifactory_eu
+#       buildName: backapp-go
+#       buildNumber: ${run_number}
   
-  - name: build_info_backapp_promoted
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: artifactory_eu
-      buildName: backapp-go
-      buildNumber: ${run_number}
+#   - name: build_info_backapp_promoted
+#     type: BuildInfo
+#     configuration:
+#       sourceArtifactory: artifactory_eu
+#       buildName: backapp-go
+#       buildNumber: ${run_number}
 
-# DOCKER PIPELINE 
-  - name: backapp_exec
-    type: FileSpec
-    configuration:
-      sourceArtifactory: artifactory_eu
-      pattern: app-generic-rc-local/**/${appVersion}/backend
-      buildName: ${triggerBuildInfoName}
-      buildNumber: ${triggerBuildInfoNumber}
-      flat: true
-#      pattern: app-generic/backend
-#      aql: '{"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"}'
-#      aql: "({\"name\":\"backend\"})"
+# # DOCKER PIPELINE 
+#   - name: backapp_exec
+#     type: FileSpec
+#     configuration:
+#       sourceArtifactory: artifactory_eu
+#       pattern: app-generic-rc-local/**/${appVersion}/backend
+#       buildName: ${triggerBuildInfoName}
+#       buildNumber: ${triggerBuildInfoNumber}
+#       flat: true
+# #      pattern: app-generic/backend
+# #      aql: '{"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"}'
+# #      aql: "({\"name\":\"backend\"})"
 
-  - name: build_info_docker_backapp
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: artifactory_eu
-      buildName: backapp-docker
-      buildNumber: ${run_number}
+#   - name: build_info_docker_backapp
+#     type: BuildInfo
+#     configuration:
+#       sourceArtifactory: artifactory_eu
+#       buildName: backapp-docker
+#       buildNumber: ${run_number}
 
-  - name: build_info_docker_backapp_scanned
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: artifactory_eu
-      buildName: backapp-docker
-      buildNumber: ${run_number}
+#   - name: build_info_docker_backapp_scanned
+#     type: BuildInfo
+#     configuration:
+#       sourceArtifactory: artifactory_eu
+#       buildName: backapp-docker
+#       buildNumber: ${run_number}
 
-  - name: build_info_docker_backapp_promoted
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: artifactory_eu
-      buildName: backapp-docker
-      buildNumber: ${run_number}
+#   - name: build_info_docker_backapp_promoted
+#     type: BuildInfo
+#     configuration:
+#       sourceArtifactory: artifactory_eu
+#       buildName: backapp-docker
+#       buildNumber: ${run_number}
 
-# DEPLOY pipeline
-  - name: app_helm_chart
-    type: HelmChart
-    configuration:
-      sourceArtifactory: artifactory_eu
-      repository: app-helm
-      chart: my-app
-      version: 0.0.1
+# # DEPLOY pipeline
+#   - name: app_helm_chart
+#     type: HelmChart
+#     configuration:
+#       sourceArtifactory: artifactory_eu
+#       repository: app-helm
+#       chart: my-app
+#       version: 0.0.1

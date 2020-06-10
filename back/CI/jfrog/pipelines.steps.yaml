@@ -88,180 +88,180 @@ pipelines:
           onSuccess:
             - jfrog rt sp --build=${res_build_info_backapp_scanned_buildName}/${res_build_info_backapp_scanned_buildNumber} app-generic-rc-local/ "app.version=${appVersion}"
   
-  - name: backapp_docker_pipeline
-    steps:
-      - name: export_var
-        type: Bash
-        configuration:
-          integrations:
-            - name: artifactory_eu
-          inputResources:
-            - name: build_info_backapp_promoted
-          outputResources:
-            - name: backapp_exec
-        execution:
-          onSuccess: 
-          - add_pipeline_variables triggerBuildInfoName="${res_build_info_backapp_promoted_buildName}"
-          - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_backapp_promoted_buildNumber}"
-          - echo "items.find({\"name\":\"backend\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
-          - cat aql.json
-          - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
-          - add_pipeline_variables appVersion="${appVersion}"
+#   - name: backapp_docker_pipeline
+#     steps:
+#       - name: export_var
+#         type: Bash
+#         configuration:
+#           integrations:
+#             - name: artifactory_eu
+#           inputResources:
+#             - name: build_info_backapp_promoted
+#           outputResources:
+#             - name: backapp_exec
+#         execution:
+#           onSuccess: 
+#           - add_pipeline_variables triggerBuildInfoName="${res_build_info_backapp_promoted_buildName}"
+#           - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_backapp_promoted_buildNumber}"
+#           - echo "items.find({\"name\":\"backend\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
+#           - cat aql.json
+#           - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
+#           - add_pipeline_variables appVersion="${appVersion}"
           
-      - name: build_docker_backapp
-        type: DockerBuild
-        configuration:
-          affinityGroup: build_docker 
-          dockerFileName: jfrog-Dockerfile
-          dockerFileLocation: back/CI/Docker/
-          dockerImageName: 'yannaws-app-docker.jfrog.io/backapp'
-          dockerImageTag: ${appVersion}-${res_src_dockerfile_backapp_commitSha}
-          inputResources:
-            - name: src_dockerfile_backapp
-            - name: backapp_exec
-          integrations:
-            - name: artifactory_eu
-            - name: yann_github
-        execution:
-          onStart:
-            - echo ${res_backapp_exec_resourcePath}
-            - echo "Go App Build number :" 
-            - echo ${triggerBuildInfoNumber}
-            - echo "Go App version :" 
-            - echo ${appVersion} 
-            - echo "Git repo hash :" 
-            - echo ${res_src_dockerfile_backapp_commitSha}
-            - echo "Copying exec binary to specific location..." && ls -l
-            - echo "Filespec location :" && echo ${res_backapp_exec_resourcePath} && ls -l ${res_backapp_exec_resourcePath}
-            - cp ${res_backapp_exec_resourcePath}/backend ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
-            - cd ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/ && curl -O "https://${int_yann_github_token}@raw.githubusercontent.com/cyan21/k8s-app/master/back/data.json"
-            - ls -l ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker
-#            - echo "items.find({\"name\":\"backend\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
-#            - cat aql.json
-#            - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
-            - echo $appVersion
-            - add_pipeline_variables myDockerTag="${appVersion}-${res_src_dockerfile_backapp_commitSha}"
-          onSuccess:
-            - echo "Job well done!"
-      - name: publish_docker_backapp
-        type: DockerPush
-        configuration:
-          affinityGroup: build_docker 
-          targetRepository: app-docker
-          autoPublishBuildInfo: true
-          inputSteps:
-            - name: build_docker_backapp
-          integrations:
-            - name: artifactory_eu
-          outputResources:
-            - name: build_info_docker_backapp
-        execution:
-          onSuccess:
-            - echo "Job well done!"
-            - echo $appVersion
-      - name: scan_docker_build_info_backapp
-        type: XrayScan
-        configuration:
-          failOnScan: false
-          inputResources:
-            - name: build_info_docker_backapp
-              trigger: true
-          outputResources:
-            - name: build_info_docker_backapp_scanned
-      - name: promote_docker_build_info_backapp
-        type: PromoteBuild
-        configuration:
-          targetRepository: app-docker-sit-local
-          includeDependencies: false
-          status: "DOCKER_SCAN_OK"
-          comment: "Xray scan passed succesfully"
-          copy: false
-          inputResources:
-            - name: build_info_docker_backapp_scanned
-              trigger: true
-          outputResources:
-            - name: build_info_docker_backapp_promoted
-        execution:
-          onSuccess:
-            - jfrog rt sp --build=${res_build_info_docker_backapp_scanned_buildName}/${res_build_info_docker_backapp_scanned_buildNumber}  app-docker-sit-local/**/manifest.json "docker.tag=${myDockerTag}"
+#       - name: build_docker_backapp
+#         type: DockerBuild
+#         configuration:
+#           affinityGroup: build_docker 
+#           dockerFileName: jfrog-Dockerfile
+#           dockerFileLocation: back/CI/Docker/
+#           dockerImageName: 'yannaws-app-docker.jfrog.io/backapp'
+#           dockerImageTag: ${appVersion}-${res_src_dockerfile_backapp_commitSha}
+#           inputResources:
+#             - name: src_dockerfile_backapp
+#             - name: backapp_exec
+#           integrations:
+#             - name: artifactory_eu
+#             - name: yann_github
+#         execution:
+#           onStart:
+#             - echo ${res_backapp_exec_resourcePath}
+#             - echo "Go App Build number :" 
+#             - echo ${triggerBuildInfoNumber}
+#             - echo "Go App version :" 
+#             - echo ${appVersion} 
+#             - echo "Git repo hash :" 
+#             - echo ${res_src_dockerfile_backapp_commitSha}
+#             - echo "Copying exec binary to specific location..." && ls -l
+#             - echo "Filespec location :" && echo ${res_backapp_exec_resourcePath} && ls -l ${res_backapp_exec_resourcePath}
+#             - cp ${res_backapp_exec_resourcePath}/backend ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
+#             - cd ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/ && curl -O "https://${int_yann_github_token}@raw.githubusercontent.com/cyan21/k8s-app/master/back/data.json"
+#             - ls -l ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker
+# #            - echo "items.find({\"name\":\"backend\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
+# #            - cat aql.json
+# #            - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
+#             - echo $appVersion
+#             - add_pipeline_variables myDockerTag="${appVersion}-${res_src_dockerfile_backapp_commitSha}"
+#           onSuccess:
+#             - echo "Job well done!"
+#       - name: publish_docker_backapp
+#         type: DockerPush
+#         configuration:
+#           affinityGroup: build_docker 
+#           targetRepository: app-docker
+#           autoPublishBuildInfo: true
+#           inputSteps:
+#             - name: build_docker_backapp
+#           integrations:
+#             - name: artifactory_eu
+#           outputResources:
+#             - name: build_info_docker_backapp
+#         execution:
+#           onSuccess:
+#             - echo "Job well done!"
+#             - echo $appVersion
+#       - name: scan_docker_build_info_backapp
+#         type: XrayScan
+#         configuration:
+#           failOnScan: false
+#           inputResources:
+#             - name: build_info_docker_backapp
+#               trigger: true
+#           outputResources:
+#             - name: build_info_docker_backapp_scanned
+#       - name: promote_docker_build_info_backapp
+#         type: PromoteBuild
+#         configuration:
+#           targetRepository: app-docker-sit-local
+#           includeDependencies: false
+#           status: "DOCKER_SCAN_OK"
+#           comment: "Xray scan passed succesfully"
+#           copy: false
+#           inputResources:
+#             - name: build_info_docker_backapp_scanned
+#               trigger: true
+#           outputResources:
+#             - name: build_info_docker_backapp_promoted
+#         execution:
+#           onSuccess:
+#             - jfrog rt sp --build=${res_build_info_docker_backapp_scanned_buildName}/${res_build_info_docker_backapp_scanned_buildNumber}  app-docker-sit-local/**/manifest.json "docker.tag=${myDockerTag}"
 
-  - name: app_deploy_pipeline
-    steps:
-      - name: export_var
-        type: Bash
-        configuration:
-          integrations:
-            - name: artifactory_eu
-          inputResources:
-            - name: build_info_docker_backapp_promoted
-          outputResources:
-            - name: app_helm_chart
-        execution:
-          onSuccess: 
-          - add_pipeline_variables triggerBuildInfoName="${res_build_info_docker_backapp_promoted_buildName}"
-          - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_docker_backapp_promoted_buildNumber}"
+#   - name: app_deploy_pipeline
+#     steps:
+#       - name: export_var
+#         type: Bash
+#         configuration:
+#           integrations:
+#             - name: artifactory_eu
+#           inputResources:
+#             - name: build_info_docker_backapp_promoted
+#           outputResources:
+#             - name: app_helm_chart
+#         execution:
+#           onSuccess: 
+#           - add_pipeline_variables triggerBuildInfoName="${res_build_info_docker_backapp_promoted_buildName}"
+#           - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_docker_backapp_promoted_buildNumber}"
 
-      - name: deploy_helm_chart
-        type: HelmDeploy
-        configuration:
-          flags: "--set images.back.repository=yannaws-app-docker.jfrog.io/backapp --set images.back.tag=${backDockerTag} --set images.front.repository=yannaws-app-docker.jfrog.io/frontapp --set images.front.tag=0.1 --force"
-          releaseName: yann-app
-          dryRun: false
-          lint: false
-          lintFlags: "--strict"
-          test: false
-          testFlags: "--parallel"
-          integrations:
-            - name: ych_eks
-            - name: ych_secret
-            - name: artifactory_eu
-          inputResources:
-            - name: app_helm_chart
-        execution:
-          onStart:
-            - helm version
-            - aws --version
-            - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" 
-            - unzip awscliv2.zip 
-            - ./aws/install
-            - aws --version 
-            - mkdir -p ~/.aws/ 
-            - echo ${res_ych_secret_registry_accessKeyId} > ~/.aws/credentials
-            - echo ${res_ych_secret_registry_secretAccessKey} >> ~/.aws/credentials
-            - aws --version
-            - echo "items.find({\"name\":\"manifest.json\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@docker.tag\")" > aql.json
-            - cat aql.json
-            - jfrog rt curl -XPOST api/search/aql -T aql.json
-            - backDockerTag=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
-            - echo $backDockerTag
-            - env
-      - name: non_regression_testing
-        type: Bash
-        configuration:
-          inputSteps:
-            - name: deploy_helm_chart
-        execution:
-          onStart: 
-            - echo "Running non regression tests"
-          onSuccess: 
-            - echo "non regression tests done !"
-      - name: feature_testing
-        type: Bash
-        configuration:
-          inputSteps:
-            - name: deploy_helm_chart
-        execution:
-          onStart: 
-            - echo "Running feature_1 tests"
-          onSuccess: 
-            - echo "feature_1 tests done !"
-      - name: performance_testing
-        type: Bash
-        configuration:
-          inputSteps:
-            - name: deploy_helm_chart
-        execution:
-          onStart: 
-            - echo "Running performance tests"
-          onSuccess: 
-            - echo "performance tests done !"
+#       - name: deploy_helm_chart
+#         type: HelmDeploy
+#         configuration:
+#           flags: "--set images.back.repository=yannaws-app-docker.jfrog.io/backapp --set images.back.tag=${backDockerTag} --set images.front.repository=yannaws-app-docker.jfrog.io/frontapp --set images.front.tag=0.1 --force"
+#           releaseName: yann-app
+#           dryRun: false
+#           lint: false
+#           lintFlags: "--strict"
+#           test: false
+#           testFlags: "--parallel"
+#           integrations:
+#             - name: ych_eks
+#             - name: ych_secret
+#             - name: artifactory_eu
+#           inputResources:
+#             - name: app_helm_chart
+#         execution:
+#           onStart:
+#             - helm version
+#             - aws --version
+#             - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" 
+#             - unzip awscliv2.zip 
+#             - ./aws/install
+#             - aws --version 
+#             - mkdir -p ~/.aws/ 
+#             - echo ${res_ych_secret_registry_accessKeyId} > ~/.aws/credentials
+#             - echo ${res_ych_secret_registry_secretAccessKey} >> ~/.aws/credentials
+#             - aws --version
+#             - echo "items.find({\"name\":\"manifest.json\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@docker.tag\")" > aql.json
+#             - cat aql.json
+#             - jfrog rt curl -XPOST api/search/aql -T aql.json
+#             - backDockerTag=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
+#             - echo $backDockerTag
+#             - env
+#       - name: non_regression_testing
+#         type: Bash
+#         configuration:
+#           inputSteps:
+#             - name: deploy_helm_chart
+#         execution:
+#           onStart: 
+#             - echo "Running non regression tests"
+#           onSuccess: 
+#             - echo "non regression tests done !"
+#       - name: feature_testing
+#         type: Bash
+#         configuration:
+#           inputSteps:
+#             - name: deploy_helm_chart
+#         execution:
+#           onStart: 
+#             - echo "Running feature_1 tests"
+#           onSuccess: 
+#             - echo "feature_1 tests done !"
+#       - name: performance_testing
+#         type: Bash
+#         configuration:
+#           inputSteps:
+#             - name: deploy_helm_chart
+#         execution:
+#           onStart: 
+#             - echo "Running performance tests"
+#           onSuccess: 
+#             - echo "performance tests done !"
