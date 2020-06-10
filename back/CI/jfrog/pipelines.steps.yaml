@@ -5,7 +5,7 @@ pipelines:
         type: image
         image:
           custom:
-            name: docker.artifactory-eu.soleng-emea-staging.jfrog.team/u16go-soleng:1.0.0
+            name: docker.artifactory-eu.soleng-emea-staging.jfrog.team/u16go-soleng
             tag: 1.0.0
             registry: artifactory_eu
             sourceRepository: docker
