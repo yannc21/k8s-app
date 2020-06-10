@@ -114,6 +114,7 @@ pipelines:
       - name: export_var
         type: Bash
         configuration:
+          affinityGroup: swampupgrp
           integrations:
             - name: artifactory_eu
           inputResources:
@@ -141,6 +142,7 @@ pipelines:
       - name: build_docker_frontapp
         type: DockerBuild
         configuration:
+          affinityGroup: swampupgrp
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: front/CI/Docker/
           dockerImageName: 'docker.artifactory-eu.soleng-emea-staging.jfrog.team/frontapp'
@@ -173,6 +175,7 @@ pipelines:
       - name: publish_docker_frontapp
         type: DockerPush
         configuration:
+          affinityGroup: swampupgrp
           targetRepository: docker
           autoPublishBuildInfo: true
           inputSteps:
@@ -189,6 +192,7 @@ pipelines:
       - name: scan_docker_build_info_frontapp
         type: XrayScan
         configuration:
+          affinityGroup: swampupgrp
           failOnScan: false
           inputResources:
             - name: build_info_docker_frontapp
@@ -199,6 +203,7 @@ pipelines:
       - name: promote_docker_build_info_frontapp
         type: PromoteBuild
         configuration:
+          affinityGroup: swampupgrp
           targetRepository: app-docker-sit-local
           includeDependencies: false
           status: "DOCKER_SCAN_OK"
