@@ -78,10 +78,10 @@ pipelines:
 
   - name: backapp_docker_pipeline
     steps:
-      - name: export_var
+      - name: export_v
         type: Bash
         configuration:
-          affinityGroup: swampupgrp
+          affinityGroup: swampup
           integrations:
             - name: artifactory_eu
           inputResources:
@@ -109,7 +109,7 @@ pipelines:
       - name: build_docker_backapp
         type: DockerBuild
         configuration:
-          affinityGroup: swampupgrp
+          affinityGroup: swampup
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: back/CI/Docker/
           dockerImageName: docker.artifactory-eu.soleng-emea-staging.jfrog.team/backapp
