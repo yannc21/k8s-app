@@ -109,7 +109,7 @@ pipelines:
       - name: build_docker_backapp
         type: DockerBuild
         configuration:
-          affinityGroup: build_docker
+          affinityGroup: swampupgrp
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: back/CI/Docker/
           dockerImageName: docker.artifactory-eu.soleng-emea-staging.jfrog.team/backapp
