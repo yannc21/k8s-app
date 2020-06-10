@@ -7,6 +7,7 @@ pipelines:
           custom:
             name: docker.artifactory-eu.soleng-emea-staging.jfrog.team/u16go-soleng
             tag: 1.0.0
+            options: "-v /etc/ssl/certs/soleng-staging.crt:/etc/ssl/certs/soleng-staging.crt" 
             registry: registry_eu
             sourceRepository: docker
     steps:
