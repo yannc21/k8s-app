@@ -85,7 +85,7 @@ pipelines:
           onStart:
             - echo ${res_FrontAppBuildInfo_buildName}
             - echo ${res_FrontAppBuildInfo_buildNumber}
-            - jfrog rt bs ${res_FrontAppBuildInfo_buildName} ${res_FrontAppBuildInfo_buildNumber}
+            - jfrog rt bs ${res_FrontAppBuildInfo_buildName} ${res_FrontAppBuildInfo_buildNumber} --fail=false
 
       - name: promote_build_info_npm_frontapp
         type: PromoteBuild
