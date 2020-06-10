@@ -173,7 +173,7 @@ pipelines:
       - name: publish_docker_frontapp
         type: DockerPush
         configuration:
-          targetRepository: docker-dev-local
+          targetRepository: docker
           autoPublishBuildInfo: true
           inputSteps:
             - name: build_docker_frontapp
