@@ -78,7 +78,7 @@ pipelines:
 
   - name: backapp_docker_pipeline
     steps:
-      - name: export_var
+      - name: export_var_back
         type: Bash
         configuration:
           affinityGroup: swampupgrp
