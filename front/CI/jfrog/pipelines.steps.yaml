@@ -67,7 +67,7 @@ pipelines:
           outputResources:
             - name: FrontAppBuildInfo
 
-      - name: scan_npm_frontapp
+      - name: xray_scan_npm_frontapp
         type: Bash
         configuration:
           affinityGroup: together
