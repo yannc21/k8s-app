@@ -70,12 +70,9 @@ pipelines:
       - name: scan_npm_frontapp
         type: Bash
         configuration:
-          integrations:
-            - name: artifactory_eu
           affinityGroup: together
           inputResources:
             - name: FrontAppBuildInfo
-              trigger: true
           outputResources:
             - name: FrontAppBuildInfo_scanned
         execution:
