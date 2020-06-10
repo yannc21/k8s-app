@@ -78,18 +78,23 @@ pipelines:
 
   - name: backapp_docker_pipeline
     steps:
-      - name: export_v
-        type: Bash
+      - name: build_docker_backapp
+        type: DockerBuild
         configuration:
           affinityGroup: swampup
+          dockerFileName: jfrog-Dockerfile
+          dockerFileLocation: back/CI/Docker/
+          dockerImageName: docker.artifactory-eu.soleng-emea-staging.jfrog.team/backapp
+          dockerImageTag: '${appVersion}-${res_src_dockerfile_back_app_commitSha}'
+          inputResources:
+            - name: src_dockerfile_back_app
+            - name: back_app_exec
+            - name: build_info_back_app_promoted
           integrations:
             - name: artifactory_eu
-          inputResources:
-            - name: build_info_back_app_promoted
-          outputResources:
-            - name: back_app_exec
+            - name: hza_github
         execution:
-          onSuccess:
+          onStart:
             - echo $triggerBuildInfoName
             - echo $triggerBuildInfoNumber
             - add_pipeline_variables triggerBuildInfoName="${res_build_info_back_app_promoted_buildName}"
@@ -105,25 +110,9 @@ pipelines:
             - echo ${appVersion}
             - echo $triggerBuildInfoName
             - echo ${triggerBuildInfoNumber}
-
-      - name: build_docker_backapp
-        type: DockerBuild
-        configuration:
-          affinityGroup: swampup
-          dockerFileName: jfrog-Dockerfile
-          dockerFileLocation: back/CI/Docker/
-          dockerImageName: docker.artifactory-eu.soleng-emea-staging.jfrog.team/backapp
-          dockerImageTag: '${appVersion}-${res_src_dockerfile_back_app_commitSha}'
-          inputResources:
-            - name: src_dockerfile_back_app
-            - name: back_app_exec
-          integrations:
-            - name: artifactory_eu
-            - name: hza_github
-        execution:
-          onStart:
+            #####################################
             - echo ${res_back_app_exec_resourcePath}
-            - echo "Npm App Build number :" 
+            - echo "Gradle App Build number :" 
             - echo ${triggerBuildInfoNumber}
             - echo "Webservice App version :" 
             - echo ${appVersion} 
