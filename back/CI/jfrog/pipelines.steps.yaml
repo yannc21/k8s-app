@@ -23,9 +23,11 @@ pipelines:
             OFFLINE_MODE: "true"
             CGO_ENABLED: 0
           integrations:
-            - name: artifactory_eu
+            - name: artifactory_eu_ssl
+            - name: artifactory_eu_ssl_cert 
         execution:
           onStart:
+            - echo ${int_artifactory_eu_ssl_cert_key}
             - echo "Run Unit Testing ..." 
             - if [ $OFFLINE_MODE == "true" ]; then echo "Offline mode turned on";fi
             - env
@@ -46,7 +48,7 @@ pipelines:
           inputSteps:
             - name: build_go_backapp
           integrations:
-            - name: artifactory_eu
+            - name: artifactory_eu_ssl
           outputResources:
             - name: build_info_backapp
         execution:
