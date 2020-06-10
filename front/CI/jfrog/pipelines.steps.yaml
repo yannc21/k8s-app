@@ -73,7 +73,6 @@ pipelines:
           integrations:
             - name: artifactory_eu
           affinityGroup: together
-          failOnScan: "false"
           inputResources:
             - name: FrontAppBuildInfo
               trigger: true
