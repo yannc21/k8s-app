@@ -23,7 +23,7 @@ pipelines:
           environmentVariables:
             OFFLINE_MODE: "true"
             CGO_ENABLED: 0
-            GO_PROXY: ${int_artifactory_eu_ssl_user}:${int_artifactory_eu_ssl_apikey}@artifactory-eu.soleng-emea-staging.jfrog.team/artifactory/api/go/app-go	 
+            GO_PROXY: https://truc:truc@artifactory-eu.soleng-emea-staging.jfrog.team/artifactory/api/go/app-go	 
           integrations:
             - name: artifactory_eu_ssl
         execution:
