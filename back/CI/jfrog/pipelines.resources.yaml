@@ -49,13 +49,10 @@ resources:
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory_eu
-      pattern: app-gradle-rc-local/back/**/back**
+      pattern: 'app-gradle-rc-local/**/web-service-*.war'
       buildName: ${triggerBuildInfoName}
       buildNumber: ${triggerBuildInfoNumber}
       flat: true
-#      pattern: app-generic/backend
-#      aql: '{"name":"backend","@build.name":"back_app_go_pipeline","@build.number":"43"}'
-#      aql: "({\"name\":\"backend\"})"
 
   - name: build_info_docker_back_app
     type: BuildInfo

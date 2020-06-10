@@ -74,3 +74,68 @@ pipelines:
             - echo ${res_back_appBuildInfo_buildNumber} 
           onSuccess:
             - jfrog rt sp --build=${res_back_appBuildInfo_buildName}/${res_back_appBuildInfo_buildNumber} app-gradle-rc-local/ "app.version=${appVersion}"
+
+
+  - name: backapp_docker_pipeline
+    steps:
+      - name: export_var
+        type: Bash
+        configuration:
+          affinityGroup: swampupgrp
+          integrations:
+            - name: artifactory_eu
+          inputResources:
+            - name: build_info_backapp_promoted
+          outputResources:
+            - name: backapp_exec
+        execution:
+          onSuccess:
+            - echo $triggerBuildInfoName
+            - echo $triggerBuildInfoNumber
+            - add_pipeline_variables triggerBuildInfoName="${res_build_info_backapp_promoted_buildName}"
+            - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_backapp_promoted_buildNumber}"
+            - echo $triggerBuildInfoName
+            - echo $triggerBuildInfoNumber
+            - echo "items.find({\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
+            - cat aql.json
+            - jfrog rt curl -XPOST api/search/aql -T aql.json
+            - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
+            - echo $appVersion
+            - add_pipeline_variables appVersion="${appVersion}" 
+            - echo ${appVersion}
+            - echo $triggerBuildInfoName
+            - echo ${triggerBuildInfoNumber}
+
+      - name: build_docker_backapp
+        type: DockerBuild
+        configuration:
+          affinityGroup: build_docker
+          dockerFileName: jfrog-Dockerfile
+          dockerFileLocation: back/CI/Docker/
+          dockerImageName: docker.artifactory-eu.soleng-emea-staging.jfrog.team/backapp
+          dockerImageTag: '${appVersion}-${res_src_dockerfile_backapp_commitSha}'
+          inputResources:
+            - name: src_dockerfile_backapp
+            - name: backapp_exec
+          integrations:
+            - name: artifactory_eu
+            - name: yann_github
+        execution:
+          onStart:
+            - echo ${res_backapp_exec_resourcePath}
+            - echo "Npm App Build number :" 
+            - echo ${triggerBuildInfoNumber}
+            - echo "Webservice App version :" 
+            - echo ${appVersion} 
+            - echo "Git repo hash :" 
+            - echo ${res_src_dockerfile_backapp_commitSha}
+            - echo "Copying exec binary to specific location..." && ls -l
+            - echo "Filespec location :" && echo ${res_backapp_exec_resourcePath} && ls -l ${res_backapp_exec_resourcePath}
+            - cp ${res_backapp_exec_resourcePath}/back* ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
+            - cd ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
+            #- tar xvf back*.tgz
+            - ls -l ${res_src_dockerfile_backapp_resourcePath}/back/CI/Docker
+            - echo $appVersion
+            - add_pipeline_variables myDockerTag="${appVersion}-${res_src_dockerfile_backapp_commitSha}"
+          onSuccess:
+            - echo "Job well done!"
