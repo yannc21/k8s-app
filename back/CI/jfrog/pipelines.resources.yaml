@@ -45,11 +45,11 @@ resources:
       buildName: back_app_gradle_pipeline
       buildNumber: '${run_number}'
 
-  - name: backapp_exec
+  - name: back_app_exec
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory_eu
-      pattern: 'app-gradle-rc-local/**/webservice-*.war'
+      pattern: 'app-gradle-rc-local/**/web-service-*.war'
       buildName: ${triggerBuildInfoName}
       buildNumber: ${triggerBuildInfoNumber}
       flat: true
