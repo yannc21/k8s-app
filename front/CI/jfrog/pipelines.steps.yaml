@@ -1,8 +1,8 @@
 pipelines:
-  - name: frontapp_npm_pipeline_swampup
+  - name: frontapp_npm_pipeline
 
     steps:
-      - name: build_npm_frontend_swampup
+      - name: build_npm_frontend
         type: NpmBuild
         configuration:
           affinityGroup: together
@@ -20,14 +20,14 @@ pipelines:
             - add_pipeline_variables appVersion="${appVersion}"
             - add_pipeline_variables subPath="${res_src_code_frontapp_branchName}/${appVersion}"      
 
-      - name: npm_package_frontend_swampup
+      - name: npm_package_frontend
         type: Bash
         configuration:
           affinityGroup: together
           environmentVariables:
             OFFLINE_MODE: "true"
           inputSteps:
-            - name: build_npm_frontend_swampup
+            - name: build_npm_frontend
           integrations:
             - name: artifactory_eu
         execution:
@@ -50,10 +50,10 @@ pipelines:
         configuration:
           affinityGroup: together
           environmentVariables:
-            inputNpmBuildStepName: build_npm_frontend_swampup
+            inputNpmBuildStepName: build_npm_frontend
           repositoryName: npm
           inputSteps:
-            - name: npm_package_frontend_swampup
+            - name: npm_package_frontend
           integrations:
             - name: artifactory_eu 
 
