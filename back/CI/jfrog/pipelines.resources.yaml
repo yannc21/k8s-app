@@ -17,48 +17,48 @@ resources:
 
 
 # DOCKER PIPELINE
-#   - name: src_dockerfile_backapp
-#     type: GitRepo
-#     configuration:
-#       path: cyan21/k8s-app
-#       branches:
-#         include: master
-#       files:
-#         include: ^back\/CI\/Docker\/.+
-#       gitProvider: yann_github
-#       buildOn:
-#         commit: false
+  # - name: src_dockerfile_backapp
+  #   type: GitRepo
+  #   configuration:
+  #     path: cyan21/k8s-app
+  #     branches:
+  #       include: master
+  #     files:
+  #       include: ^back\/CI\/Docker\/.+
+  #     gitProvider: yann_github
+  #     buildOn:
+  #       commit: false
         
-#   # HELM PIPELINE
-#   # - name: src_helm_chart_app
-#   #   type: GitRepo
-#   #   configuration:
-#   #     path: cyan21/k8s-helm
-#   #     branches:
-#   #       include: master
-#   #     gitProvider: yann_github
+  # HELM PIPELINE
+  # - name: src_helm_chart_app
+  #   type: GitRepo
+  #   configuration:
+  #     path: cyan21/k8s-helm
+  #     branches:
+  #       include: master
+  #     gitProvider: yann_github
 
-#   # Build info for the published Go app
-#   - name: build_info_backapp
-#     type: BuildInfo
-#     configuration:
-#       sourceArtifactory: artifactory_eu
-#       buildName: backapp-go
-#       buildNumber: ${run_number}
+  # Build info for the published Go app
+  - name: build_info_backapp
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: backapp-go
+      buildNumber: ${run_number}
 
-#   - name: build_info_backapp_scanned
-#     type: BuildInfo
-#     configuration:
-#       sourceArtifactory: artifactory_eu
-#       buildName: backapp-go
-#       buildNumber: ${run_number}
+  - name: build_info_backapp_scanned
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: backapp-go
+      buildNumber: ${run_number}
   
-#   - name: build_info_backapp_promoted
-#     type: BuildInfo
-#     configuration:
-#       sourceArtifactory: artifactory_eu
-#       buildName: backapp-go
-#       buildNumber: ${run_number}
+  - name: build_info_backapp_promoted
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: backapp-go
+      buildNumber: ${run_number}
 
 # # DOCKER PIPELINE 
 #   - name: backapp_exec
