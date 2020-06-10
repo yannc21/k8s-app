@@ -26,7 +26,7 @@ pipelines:
             CGO_ENABLED: 0
             GO_PROXY: https://truc:truc@artifactory-eu.soleng-emea-staging.jfrog.team/artifactory/api/go/app-go	 
           integrations:
-            - name: artifactory_eu_ssl
+            - name: artifactory_eu
         execution:
           onStart:
             - env
