@@ -45,7 +45,7 @@ resources:
       buildName: back_app_gradle_pipeline
       buildNumber: '${run_number}'
 
-  - name: back_app_exec
+  - name: backapp_exec
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory_eu
