@@ -7,7 +7,7 @@ pipelines:
           custom:
             name: docker.artifactory-eu.soleng-emea-staging.jfrog.team/u16go-soleng
             tag: 1.0.0
-            registry: artifactory_eu
+            registry: registry_eu
             sourceRepository: docker
     steps:
       # Build the Go app from the GitRepo
