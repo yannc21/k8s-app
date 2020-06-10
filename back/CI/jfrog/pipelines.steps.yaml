@@ -1,13 +1,14 @@
 pipelines:
   - name: backapp_go_pipeline
     configuration:
-      runtime:
+      runtime:      
         type: image
         image:
-          auto:
-            language: go
-            versions:
-              - "1.13.7"
+          custom:
+            name: docker.artifactory-eu.soleng-emea-staging.jfrog.team/u16go-soleng:1.0.0
+            tag: 1.0.0
+            registry: artifactory_eu
+            sourceRepository: docker
     steps:
       # Build the Go app from the GitRepo
       - name: build_go_backapp
@@ -22,12 +23,12 @@ pipelines:
           environmentVariables:
             OFFLINE_MODE: "true"
             CGO_ENABLED: 0
+            GO_PROXY: ${res_artifactory_eu_ssl_sourceArtifactory_user}:${res_artifactory_eu_ssl_sourceArtifactory_apikey}@artifactory-eu.soleng-emea-staging.jfrog.team/artifactory/api/go/app-go	 
           integrations:
             - name: artifactory_eu_ssl
-            - name: artifactory_eu_ssl_cert 
         execution:
           onStart:
-            - echo ${int_artifactory_eu_ssl_cert_key}
+            - env
             - echo "Run Unit Testing ..." 
             - if [ $OFFLINE_MODE == "true" ]; then echo "Offline mode turned on";fi
             - env
