@@ -68,8 +68,10 @@ pipelines:
             - name: FrontAppBuildInfo
 
       - name: scan_npm_frontapp
-        type: XrayScan
+        type: Bash
         configuration:
+          integrations:
+            - name: artifactory_eu
           affinityGroup: together
           failOnScan: "false"
           inputResources:
@@ -77,6 +79,9 @@ pipelines:
               trigger: true
           outputResources:
             - name: FrontAppBuildInfo_scanned
+        execution:
+          onStart:
+            - jfrog rt bs ${res_FrontAppBuildInfo_buildName} ${res_FrontAppBuildInfo_buildNumber}
 
       - name: promote_build_info_npm_frontapp
         type: PromoteBuild
