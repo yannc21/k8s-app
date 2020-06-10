@@ -79,8 +79,6 @@ pipelines:
           affinityGroup: together
           inputResources:
             - name: FrontAppBuildInfo
-          outputResources:
-            - name: FrontAppBuildInfo_scanned
         execution:
           onStart:
             - echo ${res_FrontAppBuildInfo_buildName}
@@ -96,18 +94,20 @@ pipelines:
           status: SANDBOX_OK
           comment: Unit testing and Xray scan passed succesfully
           copy: false
+          inputSteps:
+            - name: xray_scan_npm_frontapp
           inputResources:
-            - name: FrontAppBuildInfo_scanned
+            - name: FrontAppBuildInfo
               trigger: true
           outputResources:
             - name: build_info_frontapp_promoted
         execution:  
           onStart:
-            - echo ${res_FrontAppBuildInfo_scanned_buildName} 
-            - echo ${res_FrontAppBuildInfo_scanned_buildNumber} 
+            - echo ${res_FrontAppBuildInfo_buildName} 
+            - echo ${res_FrontAppBuildInfo_buildNumber} 
             - echo ${appVersion}
           onSuccess:
-            - jfrog rt sp --build=${res_FrontAppBuildInfo_scanned_buildName}/${res_FrontAppBuildInfo_scanned_buildNumber} app-npm-rc-local/ "app.version=${appVersion}"
+            - jfrog rt sp --build=${res_FrontAppBuildInfo_buildName}/${res_FrontAppBuildInfo_buildNumber} app-npm-rc-local/ "app.version=${appVersion}"
 
   - name: frontapp_docker_pipeline
     steps:
