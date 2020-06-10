@@ -105,6 +105,7 @@ pipelines:
           onStart:
             - echo ${res_FrontAppBuildInfo_scanned_buildName} 
             - echo ${res_FrontAppBuildInfo_scanned_buildNumber} 
+            - echo ${appVersion}
           onSuccess:
             - jfrog rt sp --build=${res_FrontAppBuildInfo_scanned_buildName}/${res_FrontAppBuildInfo_scanned_buildNumber} app-npm-rc-local/ "app.version=${appVersion}"
 
