@@ -142,7 +142,7 @@ pipelines:
         configuration:
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: front/CI/Docker/
-          dockerImageName: 'yannaws-app-docker.jfrog.io/frontapp'
+          dockerImageName: 'docker-dev-local.artifactory-eu.soleng-emea-staging.jfrog.team/frontapp'
           dockerImageTag: ${appVersion}-${res_src_dockerfile_frontapp_commitSha}
           inputResources:
             - name: src_dockerfile_frontapp
