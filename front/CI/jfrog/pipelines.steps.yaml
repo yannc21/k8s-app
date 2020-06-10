@@ -71,7 +71,7 @@ pipelines:
         type: XrayScan
         configuration:
           affinityGroup: together
-          failOnScan: false
+          failOnScan: "false"
           inputResources:
             - name: FrontAppBuildInfo
               trigger: true
