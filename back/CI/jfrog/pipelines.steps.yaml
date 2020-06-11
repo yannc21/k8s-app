@@ -9,7 +9,7 @@ pipelines:
 #            tag: 1.1.0
             name: docker.bintray.io/jfrog/pipelines-u16go
             tag: 1.13.7
-#            options: "-v /etc/ssl/certs/multi-domain-soleng-staging.crt:/usr/share/ca-certificates/extra/multi-domain-soleng-staging.crt" 
+            options: "-v /etc/ssl/certs/multi-domain-soleng-staging.crt:/root/.jfrog/security/multi-domain-soleng-staging.crt" 
 #            registry: registry_eu
 #            sourceRepository: docker
     steps:
