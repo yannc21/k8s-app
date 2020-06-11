@@ -96,7 +96,7 @@ pipelines:
         execution:
           onStart:
             - echo ${res_build_info_back_app_promoted_myversion}
-            - add_pipeline_variables appVersion="${res_build_info_back_app_promoted_myversion}""
+            - add_pipeline_variables appVersion="${res_build_info_back_app_promoted_myversion}"
             - echo $triggerBuildInfoName
             - echo $triggerBuildInfoNumber
             - add_pipeline_variables triggerBuildInfoName="${res_build_info_back_app_promoted_buildName}"
