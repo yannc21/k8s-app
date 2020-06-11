@@ -56,21 +56,21 @@ resources:
       target: war/webservice.war
       flat: true
 
-  - name: build_info_docker_back_app
+  - name: build_info_docker_backapp
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
       buildName: back_app-docker
       buildNumber: '${run_number}'
 
-  - name: build_info_docker_back_app_scanned
+  - name: build_info_docker_backapp_scanned
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
       buildName: back_app-docker
       buildNumber: '${run_number}'
 
-  - name: build_info_docker_back_app_promoted
+  - name: build_info_docker_backapp_promoted
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
