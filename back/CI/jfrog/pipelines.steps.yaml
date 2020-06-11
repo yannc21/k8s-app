@@ -86,7 +86,7 @@ pipelines:
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: back/CI/Docker/
           dockerImageName: docker.artifactory-eu.soleng-emea-staging.jfrog.team/backapp
-          dockerImageTag: '1.0-${res_src_dockerfile_back_app_commitSha}'
+          dockerImageTag: '${res_build_info_back_app_promoted_myversion}-${res_src_dockerfile_back_app_commitSha}'
           inputResources:
             - name: src_dockerfile_back_app
             - name: build_info_back_app_promoted
@@ -96,18 +96,19 @@ pipelines:
         execution:
           onStart:
             - echo ${res_build_info_back_app_promoted_myversion}
+            - add_pipeline_variables appVersion="${res_build_info_back_app_promoted_myversion}""
             - echo $triggerBuildInfoName
             - echo $triggerBuildInfoNumber
             - add_pipeline_variables triggerBuildInfoName="${res_build_info_back_app_promoted_buildName}"
             - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_back_app_promoted_buildNumber}"
             - echo $triggerBuildInfoName
             - echo $triggerBuildInfoNumber
-            - echo "items.find({\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
-            - cat aql.json
-            - jfrog rt curl -XPOST api/search/aql -T aql.json
-            - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
-            - echo $appVersion
-            - add_pipeline_variables appVersion="${appVersion}" 
+            #- echo "items.find({\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
+            #- cat aql.json
+            #- jfrog rt curl -XPOST api/search/aql -T aql.json
+            #- appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
+            #- echo $appVersion
+            #- add_pipeline_variables appVersion="${appVersion}" 
             - echo ${appVersion}
             - echo $triggerBuildInfoName
             - echo ${triggerBuildInfoNumber}
