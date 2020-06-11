@@ -9,7 +9,7 @@ pipelines:
 #            tag: 1.0.0
             name: docker.bintray.io/jfrog/pipelines-u16go
             tag: 1.13.7
-#            options: "-v /etc/ssl/certs/soleng-staging.crt:/etc/ssl/certs/soleng-staging.crt" 
+            options: "-v /etc/ssl/certs/multi-domain-soleng-staging.crt:/usr/share/ca-certificates/extra/multi-domain-soleng-staging.crt" 
 #            registry: registry_eu
 #            sourceRepository: docker
     steps:
@@ -30,7 +30,9 @@ pipelines:
             - name: artifactory_eu_ssl
         execution:
           onStart:
-            - env
+            - mkdir -p ~/.jfrog/security/certs 
+            - cp /usr/share/ca-certificates/extra/multi-domain-soleng-staging.crt ~/.jfrog/security/certs/
+            - sudo update-ca-certificates
             - jfrog rt c show 
             - jfrog rt ping
             - echo "Run Unit Testing ..." 
