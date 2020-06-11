@@ -24,12 +24,13 @@ pipelines:
           environmentVariables:
             OFFLINE_MODE: "true"
             CGO_ENABLED: 0
-            GO_PROXY: https://truc:truc@artifactory-eu.soleng-emea-staging.jfrog.team/artifactory/api/go/app-go	 
           integrations:
-            - name: artifactory_eu
+            - name: artifactory_eu_ssl
         execution:
           onStart:
             - env
+            - jfrog rt c show 
+            - jfrog rt ping
             - echo "Run Unit Testing ..." 
             - if [ $OFFLINE_MODE == "true" ]; then echo "Offline mode turned on";fi
             - env
