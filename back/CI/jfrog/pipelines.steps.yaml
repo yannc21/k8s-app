@@ -77,7 +77,7 @@ pipelines:
             - write_output build_info_back_app_promoted myversion=${appVersion}
 
 
-  - name: backapp_docker_pip
+  - name: backapp_docker_pipeline
     steps:
       - name: build_docker_backapp
         type: DockerBuild
