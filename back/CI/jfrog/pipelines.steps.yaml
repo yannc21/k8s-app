@@ -122,7 +122,7 @@ pipelines:
             - echo ${res_src_dockerfile_back_app_commitSha}
             - echo "Copying exec binary to specific location..." && ls -l
             - echo "Filespec location :" && echo ${res_back_app_exec_resourcePath} && ls -l ${res_back_app_exec_resourcePath}
-            - cp ${res_back_app_exec_resourcePath}/back* ${res_src_dockerfile_back_app_resourcePath}/back/CI/Docker/
+            #- cp ${res_back_app_exec_resourcePath}/back* ${res_src_dockerfile_back_app_resourcePath}/back/CI/Docker/
             - cd ${res_src_dockerfile_back_app_resourcePath}/back/CI/Docker/
             #- tar xvf back*.tgz
             - ls -l ${res_src_dockerfile_back_app_resourcePath}/back/CI/Docker

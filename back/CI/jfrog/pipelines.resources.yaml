@@ -6,7 +6,7 @@ resources:
     configuration:
       files:
         include: ^back\/.+
-        #exclude: ^back\/CI\/.+
+        exclude: ^back\/CI\/.+
       gitProvider: hza_github
       path: HamzaZFrog/k8s-app
       branches:
@@ -52,6 +52,7 @@ resources:
       pattern: 'app-gradle-rc-local/**/webservice-*.war'
       buildName: ${triggerBuildInfoName}
       buildNumber: ${triggerBuildInfoNumber}
+      target: war/webservice.war
       flat: true
 
   - name: build_info_docker_back_app
