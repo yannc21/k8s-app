@@ -90,6 +90,7 @@ pipelines:
           inputResources:
             - name: src_dockerfile_back_app
             - name: build_info_back_app_promoted
+            - name: back_app_exec
           integrations:
             - name: artifactory_eu
             - name: hza_github
