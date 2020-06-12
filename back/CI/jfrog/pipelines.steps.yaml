@@ -154,28 +154,28 @@ pipelines:
             - name: artifactory_eu_ssl
           outputResources:
             - name: suv_05_build_info_docker_backapp
-#       - name: scan_docker_build_info_backapp
-#         type: XrayScan
-#         configuration:
-#           failOnScan: false
-#           inputResources:
-#             - name: build_info_docker_backapp
-#               trigger: true
-#           outputResources:
-#             - name: build_info_docker_backapp_scanned
-#       - name: promote_docker_build_info_backapp
-#         type: PromoteBuild
-#         configuration:
-#           targetRepository: app-docker-sit-local
-#           includeDependencies: false
-#           status: "DOCKER_SCAN_OK"
-#           comment: "Xray scan passed succesfully"
-#           copy: false
-#           inputResources:
-#             - name: build_info_docker_backapp_scanned
-#               trigger: true
-#           outputResources:
-#             - name: build_info_docker_backapp_promoted
+      - name: suv_05_scan_docker_build_info_backapp
+        type: XrayScan
+        configuration:
+          failOnScan: false
+          inputResources:
+            - name: suv_05_build_info_docker_backapp
+              trigger: true
+      - name: suv_05_promote_docker_build_info_backapp
+        type: PromoteBuild
+        configuration:
+          targetRepository: app-docker-sit-local
+          includeDependencies: false
+          status: "DOCKER_SCAN_OK"
+          comment: "Xray scan passed succesfully"
+          copy: false
+          inputResources:
+            - name: suv_05_build_info_docker_backapp
+              trigger: true
+          outputResources:
+            - name: suv_05_build_info_docker_backapp_promoted
+          inputSteps:
+            - name: suv_05_scan_docker_build_info_backapp
 #         execution:
 #           onSuccess:
 #             - jfrog rt sp --build=${res_build_info_docker_backapp_scanned_buildName}/${res_build_info_docker_backapp_scanned_buildNumber}  app-docker-sit-local/**/manifest.json "docker.tag=${myDockerTag}"
