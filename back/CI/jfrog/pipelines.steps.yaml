@@ -94,9 +94,7 @@ pipelines:
             - echo ${res_suv_05_build_info_backapp_scanned_buildName} 
             - echo ${res_suv_05_build_info_backapp_scanned_buildNumber} 
           onSuccess:
-#            - jfrog rt sp --build=${res_suv_05_build_info_backapp_promoted_buildName}/${res_suv_05_build_info_backapp_promoted_buildNumber} app-generic-rc-local/ "app.version=${appVersion}"
             - write_output suv_05_build_info_backapp_promoted appversion=${appVersion}
-
   - name: suv_05_backapp_docker_pipeline
     configuration:
       runtime:      
@@ -106,7 +104,6 @@ pipelines:
             name: docker.bintray.io/jfrog/pipelines-u16node
             tag: 10.16.3
             options: "-v /etc/ssl/certs/multi-domain-soleng-staging.crt:/root/.jfrog/security/multi-domain-soleng-staging.crt  -v /etc/ssl/certs/multi-domain-soleng-staging.crt:/etc/ssl/certs/multi-domain-soleng-staging.crt" 
-
     steps:          
       - name: suv_05_build_docker_backapp
         type: DockerBuild
@@ -176,61 +173,40 @@ pipelines:
             - name: suv_05_build_info_docker_backapp_promoted
           inputSteps:
             - name: suv_05_scan_docker_build_info_backapp
-#         execution:
-#           onSuccess:
-#             - jfrog rt sp --build=${res_build_info_docker_backapp_scanned_buildName}/${res_build_info_docker_backapp_scanned_buildNumber}  app-docker-sit-local/**/manifest.json "docker.tag=${myDockerTag}"
+        execution:
+          onSuccess:
+            - write_output suv_05_build_info_docker_backapp_promoted docker_tag=${myDockerTag}
+  - name: suv_05_k8s_deploy_pipeline
+    configuration:
+      runtime:      
+        type: image
+        image:
+          custom:
+            name: docker.bintray.io/jfrog/pipelines-u16node
+            tag: 10.16.3
+            options: "-v /etc/ssl/certs/multi-domain-soleng-staging.crt:/root/.jfrog/security/multi-domain-soleng-staging.crt  -v /etc/ssl/certs/multi-domain-soleng-staging.crt:/etc/ssl/certs/multi-domain-soleng-staging.crt" 
 
-#   - name: app_deploy_pipeline
-#     steps:
-#       - name: export_var
-#         type: Bash
-#         configuration:
-#           integrations:
-#             - name: artifactory_eu
-#           inputResources:
-#             - name: build_info_docker_backapp_promoted
-#           outputResources:
-#             - name: app_helm_chart
-#         execution:
-#           onSuccess: 
-#           - add_pipeline_variables triggerBuildInfoName="${res_build_info_docker_backapp_promoted_buildName}"
-#           - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_docker_backapp_promoted_buildNumber}"
-
-#       - name: deploy_helm_chart
-#         type: HelmDeploy
-#         configuration:
-#           flags: "--set images.back.repository=yannaws-app-docker.jfrog.io/backapp --set images.back.tag=${backDockerTag} --set images.front.repository=yannaws-app-docker.jfrog.io/frontapp --set images.front.tag=0.1 --force"
-#           releaseName: yann-app
-#           dryRun: false
-#           lint: false
-#           lintFlags: "--strict"
-#           test: false
-#           testFlags: "--parallel"
-#           integrations:
-#             - name: ych_eks
-#             - name: ych_secret
-#             - name: artifactory_eu
-#           inputResources:
-#             - name: app_helm_chart
-#         execution:
-#           onStart:
-#             - helm version
-#             - aws --version
-#             - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" 
-#             - unzip awscliv2.zip 
-#             - ./aws/install
-#             - aws --version 
-#             - mkdir -p ~/.aws/ 
-#             - echo ${res_ych_secret_registry_accessKeyId} > ~/.aws/credentials
-#             - echo ${res_ych_secret_registry_secretAccessKey} >> ~/.aws/credentials
-#             - aws --version
-#             - echo "items.find({\"name\":\"manifest.json\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@docker.tag\")" > aql.json
-#             - cat aql.json
-#             - jfrog rt curl -XPOST api/search/aql -T aql.json
-#             - backDockerTag=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
-#             - echo $backDockerTag
-#             - env
-#       - name: non_regression_testing
+    steps:
+      - name: suv_05_deploy_helm_chart
+        type: HelmDeploy
+        configuration:
+          flags: "--set images.back.repository=app-docker.artifactory-eu.soleng-emea-staging.jfrog.team/backapp --set images.back.tag=${res_suv_05_build_info_docker_backapp_promoted_docker_tag} --set images.front.repository=app-docker.artifactory-eu.soleng-emea-staging.jfrog.team/frontapp --set images.front.tag=e8db0a7839414df41a9ad84153c168d2e449bf4f-e8db0a7839414df41a9ad84153c168d2e449bf4f --force"
+          releaseName: yann-app
+          dryRun: false
+          lint: false
+          lintFlags: "--strict"
+          test: false
+          testFlags: "--parallel"
+          integrations:
+            - name: ych_gke
+            - name: artifactory_eu_ssl
+          inputResources:
+            - name: app_helm_chart
+            - name: build_info_docker_backapp_promoted
+        execution:
+          onStart:
+            - helm version
+#       - name: suv_05_non_regression_testing
 #         type: Bash
 #         configuration:
 #           inputSteps:
@@ -240,7 +216,7 @@ pipelines:
 #             - echo "Running non regression tests"
 #           onSuccess: 
 #             - echo "non regression tests done !"
-#       - name: feature_testing
+#       - name: suv_05_feature_testing
 #         type: Bash
 #         configuration:
 #           inputSteps:
@@ -250,7 +226,7 @@ pipelines:
 #             - echo "Running feature_1 tests"
 #           onSuccess: 
 #             - echo "feature_1 tests done !"
-#       - name: performance_testing
+#       - name: suv_05_performance_testing
 #         type: Bash
 #         configuration:
 #           inputSteps:

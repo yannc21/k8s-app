@@ -94,11 +94,11 @@ resources:
       buildName: backapp-docker
       buildNumber: ${run_number}
 
-# # DEPLOY pipeline
-#   - name: app_helm_chart
-#     type: HelmChart
-#     configuration:
-#       sourceArtifactory: artifactory_eu
-#       repository: app-helm
-#       chart: my-app
-#       version: 0.0.1
+# DEPLOY pipeline
+  - name: suv_05_app_helm_chart
+    type: HelmChart
+    configuration:
+      sourceArtifactory: artifactory_eu_ssl
+      repository: helm
+      chart: my-app
+      version: 0.1.0
