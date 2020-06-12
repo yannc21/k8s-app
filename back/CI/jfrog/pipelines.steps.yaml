@@ -149,7 +149,7 @@ pipelines:
             - echo "Go App Build number :" 
             - echo ${triggerBuildInfoNumber}
             - echo "Go App version :" 
-            - echo ${appVersion} 
+            - echo ${res_suv_05_build_info_backapp_promoted_appversion} 
             - echo "Git repo hash :" 
             - echo ${res_suv_05_src_dockerfile_backapp_commitSha}
             - echo "Copying exec binary to specific location..." && ls -l
@@ -160,8 +160,8 @@ pipelines:
 #            - echo "items.find({\"name\":\"backend\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
 #            - cat aql.json
 #            - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
-            - echo $appVersion
-            - add_run_variables myDockerTag="${appVersion}-${res_suv_05_src_dockerfile_backapp_commitSha}"
+            - echo $res_suv_05_build_info_backapp_promoted_appversion
+            - add_run_variables myDockerTag="${res_suv_05_build_info_backapp_promoted_appversion}-${res_suv_05_src_dockerfile_backapp_commitSha}"
           onSuccess:
             - echo "Job well done!"
 #       - name: publish_docker_backapp
