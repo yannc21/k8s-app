@@ -94,7 +94,7 @@ pipelines:
             - echo ${res_suv_05_build_info_backapp_scanned_buildName} 
             - echo ${res_suv_05_build_info_backapp_scanned_buildNumber} 
           onSuccess:
-            - jfrog rt sp --build=${res_suv_05_build_info_backapp_promoted_buildName}/${res_suv_05_build_info_backapp_promoted_buildNumber} app-generic-rc-local/ "app.version=${appVersion}"
+#            - jfrog rt sp --build=${res_suv_05_build_info_backapp_promoted_buildName}/${res_suv_05_build_info_backapp_promoted_buildNumber} app-generic-rc-local/ "app.version=${appVersion}"
             - write_output suv_05_build_info_backapp_promoted appversion=${appVersion}
 
   - name: suv_05_backapp_docker_pipeline
@@ -133,7 +133,7 @@ pipelines:
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: back/CI/Docker/
           dockerImageName: 'yannaws-app-docker.jfrog.io/backapp'
-          dockerImageTag: ${appVersion}-${res_suv_05_src_dockerfile_backapp_commitSha}
+          dockerImageTag: ${res_suv_05_build_info_backapp_promoted_appversion}-${res_suv_05_src_dockerfile_backapp_commitSha}
           inputResources:
             - name: suv_05_src_dockerfile_backapp
             - name: suv_05_backapp_exec
