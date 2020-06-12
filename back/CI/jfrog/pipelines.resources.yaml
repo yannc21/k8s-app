@@ -17,17 +17,17 @@ resources:
 
 
 # DOCKER PIPELINE
-  # - name: src_dockerfile_backapp
-  #   type: GitRepo
-  #   configuration:
-  #     path: cyan21/k8s-app
-  #     branches:
-  #       include: master
-  #     files:
-  #       include: ^back\/CI\/Docker\/.+
-  #     gitProvider: yann_github
-  #     buildOn:
-  #       commit: false
+  - name: suv_05_src_dockerfile_backapp
+    type: GitRepo
+    configuration:
+      path: cyan21/k8s-app
+      branches:
+        include: master
+      files:
+        include: ^back\/CI\/Docker\/.+
+      gitProvider: yann_github
+      buildOn:
+        commit: false
         
   # HELM PIPELINE
   # - name: src_helm_chart_app
@@ -60,18 +60,18 @@ resources:
       buildName: backapp-go
       buildNumber: ${run_number}
 
-# # DOCKER PIPELINE 
-#   - name: backapp_exec
-#     type: FileSpec
-#     configuration:
-#       sourceArtifactory: artifactory_eu
-#       pattern: app-generic-rc-local/**/${appVersion}/backend
-#       buildName: ${triggerBuildInfoName}
-#       buildNumber: ${triggerBuildInfoNumber}
-#       flat: true
-# #      pattern: app-generic/backend
-# #      aql: '{"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"}'
-# #      aql: "({\"name\":\"backend\"})"
+# DOCKER PIPELINE 
+  - name: suv_05_backapp_exec
+    type: FileSpec
+    configuration:
+      sourceArtifactory: artifactory_eu_ssl
+      pattern: app-generic-rc-local/**/${appVersion}/backend
+      buildName: ${triggerBuildInfoName}
+      buildNumber: ${triggerBuildInfoNumber}
+      flat: true
+#      pattern: app-generic/backend
+#      aql: '{"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"}'
+#      aql: "({\"name\":\"backend\"})"
 
 #   - name: build_info_docker_backapp
 #     type: BuildInfo
