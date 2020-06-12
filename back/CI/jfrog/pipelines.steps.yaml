@@ -202,10 +202,10 @@ pipelines:
           inputResources:
             - name: suv_05_app_helm_chart
             - name: suv_05_build_info_docker_backapp_promoted
-        execution:
-          onStart:
-            - helm version
-            - gcloud container clusters get-credentials yann-k8s-cluster --zone europe-west2-c --project soleng-dev
+#        execution:
+#          onStart:
+#            - helm version
+#            - gcloud container clusters get-credentials yann-k8s-cluster --zone europe-west2-c --project soleng-dev
 #       - name: suv_05_non_regression_testing
 #         type: Bash
 #         configuration:
