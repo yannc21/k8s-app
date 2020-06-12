@@ -95,7 +95,7 @@ pipelines:
             - echo ${res_suv_05_build_info_backapp_scanned_buildNumber} 
           onSuccess:
             - jfrog rt sp --build=${res_suv_05_build_info_backapp_promoted_buildName}/${res_suv_05_build_info_backapp_promoted_buildNumber} app-generic-rc-local/ "app.version=${appVersion}"
-            - write_output suv_05_build_info_backapp_promoted myversion=${appVersion}
+            - write_output suv_05_build_info_backapp_promoted appversion=${appVersion}
 
   - name: suv_05_backapp_docker_pipeline
     configuration:
