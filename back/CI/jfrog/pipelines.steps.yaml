@@ -114,7 +114,7 @@ pipelines:
           affinityGroup: build_docker 
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: back/CI/Docker/
-          dockerImageName: 'app-docker.artifactory-eu.soleng-emea-staging.jfrog.team//backapp'
+          dockerImageName: 'app-docker.artifactory-eu.soleng-emea-staging.jfrog.team/backapp'
           dockerImageTag: ${res_suv_05_build_info_backapp_promoted_appversion}-${res_suv_05_src_dockerfile_backapp_commitSha}
           inputResources:
             - name: suv_05_src_dockerfile_backapp
@@ -131,9 +131,9 @@ pipelines:
             # - echo "Go App Build number :" 
             # - echo ${triggerBuildInfoNumber}
             # - echo "Go App version :" 
-            # - echo ${res_suv_05_build_info_backapp_promoted_appversion} 
+             - echo ${res_suv_05_build_info_backapp_promoted_appversion} 
             # - echo "Git repo hash :" 
-            # - echo ${res_suv_05_src_dockerfile_backapp_commitSha}
+             - echo ${res_suv_05_src_dockerfile_backapp_commitSha}
             # - echo "Copying exec binary to specific location..." && ls -l
             # - echo "Filespec location :" && echo ${res_suv_05_backapp_exec_resourcePath} && ls -l ${res_suv_05_backapp_exec_resourcePath}
             - cp ${res_suv_05_backapp_exec_resourcePath}/backend ${res_suv_05_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
