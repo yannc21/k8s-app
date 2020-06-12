@@ -107,32 +107,14 @@ pipelines:
             tag: 10.16.3
             options: "-v /etc/ssl/certs/multi-domain-soleng-staging.crt:/root/.jfrog/security/multi-domain-soleng-staging.crt  -v /etc/ssl/certs/multi-domain-soleng-staging.crt:/etc/ssl/certs/multi-domain-soleng-staging.crt" 
 
-    steps:
-      # - name: export_var
-      #   type: Bash
-      #   configuration:
-      #     integrations:
-      #       - name: artifactory_eu_ssl
-      #     inputResources:
-      #       - name: build_info_backapp_promoted
-      #     outputResources:
-      #       - name: backapp_exec
-      #   execution:
-      #     onSuccess: 
-      #     - add_pipeline_variables triggerBuildInfoName="${res_build_info_backapp_promoted_buildName}"
-      #     - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_backapp_promoted_buildNumber}"
-      #     - echo "items.find({\"name\":\"backend\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
-      #     - cat aql.json
-      #     - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
-      #     - add_pipeline_variables appVersion="${appVersion}"
-          
+    steps:          
       - name: suv_05_build_docker_backapp
         type: DockerBuild
         configuration:
           affinityGroup: build_docker 
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: back/CI/Docker/
-          dockerImageName: 'yannaws-app-docker.jfrog.io/backapp'
+          dockerImageName: 'app-docker.artifactory-eu.soleng-emea-staging.jfrog.team//backapp'
           dockerImageTag: ${res_suv_05_build_info_backapp_promoted_appversion}-${res_suv_05_src_dockerfile_backapp_commitSha}
           inputResources:
             - name: suv_05_src_dockerfile_backapp
@@ -145,41 +127,33 @@ pipelines:
           onStart:
             - add_run_variables triggerBuildInfoName="${res_suv_05_build_info_backapp_promoted_buildName}"
             - add_run_variables triggerBuildInfoNumber="${res_suv_05_build_info_backapp_promoted_buildNumber}"
-            - echo ${res_suv_05_backapp_exec_resourcePath}
-            - echo "Go App Build number :" 
-            - echo ${triggerBuildInfoNumber}
-            - echo "Go App version :" 
-            - echo ${res_suv_05_build_info_backapp_promoted_appversion} 
-            - echo "Git repo hash :" 
-            - echo ${res_suv_05_src_dockerfile_backapp_commitSha}
-            - echo "Copying exec binary to specific location..." && ls -l
-            - echo "Filespec location :" && echo ${res_suv_05_backapp_exec_resourcePath} && ls -l ${res_suv_05_backapp_exec_resourcePath}
+            # - echo ${res_suv_05_backapp_exec_resourcePath}
+            # - echo "Go App Build number :" 
+            # - echo ${triggerBuildInfoNumber}
+            # - echo "Go App version :" 
+            # - echo ${res_suv_05_build_info_backapp_promoted_appversion} 
+            # - echo "Git repo hash :" 
+            # - echo ${res_suv_05_src_dockerfile_backapp_commitSha}
+            # - echo "Copying exec binary to specific location..." && ls -l
+            # - echo "Filespec location :" && echo ${res_suv_05_backapp_exec_resourcePath} && ls -l ${res_suv_05_backapp_exec_resourcePath}
             - cp ${res_suv_05_backapp_exec_resourcePath}/backend ${res_suv_05_src_dockerfile_backapp_resourcePath}/back/CI/Docker/
             - cd ${res_suv_05_src_dockerfile_backapp_resourcePath}/back/CI/Docker/ && curl -O "https://${int_yann_github_token}@raw.githubusercontent.com/cyan21/k8s-app/master/back/data.json"
             - ls -l ${res_suv_05_src_dockerfile_backapp_resourcePath}/back/CI/Docker
-#            - echo "items.find({\"name\":\"backend\",\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
-#            - cat aql.json
-#            - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
-            - echo $res_suv_05_build_info_backapp_promoted_appversion
             - add_run_variables myDockerTag="${res_suv_05_build_info_backapp_promoted_appversion}-${res_suv_05_src_dockerfile_backapp_commitSha}"
           onSuccess:
             - echo "Job well done!"
-#       - name: publish_docker_backapp
-#         type: DockerPush
-#         configuration:
-#           affinityGroup: build_docker 
-#           targetRepository: app-docker
-#           autoPublishBuildInfo: true
-#           inputSteps:
-#             - name: build_docker_backapp
-#           integrations:
-#             - name: artifactory_eu
-#           outputResources:
-#             - name: build_info_docker_backapp
-#         execution:
-#           onSuccess:
-#             - echo "Job well done!"
-#             - echo $appVersion
+      - name: suv_05_publish_docker_backapp
+        type: DockerPush
+        configuration:
+          affinityGroup: build_docker 
+          targetRepository: app-docker
+          autoPublishBuildInfo: true
+          inputSteps:
+            - name: suv_05_build_docker_backapp
+          integrations:
+            - name: artifactory_eu_ssl
+          outputResources:
+            - name: suv_05_build_info_docker_backapp
 #       - name: scan_docker_build_info_backapp
 #         type: XrayScan
 #         configuration:

@@ -73,12 +73,12 @@ resources:
 #      aql: '{"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"}'
 #      aql: "({\"name\":\"backend\"})"
 
-#   - name: build_info_docker_backapp
-#     type: BuildInfo
-#     configuration:
-#       sourceArtifactory: artifactory_eu
-#       buildName: backapp-docker
-#       buildNumber: ${run_number}
+  - name: suv_05_build_info_docker_backapp
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu_ssl
+      buildName: backapp-docker
+      buildNumber: ${run_number}
 
 #   - name: build_info_docker_backapp_scanned
 #     type: BuildInfo
@@ -87,12 +87,12 @@ resources:
 #       buildName: backapp-docker
 #       buildNumber: ${run_number}
 
-#   - name: build_info_docker_backapp_promoted
-#     type: BuildInfo
-#     configuration:
-#       sourceArtifactory: artifactory_eu
-#       buildName: backapp-docker
-#       buildNumber: ${run_number}
+  # - name: suv_05_build_info_docker_backapp_promoted
+  #   type: BuildInfo
+  #   configuration:
+  #     sourceArtifactory: artifactory_eu_ssl
+  #     buildName: backapp-docker
+  #     buildNumber: ${run_number}
 
 # # DEPLOY pipeline
 #   - name: app_helm_chart
