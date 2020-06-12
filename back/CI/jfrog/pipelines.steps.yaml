@@ -70,8 +70,8 @@ pipelines:
           inputResources:
             - name: build_info_backapp
               trigger: true
-          outputResources:
-            - name: build_info_backapp_scanned
+#          outputResources:
+#            - name: build_info_backapp_scanned
 
       # Promote Go Build Info
       - name: promote_build_info_go_backapp
