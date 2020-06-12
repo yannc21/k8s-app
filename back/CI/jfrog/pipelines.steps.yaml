@@ -184,8 +184,7 @@ pipelines:
           custom:
             name: docker.bintray.io/jfrog/pipelines-u16node
             tag: 10.16.3
-            options: "-v /etc/ssl/certs/multi-domain-soleng-staging.crt:/root/.jfrog/security/multi-domain-soleng-staging.crt  -v /etc/ssl/certs/multi-domain-soleng-staging.crt:/etc/ssl/certs/multi-domain-soleng-staging.crt" 
-
+            options: "-v /etc/ssl/certs/multi-domain-soleng-staging.crt:/root/.jfrog/security/multi-domain-soleng-staging.crt  -v /etc/ssl/certs/multi-domain-soleng-staging.crt:/etc/ssl/certs/multi-domain-soleng-staging.crt"
     steps:
       - name: suv_05_deploy_helm_chart
         type: HelmDeploy
@@ -206,6 +205,7 @@ pipelines:
         execution:
           onStart:
             - helm version
+            - gcloud container clusters get-credentials yann-k8s-cluster --zone europe-west2-c --project soleng-dev
 #       - name: suv_05_non_regression_testing
 #         type: Bash
 #         configuration:
