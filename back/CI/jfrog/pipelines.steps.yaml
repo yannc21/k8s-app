@@ -103,8 +103,8 @@ pipelines:
         type: image
         image:
           custom:
-            name: docker.bintray.io/jfrog/pipelines-u16node:10.16.3
-            tag: 1.13.7
+            name: docker.bintray.io/jfrog/pipelines-u16node
+            tag: 10.16.3
             options: "-v /etc/ssl/certs/multi-domain-soleng-staging.crt:/root/.jfrog/security/multi-domain-soleng-staging.crt  -v /etc/ssl/certs/multi-domain-soleng-staging.crt:/etc/ssl/certs/multi-domain-soleng-staging.crt" 
 
     steps:
