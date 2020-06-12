@@ -98,6 +98,15 @@ pipelines:
             - write_output suv_05_build_info_backapp_promoted myversion=${appVersion}
 
   - name: suv_05_backapp_docker_pipeline
+    configuration:
+      runtime:      
+        type: image
+        image:
+          custom:
+            name: docker.bintray.io/jfrog/pipelines-u16node:10.16.3
+            tag: 1.13.7
+            options: "-v /etc/ssl/certs/multi-domain-soleng-staging.crt:/root/.jfrog/security/multi-domain-soleng-staging.crt  -v /etc/ssl/certs/multi-domain-soleng-staging.crt:/etc/ssl/certs/multi-domain-soleng-staging.crt" 
+
     steps:
       # - name: export_var
       #   type: Bash
