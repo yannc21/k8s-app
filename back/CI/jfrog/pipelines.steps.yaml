@@ -1,5 +1,5 @@
 pipelines:
-  - name: backapp_go_pipeline
+  - name: suv_05_backapp_go_pipeline
     configuration:
       runtime:      
         type: image
@@ -14,7 +14,7 @@ pipelines:
 #            sourceRepository: docker
     steps:
       # Build the Go app from the GitRepo
-      - name: build_go_backapp
+      - name: suv_05_build_go_backapp
         type: GoBuild
         configuration:
           sourceLocation: back/
@@ -22,7 +22,7 @@ pipelines:
           outputLocation: /tmp/dist
           outputFile: backend
           inputResources:
-            - name: src_code_backapp
+            - name: suv_05_src_code_backapp
           environmentVariables:
             OFFLINE_MODE: "true"
             CGO_ENABLED: 0
@@ -35,46 +35,46 @@ pipelines:
             - echo "Run Unit Testing ..." 
             - if [ $OFFLINE_MODE == "true" ]; then echo "Offline mode turned on";fi
             - env
-            - echo ${res_src_code_backapp_isGitTag}
+            - echo ${res_suv_05_src_code_backapp_isGitTag}
           onSuccess:
             - echo ${res_src_code_backapp_isGitTag}
-            - appVersion=`if [[ ${res_src_code_backapp_isGitTag} == "true" ]]; then echo ${res_src_code_backapp_gitTagName}; else echo ${res_src_code_backapp_commitSha}; fi`
+            - appVersion=`if [[ ${res_suv_05_src_code_backapp_isGitTag} == "true" ]]; then echo ${res_suv_05_src_code_backapp_gitTagName}; else echo ${res_suv_05_src_code_backapp_commitSha}; fi`
             - echo $appVersion 
             - add_pipeline_variables appVersion="${appVersion}"
-            - add_pipeline_variables subPath="${res_src_code_backapp_branchName}/${appVersion}"
+            - add_pipeline_variables subPath="${res_suv_05_src_code_backapp_branchName}/${appVersion}"
 
       # Publish the Go app (binary) and Go Build Info to Artifactory 
-      - name: publish_go_backapp
+      - name: suv_05_publish_go_backapp
         type: GoPublishBinary
         configuration:
           autoPublishBuildInfo: true
           targetRepository: app-generic-dev-local/${subPath}/
           inputSteps:
-            - name: build_go_backapp
+            - name: suv_05_build_go_backapp
           integrations:
             - name: artifactory_eu_ssl
           outputResources:
-            - name: build_info_backapp
+            - name: suv_05_build_info_backapp
         execution:
           onStart:
             - echo ${subPath} 
           onSuccess:
-            - echo ${res_build_info_backapp_buildName} 
-            - echo ${res_build_info_backapp_buildNumber} 
+            - echo ${res_suv_05_build_info_backapp_buildName} 
+            - echo ${res_suv_05_build_info_backapp_buildNumber} 
 
       # Scan Build Info
-      - name: scan_go_backapp
+      - name: suv_05_scan_go_backapp
         type: XrayScan 
         configuration:
           failOnScan: false
           inputResources:
-            - name: build_info_backapp
+            - name: suv_05_build_info_backapp
               trigger: true
 #          outputResources:
 #            - name: build_info_backapp_scanned
 
       # Promote Go Build Info
-      - name: promote_build_info_go_backapp
+      - name: suv_05_promote_build_info_go_backapp
         type: PromoteBuild
         configuration:
           targetRepository: app-generic-rc-local
@@ -83,18 +83,18 @@ pipelines:
           comment: "Unit testing and Xray scan passed succesfully"
           copy: false
           inputResources:
-            - name: build_info_backapp
+            - name: suv_05_build_info_backapp
               trigger: true
           outputResources:
-            - name: build_info_backapp_promoted
+            - name: suv_05_build_info_backapp_promoted
           inputSteps:
-            - name: build_go_backapp
+            - name: suv_05_scan_go_backapp
         execution:  
           onStart:
-            - echo ${res_build_info_backapp_scanned_buildName} 
-            - echo ${res_build_info_backapp_scanned_buildNumber} 
+            - echo ${res_suv_05_build_info_backapp_scanned_buildName} 
+            - echo ${res_suv_05_build_info_backapp_scanned_buildNumber} 
           onSuccess:
-            - jfrog rt sp --build=${res_build_info_backapp_scanned_buildName}/${res_build_info_backapp_scanned_buildNumber} app-generic-rc-local/ "app.version=${appVersion}"
+            - jfrog rt sp --build=${res_suv_05_build_info_backapp_promoted_buildName}/${res_suv_05_build_info_backapp_promoted_buildNumber} app-generic-rc-local/ "app.version=${appVersion}"
   
 #   - name: backapp_docker_pipeline
 #     steps:

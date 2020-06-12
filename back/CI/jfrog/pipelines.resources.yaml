@@ -1,6 +1,6 @@
 resources:
 # GO PIPELINE
-  - name: src_code_backapp
+  - name: suv_05_src_code_backapp
     type: GitRepo
     configuration:
       path: cyan21/k8s-app
@@ -39,7 +39,7 @@ resources:
   #     gitProvider: yann_github
 
   # Build info for the published Go app
-  - name: build_info_backapp
+  - name: suv_05_build_info_backapp
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
@@ -53,7 +53,7 @@ resources:
   #     buildName: backapp-go
   #     buildNumber: ${run_number}
   
-  - name: build_info_backapp_promoted
+  - name: suv_05_build_info_backapp_promoted
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
