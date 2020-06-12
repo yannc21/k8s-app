@@ -83,10 +83,12 @@ pipelines:
           comment: "Unit testing and Xray scan passed succesfully"
           copy: false
           inputResources:
-            - name: build_info_backapp_scanned
+            - name: build_info_backapp
               trigger: true
           outputResources:
             - name: build_info_backapp_promoted
+          inputSteps:
+            - name: build_go_backapp
         execution:  
           onStart:
             - echo ${res_build_info_backapp_scanned_buildName} 
