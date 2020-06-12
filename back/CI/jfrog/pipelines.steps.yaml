@@ -201,8 +201,8 @@ pipelines:
             - name: ych_gke
             - name: artifactory_eu_ssl
           inputResources:
-            - name: app_helm_chart
-            - name: build_info_docker_backapp_promoted
+            - name: suv_05_app_helm_chart
+            - name: suv_05_build_info_docker_backapp_promoted
         execution:
           onStart:
             - helm version
