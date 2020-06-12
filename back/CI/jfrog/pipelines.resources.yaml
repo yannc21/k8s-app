@@ -65,7 +65,7 @@ resources:
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory_eu_ssl
-      pattern: app-generic-rc-local/**/${appVersion}/backend
+      pattern: app-generic-rc-local/**/${res_suv_05_build_info_backapp_promoted_appversion}/backend
       buildName: ${triggerBuildInfoName}
       buildNumber: ${triggerBuildInfoNumber}
       flat: true
