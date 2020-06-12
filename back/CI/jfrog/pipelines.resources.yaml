@@ -42,7 +42,7 @@ resources:
   - name: suv_05_build_info_backapp
     type: BuildInfo
     configuration:
-      sourceArtifactory: artifactory_eu
+      sourceArtifactory: artifactory_eu_ssl
       buildName: backapp-go
       buildNumber: ${run_number}
 
@@ -56,7 +56,7 @@ resources:
   - name: suv_05_build_info_backapp_promoted
     type: BuildInfo
     configuration:
-      sourceArtifactory: artifactory_eu
+      sourceArtifactory: artifactory_eu_ssl
       buildName: backapp-go
       buildNumber: ${run_number}
 
