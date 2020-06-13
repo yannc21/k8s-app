@@ -207,7 +207,8 @@ pipelines:
         execution:
           onStart:
             - helm version
-            - gcloud container clusters get-credentials yann-k8s-cluster --zone europe-west2-c --project soleng-dev
+            - gcloud auth print-refresh-token
+#            - gcloud container clusters get-credentials yann-k8s-cluster --zone europe-west2-c --project soleng-dev
 #       - name: suv_05_non_regression_testing
 #         type: Bash
 #         configuration:
