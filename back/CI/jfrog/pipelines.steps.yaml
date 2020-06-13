@@ -206,8 +206,10 @@ pipelines:
             - name: suv_05_build_info_docker_backapp_promoted
         execution:
           onStart:
-            - helm version
             - gcloud auth list
+            - echo test
+            - helm version
+
 #            - gcloud container clusters get-credentials yann-k8s-cluster --zone europe-west2-c --project soleng-dev
 #       - name: suv_05_non_regression_testing
 #         type: Bash
