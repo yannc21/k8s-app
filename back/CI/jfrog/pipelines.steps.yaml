@@ -197,11 +197,10 @@ pipelines:
           test: false
           testFlags: "--parallel"
           integrations:
-            - name: ych_gke
-#            - name : app_k8s_cluster_integration
+#            - name: ych_gke
+            - name : app_k8s_cluster_integration
 #            - name: app_docker
             - name: artifactory_eu
-            - name: yann_svc_account
           inputResources:
             - name: suv_05_app_helm_chart
             - name: suv_05_build_info_docker_backapp_promoted
