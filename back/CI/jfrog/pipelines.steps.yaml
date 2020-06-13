@@ -197,7 +197,8 @@ pipelines:
           test: false
           testFlags: "--parallel"
           integrations:
-            - name: ych_gke
+#            - name: ych_gke
+            - name : app_k8s_cluster_integration
 #            - name: app_docker
             - name: artifactory_eu
           inputResources:
