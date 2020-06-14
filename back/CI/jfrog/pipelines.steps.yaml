@@ -160,7 +160,7 @@ pipelines:
           outputResources:
             - name: build_info_docker_backapp_scanned
 
-      - name: promote_docker_build_info_backapp
+      - name: promoting_docker_build_info_backapp
         type: PromoteBuild
         configuration:
           affinityGroup: swampup
