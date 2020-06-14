@@ -183,6 +183,6 @@ pipelines:
             - jfrog rt cp --build=${res_build_info_docker_backapp_scanned_buildName}/${res_build_info_docker_backapp_scanned_buildNumber} docker-dev-local/ docker-release-local/
           onSuccess:
             - jfrog rt sp --build=${res_build_info_docker_backapp_scanned_buildName}/${res_build_info_docker_backapp_scanned_buildNumber} docker-release-local/**/manifest.json "docker.tag=${myDockerTag}"
-            - write_output build_info_docker_backapp_promoted backregistry=docker.artifactory-eu.soleng-emea-staging.jfrog.team
-            - write_output build_info_docker_backapp_promoted backimage=backapp
-            - write_output build_info_docker_backapp_promoted backtag=${myDockerTag}
+            - write_output build_info_docker_backapp_promoted_hza backregistry=docker.artifactory-eu.soleng-emea-staging.jfrog.team
+            - write_output build_info_docker_backapp_promoted_hza backimage=backapp
+            - write_output build_info_docker_backapp_promoted_hza backtag=${myDockerTag}
