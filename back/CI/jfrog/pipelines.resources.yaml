@@ -70,7 +70,7 @@ resources:
       buildName: back_app-docker
       buildNumber: '${run_number}'
 
-  - name: build_info_docker_backapp_promoted
+  - name: build_info_docker_backapp_promoted_hza
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
