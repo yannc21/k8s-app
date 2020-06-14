@@ -80,7 +80,7 @@ resources:
       buildName: frontapp-docker
       buildNumber: '${run_number}'
 
-  - name: build_info_docker_frontapp_promoted
+  - name: build_info_docker_frontapp_promoted_hza
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
