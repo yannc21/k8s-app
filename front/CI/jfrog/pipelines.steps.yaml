@@ -215,7 +215,7 @@ pipelines:
             - name: build_info_docker_frontapp_scanned
               trigger: true
           outputResources:
-            - name: build_info_docker_backapp_promoted_hza
+            - name: build_info_docker_frontapp_promoted
         execution:
           onStart:
             - echo ${res_build_info_docker_frontapp_scanned_buildName}
