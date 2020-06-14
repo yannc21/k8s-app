@@ -152,7 +152,7 @@ pipelines:
       - name: scan_docker_build_info_backapp
         type: XrayScan
         configuration:
-          affinityGroup: swampup
+          #affinityGroup: swampup
           failOnScan: false
           inputResources:
             - name: build_info_docker_backapp
@@ -163,7 +163,7 @@ pipelines:
       - name: promoting_docker_build_info_backapp
         type: PromoteBuild
         configuration:
-          affinityGroup: swampup
+          #affinityGroup: swampup
           targetRepository: app-docker-sit-local
           includeDependencies: false
           status: "DOCKER_SCAN_OK"
