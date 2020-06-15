@@ -206,7 +206,7 @@ pipelines:
         type: Bash
         configuration:
           inputSteps:
-            - name: deploy_helm_chart
+            - name: suv_05_deploy_helm_chart
         execution:
           onStart: 
             - echo "Running non regression tests"
@@ -216,7 +216,7 @@ pipelines:
         type: Bash
         configuration:
           inputSteps:
-            - name: deploy_helm_chart
+            - name: suv_05_deploy_helm_chart
         execution:
           onStart: 
             - echo "Running feature_1 tests"
@@ -226,7 +226,7 @@ pipelines:
         type: Bash
         configuration:
           inputSteps:
-            - name: deploy_helm_chart
+            - name: suv_05_deploy_helm_chart
         execution:
           onStart: 
             - echo "Running performance tests"
