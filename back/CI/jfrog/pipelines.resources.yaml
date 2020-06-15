@@ -24,7 +24,8 @@ resources:
       branches:
         include: master
       files:
-        include: ^back\/CI\/Docker\/.+
+#        include: ^back\/CI\/Docker\/.+
+        include: ^back\/CI\/Docker\/jfrog-Dockerfile
       gitProvider: yann_github
       buildOn:
         commit: true 
