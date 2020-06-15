@@ -3,6 +3,7 @@ RUN apk update && apk add curl
 
 WORKDIR /root/
 
+# dummy comment 
 COPY backend .
 COPY data.json .
 
