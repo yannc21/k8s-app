@@ -85,7 +85,7 @@ resources:
   - name: suv_05_app_helm_chart
     type: HelmChart
     configuration:
-      sourceArtifactory: artifactory_eu
+      sourceArtifactory: artifactory_eu_ssl
       repository: helm
       chart: my-app
       version: 0.1.0

@@ -198,46 +198,37 @@ pipelines:
           testFlags: "--parallel"
           integrations:
             - name: ych_gke
-#            - name : app_k8s_cluster_integration
-#            - name: app_docker
-            - name: artifactory_eu
+            - name: artifactory_eu_ssl
           inputResources:
             - name: suv_05_app_helm_chart
             - name: suv_05_build_info_docker_backapp_promoted
-        # execution:
-        #   onStart:
-        #     - gcloud auth list
-        #     - echo test
-        #     - helm version
-
-#            - gcloud container clusters get-credentials yann-k8s-cluster --zone europe-west2-c --project soleng-dev
-#       - name: suv_05_non_regression_testing
-#         type: Bash
-#         configuration:
-#           inputSteps:
-#             - name: deploy_helm_chart
-#         execution:
-#           onStart: 
-#             - echo "Running non regression tests"
-#           onSuccess: 
-#             - echo "non regression tests done !"
-#       - name: suv_05_feature_testing
-#         type: Bash
-#         configuration:
-#           inputSteps:
-#             - name: deploy_helm_chart
-#         execution:
-#           onStart: 
-#             - echo "Running feature_1 tests"
-#           onSuccess: 
-#             - echo "feature_1 tests done !"
-#       - name: suv_05_performance_testing
-#         type: Bash
-#         configuration:
-#           inputSteps:
-#             - name: deploy_helm_chart
-#         execution:
-#           onStart: 
-#             - echo "Running performance tests"
-#           onSuccess: 
-#             - echo "performance tests done !"
+      - name: suv_05_non_regression_testing
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: deploy_helm_chart
+        execution:
+          onStart: 
+            - echo "Running non regression tests"
+          onSuccess: 
+            - echo "non regression tests done !"
+      - name: suv_05_feature_testing
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: deploy_helm_chart
+        execution:
+          onStart: 
+            - echo "Running feature_1 tests"
+          onSuccess: 
+            - echo "feature_1 tests done !"
+      - name: suv_05_performance_testing
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: deploy_helm_chart
+        execution:
+          onStart: 
+            - echo "Running performance tests"
+          onSuccess: 
+            - echo "performance tests done !"
