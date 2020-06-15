@@ -4,8 +4,8 @@ resources:
     type: GitRepo
     configuration:
       path: cyan21/k8s-app
-      branches:
-        include: master
+      branches: 
+        include: demo-soleng  
       files:
         include: ^back\/.+
         exclude: ^back\/CI\/.+
@@ -22,7 +22,7 @@ resources:
     configuration:
       path: cyan21/k8s-app
       branches:
-        include: master
+        include: demo-soleng
       files:
 #        include: ^back\/CI\/Docker\/.+
         include: ^back\/CI\/Docker\/jfrog-Dockerfile
