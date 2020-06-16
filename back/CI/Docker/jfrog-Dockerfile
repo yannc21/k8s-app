@@ -1,4 +1,4 @@
-FROM docker.artifactory-eu.soleng-emea-staging.jfrog.team/jfrog-docker-framework:latest
+FROM app-docker.artifactory-eu.soleng-emea-staging.jfrog.team/jfrog-docker-framework:latest
 
 RUN rm -rf /home/exec/apache-tomcat-8.0.32/webapps/*
 
