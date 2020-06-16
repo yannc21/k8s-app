@@ -1,5 +1,5 @@
 pipelines:
-  - name: frontapp_npm_pipeline
+  - name: asuv_003_frontapp_npm_pipeline
 
     steps:
       - name: build_npm_frontend
@@ -109,7 +109,7 @@ pipelines:
           onSuccess:
             - jfrog rt sp --build=${res_FrontAppBuildInfo_buildName}/${res_FrontAppBuildInfo_buildNumber} app-npm-rc-local/ "app.version=${appVersion}"
 
-  - name: frontapp_docker_pipeline
+  - name: asuv_003_frontapp_docker_pipeline
     steps:
       - name: export_var
         type: Bash
