@@ -96,5 +96,5 @@ func main() {
 	fmt.Println("listens to : " + fqdn + ":" +port)
 	http.HandleFunc("/quote", quoteOfTheDay)
 	http.ListenAndServe(fqdn+":"+port, nil)
-	// dummy comment 2
+	// dummy comment 3 
 }
