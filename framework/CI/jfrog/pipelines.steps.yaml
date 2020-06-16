@@ -18,7 +18,6 @@ pipelines:
         execution:
           onStart:
             - echo "Preparing for work"
-            - sed -ie 's#docker.artifactory/##g' $res_src_dockerfile_framework_resourcePath/framework/CI/Docker/jfrog-Dockerfile
           onSuccess:
             - echo "Job well done!"
           onFailure:
