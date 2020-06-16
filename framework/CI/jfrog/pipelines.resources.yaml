@@ -1,0 +1,32 @@
+resources:
+  - name: src_dockerfile_framework
+    type: GitRepo
+    configuration:
+      files:
+        include: ^framework\/CI\/Docker\/.+
+      path: HamzaZFrog/k8s-app
+      branches:
+        include: swampup2020
+      gitProvider: hza_github
+
+  - name: frameworkGenericFileSpec
+    type: FileSpec
+    configuration:
+      sourceArtifactory: artifactory_eu
+      pattern:  tomcat-local/(*).tar.gz
+      target:   ./{1}.tar.gz
+      flat:     true
+
+  - name: docker_Framework_BuildInfo
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: docker_framework_pipeline
+      buildNumber: ${run_number}
+  
+  - name: docker_Framework_BuildInfo_Promoted
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: docker_framework_pipeline
+      buildNumber: ${run_number}

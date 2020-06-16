@@ -1,0 +1,29 @@
+pipelines:
+  - name: asuv_003_docker_framework_pipeline
+
+    steps:
+      - name: build_Docker_Framework
+        type: DockerBuild
+        configuration:
+          affinityGroup:       fmkGroup
+          dockerFileLocation:  framework/
+          dockerFileName:      Dockerfile
+          dockerImageName:     docker.artifactory-eu.soleng-emea-staging.jfrog.team/jfrog-docker-framework
+          dockerImageTag:      ${run_number}
+          integrations:        
+            - name: artifactory_eu
+          inputResources:
+            - name: src_dockerfile_framework
+            - name: frameworkGenericFileSpec
+        execution:
+          onStart:
+            - echo "Preparing for work"
+            - sed -ie 's#docker.artifactory/##g' $res_src_dockerfile_framework_resourcePath/framework/Docker/jfrog-Dockerfile
+          onSuccess:
+            - echo "Job well done!"
+          onFailure:
+            - echo "You Lose"
+          onComplete: #always
+            - echo "Leave it as you found it. Let's clean it"
+
+    
