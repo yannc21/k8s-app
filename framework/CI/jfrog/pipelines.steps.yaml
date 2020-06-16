@@ -18,7 +18,7 @@ pipelines:
         execution:
           onStart:
             - echo "Preparing for work"
-            - sed -ie 's#docker.artifactory/##g' $res_src_dockerfile_framework_resourcePath/framework/Docker/jfrog-Dockerfile
+            - sed -ie 's#docker.artifactory/##g' $res_src_dockerfile_framework_resourcePath/framework/CI/Docker/jfrog-Dockerfile
           onSuccess:
             - echo "Job well done!"
           onFailure:
@@ -26,4 +26,26 @@ pipelines:
           onComplete: #always
             - echo "Leave it as you found it. Let's clean it"
 
-    
+      - name: push_Docker_Framework
+        type: DockerPush
+        configuration:
+          affinityGroup: fmkGroup
+          targetRepository: docker-dev-local
+          autoPublishBuildInfo: true
+          integrations:
+            - name: artifactory_eu
+          inputSteps:
+            - name: build_Docker_Framework
+          outputResources:
+            - name: docker_Framework_BuildInfo
+
+      - name: scan_Docker_Framework_build_info
+        type: XrayScan
+        configuration:
+          affinityGroup: fmkGroup
+          failOnScan: false
+          inputResources:
+            - name: docker_Framework_BuildInfo
+              trigger: true
+
+      
