@@ -42,9 +42,23 @@ pipelines:
         type: XrayScan
         configuration:
           affinityGroup: fmkGroup
-          failOnScan: false
+          failOnScan: 'false'
           inputResources:
             - name: docker_Framework_BuildInfo
               trigger: true
 
+      - name: promoteFrameworkBuild
+        type: PromoteBuild
+        configuration:
+          affinityGroup: fmkGroup
+          targetRepository: docker-prod-local
+          inputSteps:
+            - name: scan_Docker_Framework_build_info
+          inputResources:
+            - name: docker_Framework_BuildInfo
+          outputResources:
+            - name: docker_Framework_BuildInfo_Promoted
+        execution:
+          onSuccess:
+            - echo "Job well done!"
       
