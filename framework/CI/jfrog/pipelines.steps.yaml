@@ -14,7 +14,7 @@ pipelines:
             - name: artifactory_eu
           inputResources:
             - name: src_dockerfile_framework
-            - name: frameworkGenericFileSpec
+            - name: framework_Generic_FileSpec
         execution:
           onStart:
             - echo "Preparing for work"

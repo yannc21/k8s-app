@@ -9,7 +9,7 @@ resources:
         include: swampup2020
       gitProvider: hza_github
 
-  - name: frameworkGenericFileSpec
+  - name: framework_Generic_FileSpec
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory_eu
