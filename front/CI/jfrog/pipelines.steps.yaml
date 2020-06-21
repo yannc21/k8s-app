@@ -127,6 +127,7 @@ pipelines:
             - name: frontapp_exec
           integrations:
             - name: artifactory
+            - name: docker_registry
         execution:
           onStart:
             - echo ${int_artifactory_url}
