@@ -28,14 +28,14 @@ resources:
   - name: FrontAppBuildInfo
     type: BuildInfo
     configuration:
-      sourceArtifactory: artifactory_eu
+      sourceArtifactory: artifactory
       buildName: frontapp_npm_pipeline
       buildNumber: ${run_number}
   
   - name: build_info_frontapp_promoted_staging
     type: BuildInfo
     configuration:
-      sourceArtifactory: artifactory_eu
+      sourceArtifactory: artifactory
       buildName: frontapp_npm_pipeline
       buildNumber: '${run_number}'
 
@@ -43,14 +43,14 @@ resources:
 #  - name: aql_go
 #    type: Aql
 #    configuration:
-#      sourceArtifactory: artifactory_eu
+#      sourceArtifactory: artifactory
 #      query: items.find({"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"})
 #      query: items.find({"name":"backend"})
 
   - name: frontapp_exec
     type: FileSpec
     configuration:
-      sourceArtifactory: artifactory_eu
+      sourceArtifactory: artifactory
       pattern: app-npm-rc-local/front/**/front**
       buildName: ${triggerBuildInfoName}
       buildNumber: ${triggerBuildInfoNumber}
@@ -62,13 +62,13 @@ resources:
   - name: build_info_docker_frontapp
     type: BuildInfo
     configuration:
-      sourceArtifactory: artifactory_eu
+      sourceArtifactory: artifactory
       buildName: frontapp-docker
       buildNumber: '${run_number}'
 
   - name: build_info_docker_frontapp_promoted_staging
     type: BuildInfo
     configuration:
-      sourceArtifactory: artifactory_eu
+      sourceArtifactory: artifactory
       buildName: frontapp-docker
       buildNumber: '${run_number}'
