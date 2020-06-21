@@ -31,15 +31,8 @@ resources:
       sourceArtifactory: artifactory_eu
       buildName: frontapp_npm_pipeline
       buildNumber: ${run_number}
-
-  - name: FrontAppBuildInfo_scanned
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: artifactory_eu
-      buildName: frontapp_npm_pipeline
-      buildNumber: '${run_number}'
   
-  - name: build_info_frontapp_promoted
+  - name: build_info_frontapp_promoted_staging
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
@@ -73,7 +66,7 @@ resources:
       buildName: frontapp-docker
       buildNumber: '${run_number}'
 
-  - name: build_info_docker_frontapp_promoted_hza
+  - name: build_info_docker_frontapp_promoted_staging
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu

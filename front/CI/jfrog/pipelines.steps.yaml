@@ -214,18 +214,20 @@ pipelines:
           copy: false
           integrations:
             - name: artifactory_eu
+          inputSteps:
+            - name: scan_docker_build_info_frontapp
           inputResources:
-            - name: build_info_docker_frontapp_scanned
+            - name: build_info_docker_frontapp
               trigger: true
           outputResources:
-            - name: build_info_docker_frontapp_promoted_hza
+            - name: build_info_docker_frontapp_promoted_staging
         execution:
           onStart:
-            - echo ${res_build_info_docker_frontapp_scanned_buildName}
-            - echo ${res_build_info_docker_frontapp_scanned_buildNumber}
-            - jfrog rt cp --build=${res_build_info_docker_frontapp_scanned_buildName}/${res_build_info_docker_frontapp_scanned_buildNumber} app-docker-dev-local/ app-docker-sit-local/
+            - echo ${res_build_info_docker_frontapp_buildName}
+            - echo ${res_build_info_docker_frontapp_buildNumber}
+            - jfrog rt cp --build=${res_build_info_docker_frontapp_buildName}/${res_build_info_docker_frontapp_buildNumber} app-docker-dev-local/ app-docker-sit-local/
           onSuccess:
-            - jfrog rt sp --build=${res_build_info_docker_frontapp_scanned_buildName}/${res_build_info_docker_frontapp_scanned_buildNumber} app-docker-sit-local/**/manifest.json "docker.tag=${myDockerTag}"
-            - write_output build_info_docker_frontapp_promoted_hza "frontregistry=\"docker.artifactory-eu.soleng-emea-staging.jfrog.team\""
-            - write_output build_info_docker_frontapp_promoted_hza "frontimage=\"frontapp\""
-            - write_output build_info_docker_frontapp_promoted_hza "fronttag=${myDockerTag}"
+            - jfrog rt sp --build=${res_build_info_docker_frontapp_buildName}/${res_build_info_docker_frontapp_buildNumber} app-docker-sit-local/**/manifest.json "docker.tag=${myDockerTag}"
+            - write_output build_info_docker_frontapp_promoted_staging "frontregistry=\"docker.artifactory-eu.soleng-emea-staging.jfrog.team\""
+            - write_output build_info_docker_frontapp_promoted_staging "frontimage=\"frontapp\""
+            - write_output build_info_docker_frontapp_promoted_staging "fronttag=${myDockerTag}"

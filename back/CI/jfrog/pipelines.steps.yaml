@@ -182,7 +182,7 @@ pipelines:
       - name: promoting_docker_build_info_backapp
         type: PromoteBuild
         configuration:
-          #affinityGroup: swampup
+          affinityGroup: swampup
           targetRepository: app-docker-sit-local
           includeDependencies: false
           status: "DOCKER_SCAN_OK"
@@ -192,9 +192,9 @@ pipelines:
             - name: artifactory_eu
           inputResources:
             - name: build_info_docker_backapp
+              trigger: true
           inputSteps:
             - name: scan_docker_build_info_backapp
-              trigger: true
           outputResources:
             - name: build_info_docker_backapp_promoted_staging
         execution:
