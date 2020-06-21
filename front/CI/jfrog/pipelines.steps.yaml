@@ -9,7 +9,7 @@ pipelines:
           repositoryName: npm
           sourceLocation: front/
           integrations:
-            - name: artifactory_eu
+            - name: artifactory
           inputResources:
             - name: src_code_frontapp
         execution:
@@ -29,7 +29,7 @@ pipelines:
           inputSteps:
             - name: build_npm_frontend
           integrations:
-            - name: artifactory_eu
+            - name: artifactory
         execution:
           onStart:
             - echo "Run Unit Testing ..." 
@@ -55,7 +55,7 @@ pipelines:
           inputSteps:
             - name: npm_package_frontend
           integrations:
-            - name: artifactory_eu 
+            - name: artifactory 
 
       - name: publish_frontend_buildinfo
         type: PublishBuildInfo
@@ -75,7 +75,7 @@ pipelines:
         type: Bash
         configuration:
           integrations:
-            - name: artifactory_eu
+            - name: artifactory
           affinityGroup: together
           inputResources:
             - name: FrontAppBuildInfo
@@ -126,7 +126,7 @@ pipelines:
             - name: build_info_frontapp_promoted_staging
             - name: frontapp_exec
           integrations:
-            - name: artifactory_eu
+            - name: artifactory
         execution:
           onStart:
             - echo ${int_artifactory_url}
@@ -161,7 +161,7 @@ pipelines:
           inputSteps:
             - name: build_docker_frontapp
           integrations:
-            - name: artifactory_eu
+            - name: artifactory
           outputResources:
             - name: build_info_docker_frontapp
         execution:
@@ -173,7 +173,7 @@ pipelines:
         type: Bash
         configuration:
           integrations:
-            - name: artifactory_eu
+            - name: artifactory
           affinityGroup: swampupgrp
           inputResources:
             - name: build_info_docker_frontapp
@@ -193,7 +193,7 @@ pipelines:
           comment: "Xray scan passed succesfully"
           copy: false
           integrations:
-            - name: artifactory_eu
+            - name: artifactory
           inputSteps:
             - name: xray_scan_docker_build_info_frontapp
           inputResources:
