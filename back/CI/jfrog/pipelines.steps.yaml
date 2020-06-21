@@ -165,7 +165,7 @@ pipelines:
             - echo "Job well done!"
             - echo $appVersion
 
-      - name: scan_docker_build_info_backapp
+      - name: xray_scan_docker_build_info_backapp
         type: Bash
         configuration:
           integrations:
@@ -194,7 +194,7 @@ pipelines:
             - name: build_info_docker_backapp
               trigger: true
           inputSteps:
-            - name: scan_docker_build_info_backapp
+            - name: xray_scan_docker_build_info_backapp
           outputResources:
             - name: build_info_docker_backapp_promoted_staging
         execution:

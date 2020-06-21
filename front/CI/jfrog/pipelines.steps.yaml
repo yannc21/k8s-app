@@ -189,7 +189,7 @@ pipelines:
             - echo "Job well done!"
             - echo $appVersion
       
-      - name: scan_docker_build_info_frontapp
+      - name: xray_scan_docker_build_info_frontapp
         type: Bash
         configuration:
           integrations:
@@ -215,7 +215,7 @@ pipelines:
           integrations:
             - name: artifactory_eu
           inputSteps:
-            - name: scan_docker_build_info_frontapp
+            - name: xray_scan_docker_build_info_frontapp
           inputResources:
             - name: build_info_docker_frontapp
               trigger: true
