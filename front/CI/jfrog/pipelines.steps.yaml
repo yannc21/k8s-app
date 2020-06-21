@@ -109,7 +109,10 @@ pipelines:
           onSuccess:
             - jfrog rt sp --build=${res_FrontAppBuildInfo_buildName}/${res_FrontAppBuildInfo_buildNumber} app-npm-rc-local/ "app.version=${appVersion}"
             - write_output build_info_frontapp_promoted_staging myversion=${appVersion}
-      
+
+
+  - name: asuv_003_frontapp_docker_pipeline
+    steps:
       - name: build_docker_frontapp
         type: DockerBuild
         configuration:
