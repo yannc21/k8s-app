@@ -129,7 +129,7 @@ pipelines:
             - name: artifactory_eu
         execution:
           onStart:
-            - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
+            - export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')
             - echo ${res_build_info_frontapp_promoted_staging_myversion}
             - add_pipeline_variables appVersion="${res_build_info_frontapp_promoted_staging_myversion}"
             - echo ${res_frontapp_exec_resourcePath}
@@ -201,7 +201,7 @@ pipelines:
             - name: build_info_docker_frontapp_promoted_staging
         execution:
           onStart:
-            - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
+            - export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')
             - echo ${res_build_info_docker_frontapp_buildName}
             - echo ${res_build_info_docker_frontapp_buildNumber}
             - jfrog rt cp --build=${res_build_info_docker_frontapp_buildName}/${res_build_info_docker_frontapp_buildNumber} app-docker-dev-local/ app-docker-sit-local/

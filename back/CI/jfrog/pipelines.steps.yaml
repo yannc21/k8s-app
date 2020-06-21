@@ -109,7 +109,7 @@ pipelines:
             - name: hza_github
         execution:
           onStart:
-            - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
+            - export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')
             - echo ${res_build_info_back_app_promoted_staging_myversion}
             - add_pipeline_variables appVersion="${res_build_info_back_app_promoted_staging_myversion}"
             - echo $triggerBuildInfoName
@@ -197,7 +197,7 @@ pipelines:
             - name: build_info_docker_backapp_promoted_staging
         execution:
           onStart:
-            - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
+            - export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')
             - echo ${res_build_info_docker_backapp_buildName}
             - echo ${res_build_info_docker_backapp_buildNumber}
             - jfrog rt cp --build=${res_build_info_docker_backapp_buildName}/${res_build_info_docker_backapp_buildNumber} app-docker-dev-local/ app-docker-sit-local/
