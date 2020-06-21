@@ -147,7 +147,7 @@ pipelines:
             - cd ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker/
             - tar xvf front*.tgz
             - ls -l ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker
-            - sed -i "s/registry/${ArtIP}/g" Chart.yaml
+            - sed -i "s/registry/${ArtIP}/g" jfrog-Dockerfile
             - echo $appVersion
             - add_pipeline_variables myDockerTag="${appVersion}-${res_src_dockerfile_frontapp_commitSha}"
           onSuccess:
