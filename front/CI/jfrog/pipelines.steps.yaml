@@ -100,7 +100,7 @@ pipelines:
             - name: FrontAppBuildInfo
               trigger: true
           outputResources:
-            - name: build_info_frontapp_promoted
+            - name: build_info_frontapp_promoted_staging
         execution:  
           onStart:
             - echo ${res_FrontAppBuildInfo_buildName} 
@@ -118,15 +118,15 @@ pipelines:
           integrations:
             - name: artifactory_eu
           inputResources:
-            - name: build_info_frontapp_promoted
+            - name: build_info_frontapp_promoted_staging
           outputResources:
             - name: frontapp_exec
         execution:
           onSuccess:
           - echo $triggerBuildInfoName
           - echo $triggerBuildInfoNumber
-          - add_pipeline_variables triggerBuildInfoName="${res_build_info_frontapp_promoted_buildName}"
-          - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_frontapp_promoted_buildNumber}"
+          - add_pipeline_variables triggerBuildInfoName="${res_build_info_frontapp_promoted_staging_buildName}"
+          - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_frontapp_promoted_staging_buildNumber}"
           - echo $triggerBuildInfoName
           - echo $triggerBuildInfoNumber
           - echo "items.find({\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
