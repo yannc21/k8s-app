@@ -1,4 +1,4 @@
-FROM artifactory-eu.soleng-emea-staging.jfrog.team/docker-remote/node:14-alpine3.10
+FROM registry/app-docker-virtual/node:14-alpine3.10
 
 WORKDIR /tmp/
 
