@@ -43,7 +43,6 @@ pipelines:
         type: XrayScan
         configuration:
           affinityGroup: fmkGroup
-          failOnScan: false
           inputResources:
             - name: docker_Framework_BuildInfo
               trigger: true
