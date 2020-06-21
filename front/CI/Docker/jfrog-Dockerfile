@@ -1,4 +1,4 @@
-FROM registry/app-docker-virtual/node:14-alpine3.10
+FROM registry/app-docker-virtual/library/node:14-alpine3.10
 
 WORKDIR /tmp/
 
