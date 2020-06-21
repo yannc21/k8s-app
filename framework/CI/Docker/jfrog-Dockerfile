@@ -1,4 +1,4 @@
-FROM openjdk:11-jdk
+FROM artifactory-eu.soleng-emea-staging.jfrog.team:80/artifactory/docker-remote/openjdk:11-jdk
 
 COPY tomcat/apache-tomcat-8.tar.gz /home/exec/tomcat/apache-tomcat-8.tar.gz
 RUN cd /home/exec/ && tar -xvf /home/exec/tomcat/apache-tomcat-8.tar.gz

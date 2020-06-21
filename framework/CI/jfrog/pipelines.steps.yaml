@@ -8,7 +8,7 @@ pipelines:
           affinityGroup:       fmkGroup
           dockerFileLocation:  framework/CI/Docker/
           dockerFileName:      jfrog-Dockerfile
-          dockerImageName:     docker.artifactory-eu.soleng-emea-staging.jfrog.team/jfrog-docker-framework
+          dockerImageName:     artifactory-eu.soleng-emea-staging.jfrog.team/docker/jfrog-docker-framework
           dockerImageTag:      ${run_number}
           integrations:        
             - name: artifactory_eu
