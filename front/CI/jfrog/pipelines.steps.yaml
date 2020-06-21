@@ -108,36 +108,7 @@ pipelines:
             - echo ${appVersion}
           onSuccess:
             - jfrog rt sp --build=${res_FrontAppBuildInfo_buildName}/${res_FrontAppBuildInfo_buildNumber} app-npm-rc-local/ "app.version=${appVersion}"
-
-  - name: asuv_003_frontapp_docker_pipeline
-    steps:
-      - name: export_var
-        type: Bash
-        configuration:
-          affinityGroup: swampupgrp
-          integrations:
-            - name: artifactory_eu
-          inputResources:
-            - name: build_info_frontapp_promoted_staging
-          outputResources:
-            - name: frontapp_exec
-        execution:
-          onSuccess:
-          - echo $triggerBuildInfoName
-          - echo $triggerBuildInfoNumber
-          - add_pipeline_variables triggerBuildInfoName="${res_build_info_frontapp_promoted_staging_buildName}"
-          - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_frontapp_promoted_staging_buildNumber}"
-          - echo $triggerBuildInfoName
-          - echo $triggerBuildInfoNumber
-          - echo "items.find({\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
-          - cat aql.json
-          - jfrog rt curl -XPOST api/search/aql -T aql.json
-          - appVersion=`jfrog rt curl -XPOST api/search/aql -T aql.json | jq --raw-output .results[].properties[].value`
-          - echo $appVersion
-          - add_pipeline_variables appVersion="${appVersion}" 
-          - echo ${appVersion}
-          - echo $triggerBuildInfoName
-          - echo ${triggerBuildInfoNumber}
+            - write_output build_info_frontapp_promoted_staging myversion=${appVersion}
       
       - name: build_docker_frontapp
         type: DockerBuild
@@ -149,11 +120,14 @@ pipelines:
           dockerImageTag: ${appVersion}-${res_src_dockerfile_frontapp_commitSha}
           inputResources:
             - name: src_dockerfile_frontapp
+            - name: build_info_frontapp_promoted_staging
             - name: frontapp_exec
           integrations:
             - name: artifactory_eu
         execution:
           onStart:
+            - echo ${res_build_info_frontapp_promoted_staging_myversion}
+            - add_pipeline_variables appVersion="${res_build_info_frontapp_promoted_staging_myversion}"
             - echo ${res_frontapp_exec_resourcePath}
             - echo "Npm App Build number :" 
             - echo ${triggerBuildInfoNumber}
