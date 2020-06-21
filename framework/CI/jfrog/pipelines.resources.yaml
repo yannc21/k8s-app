@@ -12,7 +12,7 @@ resources:
   - name: framework_Generic_FileSpec
     type: FileSpec
     configuration:
-      sourceArtifactory: artifactory_eu
+      sourceArtifactory: artifactory
       pattern:  tomcat-local/(*).tar.gz
       target:   ./{1}.tar.gz
       flat:     true
@@ -20,13 +20,13 @@ resources:
   - name: docker_Framework_BuildInfo
     type: BuildInfo
     configuration:
-      sourceArtifactory: artifactory_eu
+      sourceArtifactory: artifactory
       buildName: docker_framework_pipeline
       buildNumber: ${run_number}
   
   - name: docker_Framework_BuildInfo_Promoted
     type: BuildInfo
     configuration:
-      sourceArtifactory: artifactory_eu
+      sourceArtifactory: artifactory
       buildName: docker_framework_pipeline
       buildNumber: ${run_number}

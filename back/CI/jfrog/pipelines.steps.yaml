@@ -1,9 +1,6 @@
 pipelines:
   - name: asuv_003_back_app_gradle_pipeline
-    configuration:
-      environmentVariables:
-        readOnly:
-          art_url: "http://artifactory-eu.soleng-emea-staging.jfrog.team/artifactory"
+
     steps:
       - name: build_app_gradle_backend
         type: GradleBuild
@@ -23,7 +20,7 @@ pipelines:
           inputResources:
             - name: src_code_back_app
           integrations:
-            - name: artifactory_eu
+            - name: artifactory
         execution:
           onStart:
             - echo  "Preparing for work..."
@@ -59,7 +56,7 @@ pipelines:
         type: Bash
         configuration:
           integrations:
-            - name: artifactory_eu
+            - name: artifactory
           affinityGroup: together
           inputResources:
             - name: back_appBuildInfo
@@ -100,7 +97,7 @@ pipelines:
           affinityGroup: swampup
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: back/CI/Docker/
-          dockerImageName: app-docker.artifactory-eu.soleng-emea-staging.jfrog.team/backapp
+          dockerImageName: '${ArtIP}/app-docker/backapp'
           dockerImageTag: '${res_build_info_back_app_promoted_staging_myversion}-${res_src_dockerfile_back_app_commitSha}'
           inputResources:
             - name: src_dockerfile_back_app
@@ -108,10 +105,11 @@ pipelines:
             - name: docker_Framework_BuildInfo_Promoted
             - name: back_app_exec
           integrations:
-            - name: artifactory_eu
+            - name: artifactory
             - name: hza_github
         execution:
           onStart:
+            - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
             - echo ${res_build_info_back_app_promoted_staging_myversion}
             - add_pipeline_variables appVersion="${res_build_info_back_app_promoted_staging_myversion}"
             - echo $triggerBuildInfoName
@@ -157,7 +155,7 @@ pipelines:
           inputSteps:
             - name: build_docker_backapp
           integrations:
-            - name: artifactory_eu
+            - name: artifactory
           outputResources:
             - name: build_info_docker_backapp
         execution:
@@ -169,7 +167,7 @@ pipelines:
         type: Bash
         configuration:
           integrations:
-            - name: artifactory_eu
+            - name: artifactory
           affinityGroup: swampup
           inputResources:
             - name: build_info_docker_backapp
@@ -189,7 +187,7 @@ pipelines:
           comment: "Xray scan passed succesfully"
           copy: false
           integrations:
-            - name: artifactory_eu
+            - name: artifactory
           inputResources:
             - name: build_info_docker_backapp
               trigger: true
@@ -199,11 +197,12 @@ pipelines:
             - name: build_info_docker_backapp_promoted_staging
         execution:
           onStart:
+            - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
             - echo ${res_build_info_docker_backapp_buildName}
             - echo ${res_build_info_docker_backapp_buildNumber}
             - jfrog rt cp --build=${res_build_info_docker_backapp_buildName}/${res_build_info_docker_backapp_buildNumber} app-docker-dev-local/ app-docker-sit-local/
           onSuccess:
             - jfrog rt sp --build=${res_build_info_docker_backapp_buildName}/${res_build_info_docker_backapp_buildNumber} app-docker-sit-local/**/manifest.json "docker.tag=${myDockerTag}"
-            - write_output build_info_docker_backapp_promoted_staging "backregistry=\"docker.artifactory-eu.soleng-emea-staging.jfrog.team\""
+            - write_output build_info_docker_backapp_promoted_staging "backregistry=\"${ArtIP}/docker\""
             - write_output build_info_docker_backapp_promoted_staging "backimage=\"backapp\""
             - write_output build_info_docker_backapp_promoted_staging "backtag=${myDockerTag}"

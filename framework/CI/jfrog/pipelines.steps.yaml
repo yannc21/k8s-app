@@ -8,15 +8,16 @@ pipelines:
           affinityGroup:       fmkGroup
           dockerFileLocation:  framework/CI/Docker/
           dockerFileName:      jfrog-Dockerfile
-          dockerImageName:     artifactory-eu.soleng-emea-staging.jfrog.team/docker/jfrog-docker-framework
+          dockerImageName:     '${ArtIP}/docker/jfrog-docker-framework'
           dockerImageTag:      ${run_number}
           integrations:        
-            - name: artifactory_eu
+            - name: artifactory
           inputResources:
             - name: src_dockerfile_framework
             - name: framework_Generic_FileSpec
         execution:
           onStart:
+            - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
             - echo "Preparing for work"
           onSuccess:
             - echo "Job well done!"
@@ -32,7 +33,7 @@ pipelines:
           targetRepository: docker-dev-local
           autoPublishBuildInfo: true
           integrations:
-            - name: artifactory_eu
+            - name: artifactory
           inputSteps:
             - name: build_Docker_Framework
           outputResources:
