@@ -130,7 +130,7 @@ pipelines:
         execution:
           onStart:
             - echo ${int_artifactory_url}
-            - export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')
+            - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
             - echo ${ArtIP}
             - echo ${res_build_info_frontapp_promoted_staging_myversion}
             - add_pipeline_variables appVersion="${res_build_info_frontapp_promoted_staging_myversion}"
