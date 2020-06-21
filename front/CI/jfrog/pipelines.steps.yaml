@@ -199,6 +199,20 @@ pipelines:
               trigger: true
           outputResources:
             - name: build_info_docker_frontapp_scanned
+      
+      - name: scan_docker_build_info_frontapp
+        type: Bash
+        configuration:
+          integrations:
+            - name: artifactory_eu
+          affinityGroup: swampupgrp
+          inputResources:
+            - name: build_info_docker_frontapp
+        execution:
+          onStart:
+            - echo ${res_build_info_docker_frontapp_buildName}
+            - echo ${res_build_info_docker_frontapp_buildNumber}
+            - jfrog rt bs ${res_build_info_docker_frontapp_buildName} ${res_build_info_docker_frontapp_buildNumber} --fail=false
 
       - name: promote_docker_build_info_frontapp
         type: PromoteBuild

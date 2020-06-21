@@ -54,6 +54,20 @@ pipelines:
             - echo "uh oh, something went wrong"
           onComplete: #always
             - echo "Cleaning up some stuff"
+      
+      - name: xray_scan_gradle_backapp
+        type: Bash
+        configuration:
+          integrations:
+            - name: artifactory_eu
+          affinityGroup: together
+          inputResources:
+            - name: back_appBuildInfo
+        execution:
+          onStart:
+            - echo ${res_back_appBuildInfo_buildName}
+            - echo ${res_back_appBuildInfo_buildNumber}
+            - jfrog rt bs ${res_back_appBuildInfo_buildName} ${res_back_appBuildInfo_buildNumber} --fail=false
 
       - name: promote_build_info_gradle_back_app
         type: PromoteBuild
@@ -66,16 +80,17 @@ pipelines:
           inputResources:
             - name: back_appBuildInfo
               trigger: true
+          inputSteps:
+            - name: xray_scan_gradle_backapp
           outputResources:
-            - name: build_info_back_app_promoted
+            - name: build_info_back_app_promoted_staging
         execution:  
           onStart:
             - echo ${res_back_appBuildInfo_buildName} 
             - echo ${res_back_appBuildInfo_buildNumber} 
           onSuccess:
             - jfrog rt sp --build=${res_back_appBuildInfo_buildName}/${res_back_appBuildInfo_buildNumber} app-gradle-rc-local/ "app.version=${appVersion}"
-            - write_output build_info_back_app_promoted myversion=${appVersion}
-
+            - write_output build_info_back_app_promoted_staging myversion=${appVersion}
 
   - name: asuv_003_backapp_docker_pipeline
     steps:
@@ -86,10 +101,10 @@ pipelines:
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: back/CI/Docker/
           dockerImageName: app-docker.artifactory-eu.soleng-emea-staging.jfrog.team/backapp
-          dockerImageTag: '${res_build_info_back_app_promoted_myversion}-${res_src_dockerfile_back_app_commitSha}'
+          dockerImageTag: '${res_build_info_back_app_promoted_staging_myversion}-${res_src_dockerfile_back_app_commitSha}'
           inputResources:
             - name: src_dockerfile_back_app
-            - name: build_info_back_app_promoted
+            - name: build_info_back_app_promoted_staging
             - name: docker_Framework_BuildInfo_Promoted
             - name: back_app_exec
           integrations:
@@ -97,12 +112,12 @@ pipelines:
             - name: hza_github
         execution:
           onStart:
-            - echo ${res_build_info_back_app_promoted_myversion}
-            - add_pipeline_variables appVersion="${res_build_info_back_app_promoted_myversion}"
+            - echo ${res_build_info_back_app_promoted_staging_myversion}
+            - add_pipeline_variables appVersion="${res_build_info_back_app_promoted_staging_myversion}"
             - echo $triggerBuildInfoName
             - echo $triggerBuildInfoNumber
-            - add_pipeline_variables triggerBuildInfoName="${res_build_info_back_app_promoted_buildName}"
-            - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_back_app_promoted_buildNumber}"
+            - add_pipeline_variables triggerBuildInfoName="${res_build_info_back_app_promoted_staging_buildName}"
+            - add_pipeline_variables triggerBuildInfoNumber="${res_build_info_back_app_promoted_staging_buildNumber}"
             - echo $triggerBuildInfoName
             - echo $triggerBuildInfoNumber
             #- echo "items.find({\"@build.name\":\"${triggerBuildInfoName}\",\"@build.number\":\"${triggerBuildInfoNumber}\"}).include(\"@app.version\")" > aql.json
@@ -151,15 +166,18 @@ pipelines:
             - echo $appVersion
 
       - name: scan_docker_build_info_backapp
-        type: XrayScan
+        type: Bash
         configuration:
-          #affinityGroup: swampup
-          failOnScan: false
+          integrations:
+            - name: artifactory_eu
+          affinityGroup: swampup
           inputResources:
             - name: build_info_docker_backapp
-              trigger: true
-          outputResources:
-            - name: build_info_docker_backapp_scanned
+        execution:
+          onStart:
+            - echo ${res_build_info_docker_backapp_buildName}
+            - echo ${res_build_info_docker_backapp_buildNumber}
+            - jfrog rt bs ${res_build_info_docker_backapp_buildName} ${res_build_info_docker_backapp_buildNumber} --fail=false
 
       - name: promoting_docker_build_info_backapp
         type: PromoteBuild
@@ -173,17 +191,19 @@ pipelines:
           integrations:
             - name: artifactory_eu
           inputResources:
-            - name: build_info_docker_backapp_scanned
+            - name: build_info_docker_backapp
+          inputSteps:
+            - name: scan_docker_build_info_backapp
               trigger: true
           outputResources:
-            - name: build_info_docker_backapp_promoted_hza
+            - name: build_info_docker_backapp_promoted_staging
         execution:
           onStart:
-            - echo ${res_build_info_docker_backapp_scanned_buildName}
-            - echo ${res_build_info_docker_backapp_scanned_buildNumber}
-            - jfrog rt cp --build=${res_build_info_docker_backapp_scanned_buildName}/${res_build_info_docker_backapp_scanned_buildNumber} app-docker-dev-local/ app-docker-sit-local/
+            - echo ${res_build_info_docker_backapp_buildName}
+            - echo ${res_build_info_docker_backapp_buildNumber}
+            - jfrog rt cp --build=${res_build_info_docker_backapp_buildName}/${res_build_info_docker_backapp_buildNumber} app-docker-dev-local/ app-docker-sit-local/
           onSuccess:
-            - jfrog rt sp --build=${res_build_info_docker_backapp_scanned_buildName}/${res_build_info_docker_backapp_scanned_buildNumber} app-docker-sit-local/**/manifest.json "docker.tag=${myDockerTag}"
-            - write_output build_info_docker_backapp_promoted_hza "backregistry=\"docker.artifactory-eu.soleng-emea-staging.jfrog.team\""
-            - write_output build_info_docker_backapp_promoted_hza "backimage=\"backapp\""
-            - write_output build_info_docker_backapp_promoted_hza "backtag=${myDockerTag}"
+            - jfrog rt sp --build=${res_build_info_docker_backapp_buildName}/${res_build_info_docker_backapp_buildNumber} app-docker-sit-local/**/manifest.json "docker.tag=${myDockerTag}"
+            - write_output build_info_docker_backapp_promoted_staging "backregistry=\"docker.artifactory-eu.soleng-emea-staging.jfrog.team\""
+            - write_output build_info_docker_backapp_promoted_staging "backimage=\"backapp\""
+            - write_output build_info_docker_backapp_promoted_staging "backtag=${myDockerTag}"

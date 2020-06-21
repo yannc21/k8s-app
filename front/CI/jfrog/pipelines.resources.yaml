@@ -73,13 +73,6 @@ resources:
       buildName: frontapp-docker
       buildNumber: '${run_number}'
 
-  - name: build_info_docker_frontapp_scanned
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: artifactory_eu
-      buildName: frontapp-docker
-      buildNumber: '${run_number}'
-
   - name: build_info_docker_frontapp_promoted_hza
     type: BuildInfo
     configuration:

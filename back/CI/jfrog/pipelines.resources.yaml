@@ -30,15 +30,8 @@ resources:
       sourceArtifactory: artifactory_eu
       buildName: back_app_gradle_pipeline
       buildNumber: ${run_number}
-
-  - name: back_appBuildInfo_scanned
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: artifactory_eu
-      buildName: back_app_gradle_pipeline
-      buildNumber: '${run_number}'
   
-  - name: build_info_back_app_promoted
+  - name: build_info_back_app_promoted_staging
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
@@ -70,7 +63,7 @@ resources:
       buildName: back_app-docker
       buildNumber: '${run_number}'
 
-  - name: build_info_docker_backapp_promoted_hza
+  - name: build_info_docker_backapp_promoted_staging
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
