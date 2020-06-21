@@ -18,7 +18,8 @@ pipelines:
             - name: framework_Generic_FileSpec
         execution:
           onStart:
-            - export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')
+            - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
+            - cd ${res_src_dockerfile_framework_resourcePath}/framework/CI/Docker/
             - sed -i "s/registry/${ArtIP}/g" jfrog-Dockerfile
             - echo "Preparing for work"
           onSuccess:
