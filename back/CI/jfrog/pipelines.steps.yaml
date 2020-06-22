@@ -97,7 +97,7 @@ pipelines:
           affinityGroup: swampup
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: back/CI/Docker/
-          dockerImageName: '${ArtIP}/app-docker/backapp'
+          dockerImageName: '${ArtIP}/app-docker-virtual/backapp'
           dockerImageTag: '${res_build_info_back_app_promoted_staging_myversion}-${res_src_dockerfile_back_app_commitSha}'
           inputResources:
             - name: src_dockerfile_back_app
@@ -151,13 +151,12 @@ pipelines:
         type: DockerPush
         configuration:
           affinityGroup: swampup
-          targetRepository: app-docker
+          targetRepository: app-docker-virtual
           autoPublishBuildInfo: true
           inputSteps:
             - name: build_docker_backapp
           integrations:
             - name: artifactory
-            - name: docker_registry
           outputResources:
             - name: build_info_docker_backapp
         execution:
