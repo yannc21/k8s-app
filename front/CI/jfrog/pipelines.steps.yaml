@@ -205,12 +205,12 @@ pipelines:
             - name: build_info_docker_frontapp_promoted_staging
         execution:
           onStart:
-            - export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')
+            - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
             - echo ${res_build_info_docker_frontapp_buildName}
             - echo ${res_build_info_docker_frontapp_buildNumber}
             - jfrog rt cp --build=${res_build_info_docker_frontapp_buildName}/${res_build_info_docker_frontapp_buildNumber} app-docker-dev-local/ app-docker-rc-local/
           onSuccess:
             - jfrog rt sp --build=${res_build_info_docker_frontapp_buildName}/${res_build_info_docker_frontapp_buildNumber} app-docker-rc-local/**/manifest.json "docker.tag=${myDockerTag}"
-            - write_output build_info_docker_frontapp_promoted_staging "frontregistry=\"${ArtIP}/docker\""
+            - write_output build_info_docker_frontapp_promoted_staging "frontregistry=\"${ArtIP}/app-docker-virtual\""
             - write_output build_info_docker_frontapp_promoted_staging "frontimage=\"frontapp\""
             - write_output build_info_docker_frontapp_promoted_staging "fronttag=${myDockerTag}"
