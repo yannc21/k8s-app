@@ -182,7 +182,7 @@ pipelines:
         type: PromoteBuild
         configuration:
           affinityGroup: swampup
-          targetRepository: app-docker-sit-local
+          targetRepository: app-docker-rc-local
           includeDependencies: false
           status: "DOCKER_SCAN_OK"
           comment: "Xray scan passed succesfully"
@@ -201,9 +201,9 @@ pipelines:
             - export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')
             - echo ${res_build_info_docker_backapp_buildName}
             - echo ${res_build_info_docker_backapp_buildNumber}
-            - jfrog rt cp --build=${res_build_info_docker_backapp_buildName}/${res_build_info_docker_backapp_buildNumber} app-docker-dev-local/ app-docker-sit-local/
+            - jfrog rt cp --build=${res_build_info_docker_backapp_buildName}/${res_build_info_docker_backapp_buildNumber} app-docker-dev-local/ app-docker-rc-local/
           onSuccess:
-            - jfrog rt sp --build=${res_build_info_docker_backapp_buildName}/${res_build_info_docker_backapp_buildNumber} app-docker-sit-local/**/manifest.json "docker.tag=${myDockerTag}"
+            - jfrog rt sp --build=${res_build_info_docker_backapp_buildName}/${res_build_info_docker_backapp_buildNumber} app-docker-rc-local/**/manifest.json "docker.tag=${myDockerTag}"
             - write_output build_info_docker_backapp_promoted_staging "backregistry=\"${ArtIP}/docker\""
             - write_output build_info_docker_backapp_promoted_staging "backimage=\"backapp\""
             - write_output build_info_docker_backapp_promoted_staging "backtag=${myDockerTag}"
