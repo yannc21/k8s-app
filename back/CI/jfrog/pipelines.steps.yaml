@@ -157,6 +157,7 @@ pipelines:
             - name: build_docker_backapp
           integrations:
             - name: artifactory
+            - name: docker_registry
           outputResources:
             - name: build_info_docker_backapp
         execution:
