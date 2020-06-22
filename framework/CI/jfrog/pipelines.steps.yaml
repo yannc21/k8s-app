@@ -41,13 +41,19 @@ pipelines:
           outputResources:
             - name: docker_Framework_BuildInfo
 
-      - name: scan_Docker_Framework_build_info
-        type: XrayScan
+      - name: xray_scan_Docker_Framework_build_info
+        type: Bash
         configuration:
+          integrations:
+            - name: artifactory
           affinityGroup: fmkGroup
           inputResources:
             - name: docker_Framework_BuildInfo
-              trigger: true
+        execution:
+          onStart:
+            - echo ${res_docker_Framework_BuildInfo_buildName}
+            - echo ${res_docker_Framework_BuildInfo_buildNumber}
+            - jfrog rt bs ${res_docker_Framework_BuildInfo_buildName} ${res_docker_Framework_BuildInfo_buildNumber} --fail=false
 
       - name: promoteFrameworkBuild
         type: PromoteBuild
@@ -55,7 +61,7 @@ pipelines:
           affinityGroup: fmkGroup
           targetRepository: app-docker-release-local
           inputSteps:
-            - name: scan_Docker_Framework_build_info
+            - name: xray_scan_Docker_Framework_build_info
           inputResources:
             - name: docker_Framework_BuildInfo
           outputResources:
