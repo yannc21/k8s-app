@@ -46,7 +46,7 @@ pipelines:
         configuration:
           integrations:
             - name: artifactory
-          affinityGroup: fmkGroup
+          #affinityGroup: fmkGroup
           inputResources:
             - name: docker_Framework_BuildInfo
         execution:
@@ -58,7 +58,7 @@ pipelines:
       - name: promoteFrameworkBuild
         type: PromoteBuild
         configuration:
-          affinityGroup: fmkGroup
+          #affinityGroup: fmkGroup
           targetRepository: app-docker-release-local
           inputSteps:
             - name: xray_scan_Docker_Framework_build_info
