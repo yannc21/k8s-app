@@ -109,7 +109,7 @@ pipelines:
             - name: hza_github
         execution:
           onStart:
-            - export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')
+            - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
             - echo ${res_build_info_back_app_promoted_staging_myversion}
             - add_pipeline_variables appVersion="${res_build_info_back_app_promoted_staging_myversion}"
             - echo $triggerBuildInfoName
@@ -142,6 +142,7 @@ pipelines:
             #- tar xvf back*.tgz
             #- ls -l ${res_src_dockerfile_back_app_resourcePath}/back/CI/Docker
             - echo $appVersion
+            - sed -i "s/registry/${ArtIP}/g" ${res_src_dockerfile_back_app_resourcePath}/back/CI/Docker/jfrog-Dockerfile
             - add_pipeline_variables myDockerTag="${appVersion}-${res_src_dockerfile_back_app_commitSha}"
           onSuccess:
             - echo "Job well done!"
