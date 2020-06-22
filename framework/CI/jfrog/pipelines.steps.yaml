@@ -69,4 +69,5 @@ pipelines:
         execution:
           onSuccess:
             - echo "Job well done!"
+            - 'jfrog rt curl -X POST api/docker/app-docker-release-local/v2/promote -H "Content-Type: application/json" -d {"targetRepo":"app-docker-release-local","dockerRepository":"jfrog-docker-framework", "tag" : ${res_docker_Framework_BuildInfo_buildNumber}, "targetTag" : "latest", "copy" : "true"}'
       
