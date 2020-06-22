@@ -1,5 +1,5 @@
 pipelines:
-  - name: asuv_003_back_app_gradle_pipeline
+  - name: suv_003_back_app_gradle_pipeline
 
     steps:
       - name: build_app_gradle_backend
@@ -89,7 +89,7 @@ pipelines:
             - jfrog rt sp --build=${res_back_appBuildInfo_buildName}/${res_back_appBuildInfo_buildNumber} app-gradle-rc-local/ "app.version=${appVersion}"
             - write_output build_info_back_app_promoted_staging myversion=${appVersion}
 
-  - name: asuv_003_backapp_docker_pipeline
+  - name: suv_003_backapp_docker_pipeline
     steps:
       - name: build_docker_backapp
         type: DockerBuild

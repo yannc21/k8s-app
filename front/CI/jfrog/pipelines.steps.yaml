@@ -1,5 +1,5 @@
 pipelines:
-  - name: asuv_003_frontapp_npm_pipeline
+  - name: suv_003_frontapp_npm_pipeline
 
     steps:
       - name: build_npm_frontend
@@ -111,7 +111,7 @@ pipelines:
             - write_output build_info_frontapp_promoted_staging myversion=${appVersion}
 
 
-  - name: asuv_003_frontapp_docker_pipeline
+  - name: suv_003_frontapp_docker_pipeline
     steps:
       - name: build_docker_frontapp
         type: DockerBuild

@@ -1,5 +1,5 @@
 pipelines:
-  - name: asuv_003_docker_framework_pipeline
+  - name: suv_003_docker_framework_pipeline
 
     steps:
       - name: build_Docker_Framework
