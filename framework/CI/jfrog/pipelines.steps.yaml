@@ -60,6 +60,7 @@ pipelines:
         configuration:
           #affinityGroup: fmkGroup
           targetRepository: app-docker-release-local
+          copy: "true"
           inputSteps:
             - name: xray_scan_Docker_Framework_build_info
           inputResources:

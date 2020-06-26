@@ -93,7 +93,7 @@ pipelines:
           includeDependencies: false
           status: SANDBOX_OK
           comment: Unit testing and Xray scan passed succesfully
-          copy: false
+          copy: true
           inputSteps:
             - name: xray_scan_npm_frontapp
           inputResources:
@@ -193,7 +193,7 @@ pipelines:
           includeDependencies: false
           status: "DOCKER_SCAN_OK"
           comment: "Xray scan passed succesfully"
-          copy: false
+          copy: true
           integrations:
             - name: artifactory
           inputSteps:
