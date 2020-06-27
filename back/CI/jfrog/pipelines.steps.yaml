@@ -109,6 +109,7 @@ pipelines:
             - name: docker_registry
         execution:
           onStart:
+            - jfrog rt dl app-gradle-rc-local/org/jfrog/example/gradle/webservice/1.1.2/webservice-1.1.2.war --build-name=${res_build_info_back_app_promoted_staging_buildName} --build-number=${res_build_info_back_app_promoted_staging_buildNumber}
             - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
             - echo ${res_build_info_back_app_promoted_staging_myversion}
             - add_pipeline_variables appVersion="${res_build_info_back_app_promoted_staging_myversion}"
