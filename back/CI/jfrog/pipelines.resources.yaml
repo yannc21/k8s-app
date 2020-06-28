@@ -44,8 +44,8 @@ resources:
       sourceArtifactory: artifactory
       pattern: 'app-gradle-rc-local/*/webservice-*.war'
       #pattern: 'app-gradle-rc-local/org/jfrog/example/gradle/webservice/1.1.2/webservice-1.1.2.war'
-      buildName: ${triggerBuildInfoName}
-      buildNumber: ${triggerBuildInfoNumber}
+      buildName: ${pipeline_name}
+      buildNumber: ${run_id}
       target: war/webservice.war
       flat: true
 
