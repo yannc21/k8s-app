@@ -161,7 +161,7 @@ pipelines:
             - name: build_info_docker_backapp
         execution:
           onStart: 
-            - jfrog rt dl app-gradle-rc-local/org/jfrog/example/gradle/webservice/1.1.2/webservice-1.1.2.war --build-name=${pipeline_name} --build-number=${run_id}
+            - jfrog rt dl app-gradle-rc-local/org/jfrog/example/gradle/webservice/1.1.2/webservice-1.1.2.war --build-name="suv_003_backapp_docker_pipeline" --build-number=${run_number}
           onSuccess:
             - echo "Job well done!"
             - echo $appVersion
