@@ -39,6 +39,13 @@ resources:
       buildName: frontapp_npm_pipeline
       buildNumber: '${run_number}'
 
+  - name: build_info_frontapp_promoted_prod
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory
+      buildName: frontapp_npm_pipeline
+      buildNumber: '${run_number}'
+
 # DOCKER PIPELINE 
 #  - name: aql_go
 #    type: Aql

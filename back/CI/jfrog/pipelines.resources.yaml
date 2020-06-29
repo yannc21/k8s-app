@@ -37,6 +37,13 @@ resources:
       sourceArtifactory: artifactory
       buildName: back_app_gradle_pipeline
       buildNumber: '${run_number}'
+  
+  - name: build_info_back_app_promoted_prod
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory
+      buildName: back_app_gradle_pipeline
+      buildNumber: '${run_number}'
 
   - name: back_app_exec
     type: FileSpec
