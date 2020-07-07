@@ -31,3 +31,8 @@ Execute
 ```
 docker run --env-file env.txt -p 8090:8090 -d backapp:1.0
 ```
+
+Test
+```
+curl http://localhost:8090/quote
+```
