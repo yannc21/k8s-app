@@ -60,7 +60,9 @@ pipelines:
         configuration:
           #affinityGroup: fmkGroup
           targetRepository: app-docker-release-local
-          copy: true
+          status: "DOCKER_SCAN_OK"
+          comment: "Xray scan passed succesfully"
+          copy: "True"
           inputSteps:
             - name: xray_scan_Docker_Framework_build_info
           inputResources:
@@ -70,5 +72,6 @@ pipelines:
         execution:
           onSuccess:
             - echo "Job well done!"
-            - 'jfrog rt curl -X POST api/docker/app-docker-release-local/v2/promote -H "Content-Type: application/json" -d {"targetRepo":"app-docker-release-local","dockerRepository":"jfrog-docker-framework", "tag" : ${res_docker_Framework_BuildInfo_buildNumber}, "targetTag" : "latest", "copy" : "true"}'
+            - jfrog rt cp app-docker-dev-local/jfrog-docker-framework/${res_docker_Framework_BuildInfo_buildNumber} app-docker-release-local/latest
+            #- jfrog rt curl -X POST api/docker/app-docker-release-local/v2/promote -H "Content-Type: application/json" -d {"targetRepo":"app-docker-release-local","dockerRepository":"jfrog-docker-framework", "tag" : "'"$res_docker_Framework_BuildInfo_buildNumber"'", "targetTag" : "latest", "copy" : "true"}'
       
