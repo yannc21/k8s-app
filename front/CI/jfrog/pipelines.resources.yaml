@@ -42,7 +42,7 @@ resources:
   - name: bi_frontapp_npm_promoted_prod
     type: BuildInfo
     configuration:
-      sourceArtifactory: artifactory
+      sourceArtifactory: artifactory_eu
       buildName: frontapp_npm
       buildNumber: '${run_number}'
 

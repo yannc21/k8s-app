@@ -27,7 +27,7 @@ pipelines:
             - add_pipeline_variables appVersion="${appVersion}"
             - add_pipeline_variables subPath="${res_src_code_frontapp_npm_branchName}/${appVersion}"      
 
-      - name: package_frontapp_npam
+      - name: package_frontapp_npm
         type: Bash
         configuration:
           affinityGroup: together
