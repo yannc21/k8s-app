@@ -66,16 +66,16 @@ resources:
 #      aql: '{"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"}'
 #      aql: "({\"name\":\"backend\"})"
 
-  - name: bi_docker_frontapp_npm
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: artifactory
-      buildName: frontapp_npm_docker
-      buildNumber: '${run_number}'
+  # - name: bi_docker_frontapp_npm
+  #   type: BuildInfo
+  #   configuration:
+  #     sourceArtifactory: artifactory
+  #     buildName: frontapp_npm_docker
+  #     buildNumber: '${run_number}'
 
-  - name: bi_docker_frontapp_npm_promoted_staging
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: artifactory
-      buildName: frontapp_npm_docker
-      buildNumber: '${run_number}'
+  # - name: bi_docker_frontapp_npm_promoted_staging
+  #   type: BuildInfo
+  #   configuration:
+  #     sourceArtifactory: artifactory
+  #     buildName: frontapp_npm_docker
+  #     buildNumber: '${run_number}'

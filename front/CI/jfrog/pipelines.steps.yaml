@@ -118,106 +118,106 @@ pipelines:
             - write_output bi_frontapp_npm_promoted_staging myversion=${appVersion}
 
 
-  - name: suv_003_frontapp_docker_pipeline
-    steps:
-      - name: build_docker_frontapp
-        type: DockerBuild
-        configuration:
-          affinityGroup: swampupgrp
-          dockerFileName: jfrog-Dockerfile
-          dockerFileLocation: front/CI/Docker/
-          dockerImageName: '${ArtIP}/app-docker-virtual/frontapp'
-          dockerImageTag: ${appVersion}-${res_src_dockerfile_frontapp_commitSha}
-          inputResources:
-            - name: src_dockerfile_frontapp
-            - name: build_info_frontapp_promoted_staging
-            - name: frontapp_exec
-          integrations:
-            - name: artifactory
-            - name: app_docker_registry
-        execution:
-          onStart:
-            - echo ${int_artifactory_url}
-            - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
-            - echo ${ArtIP}
-            - echo ${res_build_info_frontapp_promoted_staging_myversion}
-            - add_pipeline_variables appVersion="${res_build_info_frontapp_promoted_staging_myversion}"
-            - echo ${res_frontapp_exec_resourcePath}
-            - echo "Npm App Build number :" 
-            - echo ${triggerBuildInfoNumber}
-            - echo "Npm App version :" 
-            - echo ${appVersion} 
-            - echo "Git repo hash :" 
-            - echo ${res_src_dockerfile_frontapp_commitSha}
-            - echo "Copying exec binary to specific location..." && ls -l
-            - echo "Filespec location :" && echo ${res_frontapp_exec_resourcePath} && ls -l ${res_frontapp_exec_resourcePath}
-            - cp ${res_frontapp_exec_resourcePath}/front* ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker/
-            - cd ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker/
-            - tar xvf front*.tgz
-            - ls -l ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker
-            - sed -i "s/registry/${ArtIP}/g" jfrog-Dockerfile
-            - echo $appVersion
-            - add_pipeline_variables myDockerTag="${appVersion}-${res_src_dockerfile_frontapp_commitSha}"
-          onSuccess:
-            - echo "Job well done!"
+  # - name: suv_003_frontapp_docker_pipeline
+  #   steps:
+  #     - name: build_docker_frontapp
+  #       type: DockerBuild
+  #       configuration:
+  #         affinityGroup: swampupgrp
+  #         dockerFileName: jfrog-Dockerfile
+  #         dockerFileLocation: front/CI/Docker/
+  #         dockerImageName: '${ArtIP}/app-docker-virtual/frontapp'
+  #         dockerImageTag: ${appVersion}-${res_src_dockerfile_frontapp_commitSha}
+  #         inputResources:
+  #           - name: src_dockerfile_frontapp
+  #           - name: build_info_frontapp_promoted_staging
+  #           - name: frontapp_exec
+  #         integrations:
+  #           - name: artifactory
+  #           - name: app_docker_registry
+  #       execution:
+  #         onStart:
+  #           - echo ${int_artifactory_url}
+  #           - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
+  #           - echo ${ArtIP}
+  #           - echo ${res_build_info_frontapp_promoted_staging_myversion}
+  #           - add_pipeline_variables appVersion="${res_build_info_frontapp_promoted_staging_myversion}"
+  #           - echo ${res_frontapp_exec_resourcePath}
+  #           - echo "Npm App Build number :" 
+  #           - echo ${triggerBuildInfoNumber}
+  #           - echo "Npm App version :" 
+  #           - echo ${appVersion} 
+  #           - echo "Git repo hash :" 
+  #           - echo ${res_src_dockerfile_frontapp_commitSha}
+  #           - echo "Copying exec binary to specific location..." && ls -l
+  #           - echo "Filespec location :" && echo ${res_frontapp_exec_resourcePath} && ls -l ${res_frontapp_exec_resourcePath}
+  #           - cp ${res_frontapp_exec_resourcePath}/front* ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker/
+  #           - cd ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker/
+  #           - tar xvf front*.tgz
+  #           - ls -l ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker
+  #           - sed -i "s/registry/${ArtIP}/g" jfrog-Dockerfile
+  #           - echo $appVersion
+  #           - add_pipeline_variables myDockerTag="${appVersion}-${res_src_dockerfile_frontapp_commitSha}"
+  #         onSuccess:
+  #           - echo "Job well done!"
 
-      - name: publish_docker_frontapp
-        type: DockerPush
-        configuration:
-          affinityGroup: swampupgrp
-          targetRepository: app-docker-virtual
-          autoPublishBuildInfo: true
-          inputSteps:
-            - name: build_docker_frontapp
-          integrations:
-            - name: artifactory
-          outputResources:
-            - name: build_info_docker_frontapp
-        execution:
-          onSuccess:
-            - echo "Job well done!"
-            - echo $appVersion
+  #     - name: publish_docker_frontapp
+  #       type: DockerPush
+  #       configuration:
+  #         affinityGroup: swampupgrp
+  #         targetRepository: app-docker-virtual
+  #         autoPublishBuildInfo: true
+  #         inputSteps:
+  #           - name: build_docker_frontapp
+  #         integrations:
+  #           - name: artifactory
+  #         outputResources:
+  #           - name: build_info_docker_frontapp
+  #       execution:
+  #         onSuccess:
+  #           - echo "Job well done!"
+  #           - echo $appVersion
       
-      - name: xray_scan_docker_build_info_frontapp
-        type: Bash
-        configuration:
-          integrations:
-            - name: artifactory
-          affinityGroup: swampupgrp
-          inputResources:
-            - name: build_info_docker_frontapp
-        execution:
-          onStart:
-            - echo ${res_build_info_docker_frontapp_buildName}
-            - echo ${res_build_info_docker_frontapp_buildNumber}
-            - jfrog rt bs ${res_build_info_docker_frontapp_buildName} ${res_build_info_docker_frontapp_buildNumber} --fail=false
+  #     - name: xray_scan_docker_build_info_frontapp
+  #       type: Bash
+  #       configuration:
+  #         integrations:
+  #           - name: artifactory
+  #         affinityGroup: swampupgrp
+  #         inputResources:
+  #           - name: build_info_docker_frontapp
+  #       execution:
+  #         onStart:
+  #           - echo ${res_build_info_docker_frontapp_buildName}
+  #           - echo ${res_build_info_docker_frontapp_buildNumber}
+  #           - jfrog rt bs ${res_build_info_docker_frontapp_buildName} ${res_build_info_docker_frontapp_buildNumber} --fail=false
 
-      - name: promote_docker_build_info_frontapp
-        type: PromoteBuild
-        configuration:
-          affinityGroup: swampupgrp
-          targetRepository: app-docker-rc-local
-          includeDependencies: false
-          status: "DOCKER_SCAN_OK"
-          comment: "Xray scan passed succesfully"
-          copy: true
-          integrations:
-            - name: artifactory
-          inputSteps:
-            - name: xray_scan_docker_build_info_frontapp
-          inputResources:
-            - name: build_info_docker_frontapp
-              trigger: true
-          outputResources:
-            - name: build_info_docker_frontapp_promoted_staging
-        execution:
-          onStart:
-            - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
-            - echo ${res_build_info_docker_frontapp_buildName}
-            - echo ${res_build_info_docker_frontapp_buildNumber}
-            - jfrog rt cp --build=${res_build_info_docker_frontapp_buildName}/${res_build_info_docker_frontapp_buildNumber} app-docker-dev-local/ app-docker-rc-local/
-          onSuccess:
-            - jfrog rt sp --build=${res_build_info_docker_frontapp_buildName}/${res_build_info_docker_frontapp_buildNumber} app-docker-rc-local/**/manifest.json "docker.tag=${myDockerTag}"
-            - write_output build_info_docker_frontapp_promoted_staging "frontregistry=\"${ArtIP}/app-docker-virtual\""
-            - write_output build_info_docker_frontapp_promoted_staging "frontimage=\"frontapp\""
-            - write_output build_info_docker_frontapp_promoted_staging "fronttag=${myDockerTag}"
+  #     - name: promote_docker_build_info_frontapp
+  #       type: PromoteBuild
+  #       configuration:
+  #         affinityGroup: swampupgrp
+  #         targetRepository: app-docker-rc-local
+  #         includeDependencies: false
+  #         status: "DOCKER_SCAN_OK"
+  #         comment: "Xray scan passed succesfully"
+  #         copy: true
+  #         integrations:
+  #           - name: artifactory
+  #         inputSteps:
+  #           - name: xray_scan_docker_build_info_frontapp
+  #         inputResources:
+  #           - name: build_info_docker_frontapp
+  #             trigger: true
+  #         outputResources:
+  #           - name: build_info_docker_frontapp_promoted_staging
+  #       execution:
+  #         onStart:
+  #           - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
+  #           - echo ${res_build_info_docker_frontapp_buildName}
+  #           - echo ${res_build_info_docker_frontapp_buildNumber}
+  #           - jfrog rt cp --build=${res_build_info_docker_frontapp_buildName}/${res_build_info_docker_frontapp_buildNumber} app-docker-dev-local/ app-docker-rc-local/
+  #         onSuccess:
+  #           - jfrog rt sp --build=${res_build_info_docker_frontapp_buildName}/${res_build_info_docker_frontapp_buildNumber} app-docker-rc-local/**/manifest.json "docker.tag=${myDockerTag}"
+  #           - write_output build_info_docker_frontapp_promoted_staging "frontregistry=\"${ArtIP}/app-docker-virtual\""
+  #           - write_output build_info_docker_frontapp_promoted_staging "frontimage=\"frontapp\""
+  #           - write_output build_info_docker_frontapp_promoted_staging "fronttag=${myDockerTag}"
