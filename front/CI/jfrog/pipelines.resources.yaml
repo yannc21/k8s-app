@@ -11,7 +11,7 @@ resources:
       gitProvider: yann_github
       path: cyan21/k8s-app
       branches:
-        include: hamza-sup
+        include: swampup2020
 
 # DOCKER PIPELINE
   - name: src_dockerfile_frontapp_npm
@@ -21,21 +21,21 @@ resources:
         include: ^front\/CI\/Docker\/.+
       path: cyan21/k8s-app
       branches:
-        include: hamza-sup
+        include: swampup2020
       gitProvider: yann_github
 
   # Build info for the published Npm App
   - name: bi_frontapp_npm
     type: BuildInfo
     configuration:
-      sourceArtifactory: artifactory
+      sourceArtifactory: artifactory_eu
       buildName: frontapp_npm
       buildNumber: ${run_number}
   
   - name: bi_frontapp_npm_promoted_staging
     type: BuildInfo
     configuration:
-      sourceArtifactory: artifactory
+      sourceArtifactory: artifactory_eu
       buildName: frontapp_npm
       buildNumber: '${run_number}'
 
@@ -57,7 +57,7 @@ resources:
   - name: frontapp_npm_exec
     type: FileSpec
     configuration:
-      sourceArtifactory: artifactory
+      sourceArtifactory: artifactory_eu
       pattern: app-npm-rc-local/front/**/front**
       buildName: ${triggerBuildInfoName}
       buildNumber: ${triggerBuildInfoNumber}

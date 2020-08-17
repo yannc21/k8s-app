@@ -16,7 +16,7 @@ pipelines:
           repositoryName: app-npm-virtual
           sourceLocation: front/
           integrations:
-            - name: artifactory
+            - name: artifactory_eu
           inputResources:
             - name: src_code_frontapp_npm
         execution:
@@ -36,7 +36,7 @@ pipelines:
           inputSteps:
             - name: build_frontapp_npm
           integrations:
-            - name: artifactory
+            - name: artifactory_eu
         execution:
           onStart:
             - echo "Run Unit Testing ..." 
@@ -62,7 +62,7 @@ pipelines:
           inputSteps:
             - name: package_frontapp_npm
           integrations:
-            - name: artifactory 
+            - name: artifactory_eu 
 
       - name: publish_bi_frontapp_npm
         type: PublishBuildInfo
@@ -82,7 +82,7 @@ pipelines:
         type: Bash
         configuration:
           integrations:
-            - name: artifactory
+            - name: artifactory_eu
           affinityGroup: together
           inputResources:
             - name: bi_frontapp_npm
