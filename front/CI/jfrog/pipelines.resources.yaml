@@ -1,28 +1,28 @@
 resources:
 
 # NPM PIPELINE
-  - name: src_code_frontapp
+  - name: src_code_frontapp_npm
     type: GitRepo
     configuration:
       files:
         include: ^front\/.+
         exclude: ^front\/CI\/.+
 #        exclude: ^back\/CI\/Docker\/.+
-      gitProvider: hza_github
-      path: HamzaZFrog/k8s-app
+      gitProvider: yann_github
+      path: cyan21/k8s-app
       branches:
-        include: swampup2020
+        include: hamza-sup
 
 # DOCKER PIPELINE
-  - name: src_dockerfile_frontapp
+  - name: src_dockerfile_frontapp_npm
     type: GitRepo
     configuration:
       files:
         include: ^front\/CI\/Docker\/.+
-      path: HamzaZFrog/k8s-app
+      path: cyan21/k8s-app
       branches:
-        include: swampup2020
-      gitProvider: hza_github
+        include: hamza-sup
+      gitProvider: yann_github
 
   # Build info for the published Npm App
   - name: FrontAppBuildInfo
