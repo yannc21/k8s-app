@@ -25,25 +25,25 @@ resources:
       gitProvider: yann_github
 
   # Build info for the published Npm App
-  - name: FrontAppBuildInfo
+  - name: bi_frontapp_npm
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory
-      buildName: frontapp_npm_pipeline
+      buildName: frontapp_npm
       buildNumber: ${run_number}
   
-  - name: build_info_frontapp_promoted_staging
+  - name: bi_frontapp_npm_promoted_staging
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory
-      buildName: frontapp_npm_pipeline
+      buildName: frontapp_npm
       buildNumber: '${run_number}'
 
-  - name: build_info_frontapp_promoted_prod
+  - name: bi_frontapp_npm_promoted_prod
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory
-      buildName: frontapp_npm_pipeline
+      buildName: frontapp_npm
       buildNumber: '${run_number}'
 
 # DOCKER PIPELINE 
@@ -54,7 +54,7 @@ resources:
 #      query: items.find({"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"})
 #      query: items.find({"name":"backend"})
 
-  - name: frontapp_exec
+  - name: frontapp_npm_exec
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory
@@ -66,16 +66,16 @@ resources:
 #      aql: '{"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"}'
 #      aql: "({\"name\":\"backend\"})"
 
-  - name: build_info_docker_frontapp
+  - name: bi_docker_frontapp_npm
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory
-      buildName: frontapp-docker
+      buildName: frontapp_npm_docker
       buildNumber: '${run_number}'
 
-  - name: build_info_docker_frontapp_promoted_staging
+  - name: bi_docker_frontapp_npm_promoted_staging
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory
-      buildName: frontapp-docker
+      buildName: frontapp_npm_docker
       buildNumber: '${run_number}'
