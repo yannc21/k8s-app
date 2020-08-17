@@ -83,7 +83,6 @@ pipelines:
         configuration:
           integrations:
             - name: artifactory_eu
-          affinityGroup: together
           inputResources:
             - name: bi_frontapp_npm
         execution:
@@ -95,7 +94,6 @@ pipelines:
       - name: promote_bi_frontapp_npm
         type: PromoteBuild
         configuration:
-          affinityGroup: together
           targetRepository: app-npm-rc-local
           includeDependencies: false
           status: SANDBOX_OK
