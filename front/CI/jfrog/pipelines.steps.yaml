@@ -1,5 +1,5 @@
 pipelines:
-  - name: suv_003_frontapp_npm_pipeline
+  - name: frontapp_npm
 
     steps:
       - name: build_frontapp_npm
