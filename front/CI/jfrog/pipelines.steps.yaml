@@ -1,19 +1,24 @@
 pipelines:
   - name: frontapp_npm
-
+    configuration:
+      environmentVariables:
+        readOnly:
+          myDemoVersion:  2.0.3
+          myNpmRepo: avengers-npm
+          myNpmPromoteRepo: avengers-rc-npm-local
     steps:
       - name: build_frontapp_npm
         type: NpmBuild
         configuration:
-          runtime:
-            type: image
-            image:
-              custom:
-                name: docker.bintray.io/jfrog/pipelines-u18node
-                tag: 10.16.3
+          # runtime:
+          #   type: image
+          #   image:
+          #     custom:
+          #       name: docker.bintray.io/jfrog/pipelines-u18node
+          #       tag: 10.16.3
           npmArgs: '--no-progress --no-audit'
           affinityGroup: together
-          repositoryName: app-npm-virtual
+          repositoryName: ${myNpmRepo}
           sourceLocation: front/
           integrations:
             - name: artifactory_eu
@@ -58,7 +63,7 @@ pipelines:
           affinityGroup: together
           environmentVariables:
             inputNpmBuildStepName: build_frontapp_npm
-          repositoryName: app-npm-virtual
+          repositoryName: ${myNpmRepo}
           inputSteps:
             - name: package_frontapp_npm
           integrations:
@@ -73,28 +78,19 @@ pipelines:
             - name: publish_frontapp_npm
           outputResources:
             - name: bi_frontapp_npm
-        execution:
-          onComplete:
-            - echo ${res_bi_frontapp_npm_buildName}
-            - echo ${res_bi_frontapp_npm_buildNumber}
 
       - name: scan_frontapp_npm
-        type: Bash
+        type: XrayScan
         configuration:
-          integrations:
-            - name: artifactory_eu
+          failOnScan: false
           inputResources:
             - name: bi_frontapp_npm
-        execution:
-          onStart:
-            - echo ${res_bi_frontapp_npm_buildName}
-            - echo ${res_bi_frontapp_npm_buildNumber}
-            - jfrog rt bs ${res_bi_frontapp_npm_buildName} ${res_bi_frontapp_npm_buildNumber} --fail=false
+              trigger: true
 
       - name: promote_bi_frontapp_npm
         type: PromoteBuild
         configuration:
-          targetRepository: app-npm-rc-local
+          targetRepository: ${myNpmPromoteRepo}
           includeDependencies: false
           status: SANDBOX_OK
           comment: Unit testing and Xray scan passed succesfully

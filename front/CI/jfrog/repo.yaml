@@ -1,0 +1,47 @@
+localRepositories:   
+  avengers-dev-npm-local:
+    type: npm
+    repoLayout: npm-default 
+    xray:   
+      enabled: true
+  avengers-rc-npm-local:
+    type: npm
+    repoLayout: npm-default 
+    xray:   
+      enabled: true
+  avengers-dev-docker-local:
+    type: docker
+    repoLayout: simple-default 
+    xray:   
+      enabled: true
+remoteRepositories: 
+  avengers-npmjs-remote:
+    type: npm
+    repoLayout: npm-default 
+    url: https://registry.npmjs.org
+    xray:   
+      enabled: true
+  avengers-dockerhub-remote:
+    type: docker 
+    url: https://registry-1.docker.io/
+    dockerApiVersion: V2
+    repoLayout: simple-default 
+    enableTokenAuthentication: true
+    xray:   
+      enabled: true
+virtualRepositories: 
+  avengers-dev-npm:
+    type: npm
+    repoLayout: npm-default 
+    repositories:   
+      - avengers-dev-npm-local
+      - avengers-npmjs-remote
+    defaultDeploymentRepo: avengers-dev-npm-local
+  avengers-dev-docker:
+    type: docker
+    dockerApiVersion: V2
+    repoLayout: simple-default 
+    repositories:   
+      - avengers-dev-docker-local
+      - avengers-dockerhub-remote
+    defaultDeploymentRepo: avengers-dev-docker-local
