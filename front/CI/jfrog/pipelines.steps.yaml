@@ -16,7 +16,7 @@ pipelines:
           #     custom:
           #       name: docker.bintray.io/jfrog/pipelines-u18node
           #       tag: 10.16.3
-#          npmArgs: '--no-progress --no-audit'
+          npmArgs: '--no-progress --no-audit'
           affinityGroup: together
           repositoryName: ${myNpmRepo}
           sourceLocation: front/

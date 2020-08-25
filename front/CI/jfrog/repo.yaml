@@ -30,14 +30,14 @@ remoteRepositories:
     xray:   
       enabled: true
 virtualRepositories: 
-  avengers-dev-npm:
+  avengers-npm:
     type: npm
     repoLayout: npm-default 
     repositories:   
       - avengers-dev-npm-local
       - avengers-npmjs-remote
     defaultDeploymentRepo: avengers-dev-npm-local
-  avengers-dev-docker:
+  avengers-docker:
     type: docker
     dockerApiVersion: V2
     repoLayout: simple-default 
