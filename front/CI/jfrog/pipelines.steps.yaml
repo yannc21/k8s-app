@@ -77,7 +77,7 @@ pipelines:
           affinityGroup: together
           forceXrayScan: false
           inputSteps:
-            - name: publish_frontapp_npm
+            - name: publish_k8s_frontapp_npm
           outputResources:
             - name: bi_k8s_frontapp_npm
 
