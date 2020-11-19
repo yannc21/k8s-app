@@ -38,7 +38,7 @@ pipelines:
             - add_pipeline_variables appVersion="${appVersion}"
             - add_pipeline_variables subPath="${res_src_code_k8s_frontapp_npm_branchName}/${appVersion}"
             # cache node_modules folder for future runs
-            - add_cache_files ${res_src_code_k8s_frontapp_npm_resourcePath}/front/node_modules npm_cache
+#            - add_cache_files ${res_src_code_k8s_frontapp_npm_resourcePath}/front/node_modules npm_cache
             # pass front folder to next step
             - add_run_files  ${res_src_code_k8s_frontapp_npm_resourcePath}/front mySources            
             # pass JFrog CLI tmp folder to next step
@@ -64,7 +64,7 @@ pipelines:
             - ls -l /tmp/jfrog/
             - npm run build
           onSuccess:
-            - jfrog rt bad k8s_frontapp_npm ${run_number} node_modules/
+            - ls -la
             - tar -czvf frontapp-${myDemoVersion}.tar.gz build/
             - jfrog rt u frontapp-${myDemoVersion}.tar.gz ${myGenericRepo} --build-name=k8s_frontapp_npm --build-number=${run_number}
             - jfrog rt bp k8s_frontapp_npm ${run_number}
