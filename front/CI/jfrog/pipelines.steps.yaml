@@ -59,7 +59,8 @@ pipelines:
             - echo "Run Unit Testing ..." 
             - if [ $OFFLINE_MODE == "true" ]; then echo "Offline mode turned on";fi
             - restore_run_files mySources .
-            - restore_run_files jfrogCLI_tmp /tmp/
+            - mkdir /tmp/jfrog 
+            - restore_run_files jfrogCLI_tmp /tmp/jfrog/
             - ls -l /tmp/jfrog/
             - npm run build
           onSuccess:
