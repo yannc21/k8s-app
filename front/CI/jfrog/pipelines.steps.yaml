@@ -5,7 +5,8 @@ pipelines:
         readOnly:
           myDemoVersion:  2.0.3
           myNpmRepo: avengers-npm
-          myNpmPromoteRepo: avengers-rc-npm-local
+          myGenericRepo: avengers-generic
+          myGenericPromoteRepo: avengers-rc-generic-local
     steps:
       - name: build_k8s_frontapp_npm
         type: NpmBuild
@@ -55,13 +56,14 @@ pipelines:
             - echo "Run Unit Testing ..." 
             - if [ $OFFLINE_MODE == "true" ]; then echo "Offline mode turned on";fi
             - restore_run_files mySources .
-            - ls -la 
-            - cd front
             - ls -la
             - npm run build
           onComplete:
-            - pwd 
-            - ls -la
+            - jfrog rt bce k8s_frontapp_npm ${run_number}
+            - jfrog rt bad k8s_frontapp_npm ${run_number} node_modules/
+            - tar -czvf frontapp-${myDemoVersion}.tar.gz build/
+            - jfrog rt u frontapp-${myDemoVersion}.tar.gz ${myGenericRepo} --build-name=k8s_frontapp_npm --build-number=${run_number}
+            - jfrog rt bp k8s_frontapp_npm ${run_number}
 
       # - name: publish_k8s_frontapp_npm
       #   type: NpmPublish

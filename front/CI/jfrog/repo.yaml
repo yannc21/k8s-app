@@ -9,6 +9,16 @@ localRepositories:
     repoLayout: npm-default 
     xray:   
       enabled: true
+  avengers-dev-generic-local:
+    type: generic
+    repoLayout: simple-default 
+    xray:   
+      enabled: true
+  avengers-rc-generic-local:
+    type: generic
+    repoLayout: simple-default 
+    xray:   
+      enabled: true
   avengers-dev-docker-local:
     type: docker
     repoLayout: simple-default 
@@ -43,6 +53,13 @@ virtualRepositories:
       - avengers-rc-npm-local
       - avengers-npmjs-remote
     defaultDeploymentRepo: avengers-dev-npm-local
+  avengers-generic:
+    type: generic
+    repoLayout: simple-default 
+    repositories:   
+      - avengers-dev-generic-local
+      - avengers-rc-generic-local
+    defaultDeploymentRepo: avengers-dev-generic-local
   avengers-docker:
     type: docker
     dockerApiVersion: V2
