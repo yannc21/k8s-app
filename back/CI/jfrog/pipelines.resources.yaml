@@ -1,78 +1,76 @@
 resources:
 
 # gradle PIPELINE
-  - name: src_code_back_app
+  - name: src_code_k8s_backapp_gradle
     type: GitRepo
     configuration:
       files:
         include: ^back\/.+
         exclude: ^back\/CI\/.+
-      gitProvider: hza_github
-      path: HamzaZFrog/k8s-app
+      gitProvider: yann_github
+      path: cyan21/k8s-app
       branches:
-        include: swampup2020
+        include: jfrog-ode
+
+  # Build info for the published gradle App
+  - name: bi_k8s_backapp
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: k8s_backapp_gradle
+      buildNumber: ${run_number}
+  
+  - name: bi_k8s_backapp_gradle_promoted_staging
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: k8s_backapp_gradle
+      buildNumber: ${run_number}
+  
+  - name: pb_k8s_backapp_gradle
+    type: PropertyBag
+    configuration:
+      biNumber: XXX
 
 # DOCKER PIPELINE
-  - name: src_dockerfile_back_app
+  - name: src_dockerfile_k8s_backapp_gradle
     type: GitRepo
     configuration:
       files:
         include: ^back\/CI\/Docker\/.+
-      path: HamzaZFrog/k8s-app
+      gitProvider: yann_github
+      path: cyan21/k8s-app
       branches:
-        include: swampup2020
-      gitProvider: hza_github
+        include: jfrog-ode
 
-  # Build info for the published gradle App
-  - name: back_appBuildInfo
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: artifactory
-      buildName: back_app_gradle_pipeline
-      buildNumber: ${run_number}
-  
-  - name: build_info_back_app_promoted_staging
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: artifactory
-      buildName: back_app_gradle_pipeline
-      buildNumber: '${run_number}'
-  
-  - name: build_info_back_app_promoted_prod
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: artifactory
-      buildName: back_app_gradle_pipeline
-      buildNumber: '${run_number}'
-
-  - name: back_app_exec
+  - name: k8s_backapp_exec
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory
       pattern: 'app-gradle-rc-local/*/webservice-*.war'
       #pattern: 'app-gradle-rc-local/org/jfrog/example/gradle/webservice/1.1.2/webservice-1.1.2.war'
-      buildName: back_app-docker
-      buildNumber: '${run_number}'
+      buildName: k8s_backapp_gradle_docker
+      buildNumber: ${run_number}
       target: war/webservice.war
       flat: true
 
-  - name: build_info_docker_backapp
+  - name: bi_k8s_backapp_gradle_docker
     type: BuildInfo
     configuration:
-      sourceArtifactory: artifactory
-      buildName: back_app-docker
-      buildNumber: '${run_number}'
+      sourceArtifactory: artifactory_eu
+      buildName: k8s_backapp_gradle_docker
+      buildNumber: ${run_number}
 
-  - name: build_info_docker_backapp_scanned
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: artifactory
-      buildName: back_app-docker
-      buildNumber: '${run_number}'
+  # - name: build_info_docker_backapp_scanned
+  #   type: BuildInfo
+  #   configuration:
+  #     sourceArtifactory: artifactory
+  #     buildName: back_app-docker
+  #     buildNumber: '${run_number}'
 
-  - name: build_info_docker_backapp_promoted_staging
+  - name: bi_k8s_backapp_gradle_docker_promoted_staging
     type: BuildInfo
     configuration:
-      sourceArtifactory: artifactory
-      buildName: back_app-docker
-      buildNumber: '${run_number}'
+      sourceArtifactory: artifactory_eu
+      buildName: k8s_backapp_gradle_docker
+      buildNumber: ${run_number}
