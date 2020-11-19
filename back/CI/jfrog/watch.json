@@ -1,0 +1,84 @@
+{
+    "general_data": {
+        "name": "kaizoku",
+        "description": "This is a new watch created using API V2",
+        "active": true
+    },
+    "project_resources": {
+        "resources": [
+            {
+                "type": "repository",
+                "name": "kaizoku-dev-grdl-local",
+                "bin_mgr_id": "unused",
+                "filters": [
+                    {
+                        "type": "regex",
+                        "value": ".*"
+                    }
+                ]
+            },
+            {
+                "type": "repository",
+                "name": "kaizoku-rc-grdl-local",
+                "bin_mgr_id": "unused",
+                "filters": [
+                    {
+                        "type": "regex",
+                        "value": ".*"
+                    }
+                ]
+            },
+            {
+                "type": "repository",
+                "name": "kaizoku-rc-docker-local",
+                "bin_mgr_id": "unused",
+                "filters": [
+                    {
+                        "type": "regex",
+                        "value": ".*"
+                    }
+                ]
+            },
+            {
+                "type": "repository",
+                "repo_type": "remote",
+                "name": "kaizoku-jcenter-grdl-remote",
+                "bin_mgr_id": "unused",
+                "filters": [
+                    {
+                        "type": "regex",
+                        "value": ".*"
+                    }
+                ]
+            },  
+            {
+                "type": "repository",
+                "repo_type": "remote",
+                "name": "kaizoku-dockerhub-remote",
+                "bin_mgr_id": "unused",
+                "filters": [
+                    {
+                        "type": "regex",
+                        "value": ".*"
+                    }
+                ]
+            },  
+            {
+                "type": "build",
+                "bin_mgr_id": "unused",
+                "name": "k8s_backapp_gradle"
+            },
+            {
+                "type": "build",
+                "bin_mgr_id": "unused",
+                "name": "k8s_backapp_gradle_docker"
+            }
+        ]
+    },
+    "assigned_policies": [
+        {
+            "name": "global",
+            "type": "security"
+        }
+    ]
+}

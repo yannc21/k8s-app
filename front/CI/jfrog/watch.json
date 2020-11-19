@@ -1,0 +1,95 @@
+{
+    "general_data": {
+        "name": "avengers",
+        "description": "This is a new watch created using API V2",
+        "active": true
+    },
+    "project_resources": {
+        "resources": [
+            {
+                "type": "repository",
+                "name": "avengers-dev-npm-local",
+                "bin_mgr_id": "unused",
+                "filters": [
+                    {
+                        "type": "regex",
+                        "value": ".*"
+                    }
+                ]
+            },
+            {
+                "type": "repository",
+                "name": "avengers-rc-npm-local",
+                "bin_mgr_id": "unused",
+                "filters": [
+                    {
+                        "type": "regex",
+                        "value": ".*"
+                    }
+                ]
+            },
+            {
+                "type": "repository",
+                "name": "avengers-dev-docker-local",
+                "bin_mgr_id": "unused",
+                "filters": [
+                    {
+                        "type": "regex",
+                        "value": ".*"
+                    }
+                ]
+            },
+            {
+                "type": "repository",
+                "name": "avengers-rc-docker-local",
+                "bin_mgr_id": "unused",
+                "filters": [
+                    {
+                        "type": "regex",
+                        "value": ".*"
+                    }
+                ]
+            },
+            {
+                "type": "repository",
+                "repo_type": "remote",
+                "name": "avengers-npmjs-remote",
+                "bin_mgr_id": "unused",
+                "filters": [
+                    {
+                        "type": "regex",
+                        "value": ".*"
+                    }
+                ]
+            },  
+            {
+                "type": "repository",
+                "repo_type": "remote",
+                "name": "avengers-dockerhub-remote",
+                "bin_mgr_id": "unused",
+                "filters": [
+                    {
+                        "type": "regex",
+                        "value": ".*"
+                    }
+                ]
+            },  
+            {
+                "type": "build",
+                "bin_mgr_id": "unused",
+                "name": "k8s_frontapp_npm"
+            },
+            {
+                "type": "build",
+                "bin_mgr_id": "unused",
+                "name": "k8s_frontapp_npm_docker"
+            }
+        ]
+    },
+    "assigned_policies": [
+        {
+            "name": "global",
+            "type": "security"
+        }
+    ]
+}
