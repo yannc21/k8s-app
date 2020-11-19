@@ -11,7 +11,7 @@ pipelines:
           dockerImageName:     '${ArtIP}/app-docker-virtual/jfrog-docker-framework'
           dockerImageTag:      ${run_number}
           integrations:        
-            - name: artifactory
+            - name: artifactory_eu
             - name: app_docker_registry
           inputResources:
             - name: src_dockerfile_framework
@@ -35,7 +35,7 @@ pipelines:
           targetRepository: app-docker-virtual
           autoPublishBuildInfo: true
           integrations:
-            - name: artifactory
+            - name: artifactory_eu
           inputSteps:
             - name: build_Docker_Framework
           outputResources:
@@ -45,7 +45,7 @@ pipelines:
         type: Bash
         configuration:
           integrations:
-            - name: artifactory
+            - name: artifactory_eu
           #affinityGroup: fmkGroup
           inputResources:
             - name: docker_Framework_BuildInfo
