@@ -1,5 +1,5 @@
 pipelines:
-  - name: frontapp_npm
+  - name: k8s_frontapp_npm
     configuration:
       environmentVariables:
         readOnly:
@@ -7,7 +7,7 @@ pipelines:
           myNpmRepo: avengers-npm
           myNpmPromoteRepo: avengers-rc-npm-local
     steps:
-      - name: build_frontapp_npm
+      - name: build_k8s_frontapp_npm
         type: NpmBuild
         configuration:
           # runtime:
@@ -23,25 +23,25 @@ pipelines:
           integrations:
             - name: artifactory_eu
           inputResources:
-            - name: src_code_frontapp_npm
+            - name: src_code_k8s_frontapp_npm
         execution:
           onStart:
-            - JFROG_CLI_BUILD_URL="${int_artifactory_eu_url/%artifactory/ui}/pipelines/myPipelines/app_dotnet/${run_number}/setup_env?branch=${res_src_code_frontapp_npm_branchName}"
+            - export JFROG_CLI_BUILD_URL="${int_artifactory_eu_url/%artifactory/ui}/pipelines/myPipelines/app_dotnet/${run_number}/setup_env?branch=${res_src_code_k8s_frontapp_npm_branchName}"
           onSuccess:
-            - echo ${res_src_code_frontapp_npm_isGitTag}
-            - appVersion=`if [[ ${res_src_code_frontapp_npm_isGitTag} == "True" ]]; then echo ${res_src_code_frontapp_npm_gitTagName}; else echo ${res_src_code_frontapp_npm_commitSha}; fi`
+            - echo ${res_src_code_k8s_frontapp_npm_isGitTag}
+            - appVersion=`if [[ ${res_src_code_k8s_frontapp_npm_isGitTag} == "True" ]]; then echo ${res_src_code_k8s_frontapp_npm_gitTagName}; else echo ${res_src_code_k8s_frontapp_npm_commitSha}; fi`
             - echo $appVersion 
             - add_pipeline_variables appVersion="${appVersion}"
-            - add_pipeline_variables subPath="${res_src_code_frontapp_npm_branchName}/${appVersion}"      
+            - add_pipeline_variables subPath="${res_src_code_k8s_frontapp_npm_branchName}/${appVersion}"      
 
-      - name: package_frontapp_npm
+      - name: package_k8s_frontapp_npm
         type: Bash
         configuration:
           affinityGroup: together
           environmentVariables:
             OFFLINE_MODE: "true"
           inputSteps:
-            - name: build_frontapp_npm
+            - name: build_k8s_frontapp_npm
           integrations:
             - name: artifactory_eu
         execution:
@@ -59,19 +59,19 @@ pipelines:
             - add_run_files . $build_frontapp_npm_sourceStateName    
             - ls -la
 
-      - name: publish_frontapp_npm
+      - name: publish_k8s_frontapp_npm
         type: NpmPublish
         configuration:
           affinityGroup: together
           environmentVariables:
-            inputNpmBuildStepName: build_frontapp_npm
+            inputNpmBuildStepName: build_k8s_frontapp_npm
           repositoryName: ${myNpmRepo}
           inputSteps:
-            - name: package_frontapp_npm
+            - name: package_k8s_frontapp_npm
           integrations:
             - name: artifactory_eu 
 
-      - name: publish_bi_frontapp_npm
+      - name: publish_bi_k8s_frontapp_npm
         type: PublishBuildInfo
         configuration:
           affinityGroup: together
@@ -79,17 +79,17 @@ pipelines:
           inputSteps:
             - name: publish_frontapp_npm
           outputResources:
-            - name: bi_frontapp_npm
+            - name: bi_k8s_frontapp_npm
 
-      - name: scan_frontapp_npm
+      - name: scan_k8s_frontapp_npm
         type: XrayScan
         configuration:
           failOnScan: false
           inputResources:
-            - name: bi_frontapp_npm
+            - name: bi_k8s_frontapp_npm
               trigger: true
 
-      - name: promote_bi_frontapp_npm
+      - name: promote_bi_k8s_frontapp_npm
         type: PromoteBuild
         configuration:
           targetRepository: ${myNpmPromoteRepo}
@@ -98,20 +98,20 @@ pipelines:
           comment: Unit testing and Xray scan passed succesfully
           copy: true
           inputSteps:
-            - name: scan_frontapp_npm
+            - name: scan_k8s_frontapp_npm
           inputResources:
-            - name: bi_frontapp_npm
+            - name: bi_k8s_frontapp_npm
               trigger: true
           outputResources:
-            - name: bi_frontapp_npm_promoted_staging
+            - name: bi_k8s_frontapp_npm_promoted_staging
         execution:  
           onStart:
-            - echo ${res_bi_frontapp_npm_buildName} 
-            - echo ${res_bi_frontapp_npm_buildNumber} 
+            - echo ${res_bi_k8s_frontapp_npm_buildName} 
+            - echo ${res_bi_k8s_frontapp_npm_buildNumber} 
             - echo ${appVersion}
           onSuccess:
-            - jfrog rt sp --build=${res_bi_frontapp_npm_buildName}/${res_bi_frontapp_npm_buildNumber} app-npm-rc-local/ "app.version=${appVersion}"
-            - write_output bi_frontapp_npm_promoted_staging myversion=${appVersion}
+            - jfrog rt sp --build=${res_bi_k8s_frontapp_npm_buildName}/${res_bi_k8s_frontapp_npm_buildNumber} ${myNpmPromoteRepo}/ "app.version=${appVersion}"
+#            - write_output bi_k8s_frontapp_npm_promoted_staging myversion=${appVersion}
 
 
   # - name: suv_003_frontapp_docker_pipeline

@@ -1,7 +1,7 @@
 resources:
 
 # NPM PIPELINE
-  - name: src_code_frontapp_npm
+  - name: src_code_k8s_frontapp_npm
     type: GitRepo
     configuration:
       files:
@@ -14,7 +14,7 @@ resources:
         include: jfrog-ode
 
 # DOCKER PIPELINE
-  - name: src_dockerfile_frontapp_npm
+  - name: src_dockerfile_k8s_frontapp_npm
     type: GitRepo
     configuration:
       files:
@@ -25,25 +25,25 @@ resources:
       gitProvider: yann_github
 
   # Build info for the published Npm App
-  - name: bi_frontapp_npm
+  - name: bi_k8s_frontapp_npm
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
-      buildName: frontapp_npm
+      buildName: k8s_frontapp_npm
       buildNumber: ${run_number}
   
-  - name: bi_frontapp_npm_promoted_staging
+  - name: bi_k8s_frontapp_npm_promoted_staging
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
-      buildName: frontapp_npm
+      buildName: k8s_frontapp_npm
       buildNumber: '${run_number}'
 
-  - name: bi_frontapp_npm_promoted_prod
+  - name: bi_k8s_frontapp_npm_promoted_prod
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
-      buildName: frontapp_npm
+      buildName: k8s_frontapp_npm
       buildNumber: '${run_number}'
 
 # DOCKER PIPELINE 
