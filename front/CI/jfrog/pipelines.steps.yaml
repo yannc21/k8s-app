@@ -38,7 +38,7 @@ pipelines:
             # cache node_modules folder for future runs
             - add_cache_files ${res_src_code_k8s_frontapp_npm_resourcePath}/front/node_modules npm_cache
             # pass front folder to next step
-            - add_run_file mySources ${res_src_code_k8s_frontapp_npm_resourcePath}/front
+            - add_run_files mySources ${res_src_code_k8s_frontapp_npm_resourcePath}/front
 
       - name: package_and_publish_k8s_frontapp_npm
         type: Bash
