@@ -11,7 +11,7 @@ resources:
       gitProvider: yann_github
       path: cyan21/k8s-app
       branches:
-        include: swampup2020
+        include: jfrog-ode
 
 # DOCKER PIPELINE
   - name: src_dockerfile_frontapp_npm
@@ -21,7 +21,7 @@ resources:
         include: ^front\/CI\/Docker\/.+
       path: cyan21/k8s-app
       branches:
-        include: swampup2020
+        include: jfrog-ode
       gitProvider: yann_github
 
   # Build info for the published Npm App
