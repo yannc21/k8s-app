@@ -150,7 +150,7 @@ pipelines:
             - name: artifactory_eu
         execution:
           onStart:
-            - echo "TO DO : get tarball via FileSpec to install into Docker container"
+            - echo "TO DO = get tarball via FileSpec to install into Docker container"
 
       - name: publish_k8s_frontapp_js_docker
         type: DockerPush
