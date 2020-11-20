@@ -96,7 +96,7 @@ pipelines:
             - sudo cat /etc/docker/daemon.json
             - add_run_variables myTag=${res_pb_k8s_backapp_gradle_dockerAppTag}
             - add_run_variables biNumber=${res_pb_k8s_backapp_gradle_biNumber}
-      - name: build_k8s_backapp_gradle
+      - name: build_k8s_backapp_gradle_docker
         type: DockerBuild
         configuration:
           affinityGroup: together
