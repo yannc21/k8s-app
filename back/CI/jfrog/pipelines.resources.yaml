@@ -43,7 +43,7 @@ resources:
       branches:
         include: jfrog-ode
 
-  - name: k8s_backapp_exec
+  - name: backapp_gradle_exec
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory_eu
@@ -61,13 +61,6 @@ resources:
       sourceArtifactory: artifactory_eu
       buildName: k8s_backapp_gradle_docker
       buildNumber: ${run_number}
-
-  # - name: build_info_docker_backapp_scanned
-  #   type: BuildInfo
-  #   configuration:
-  #     sourceArtifactory: artifactory
-  #     buildName: back_app-docker
-  #     buildNumber: '${run_number}'
 
   - name: bi_k8s_backapp_gradle_docker_promoted_staging
     type: BuildInfo
