@@ -109,12 +109,12 @@ pipelines:
 
   - name: k8s_frontapp_js_docker
     configuration:
-    environmentVariables:
-      readOnly:
-        dockerPushRepo: avengers-docker
-        dockerRepoUrl: avengers-docker.artifactory-eu-yannc3-0.soleng-emea-staging.jfrog.team:80
-        myDockerImageName: ${dockerRepoUrl}/frontapp-js
-        dockerPromoteRepo: avengers-rc-docker-local
+      environmentVariables:
+        readOnly:
+          dockerPushRepo: avengers-docker
+          dockerRepoUrl: avengers-docker.artifactory-eu-yannc3-0.soleng-emea-staging.jfrog.team:80
+          myDockerImageName: ${dockerRepoUrl}/frontapp-js
+          dockerPromoteRepo: avengers-rc-docker-local
     steps:
       - name: setup_env
         type: Bash
