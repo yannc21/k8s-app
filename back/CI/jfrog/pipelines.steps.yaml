@@ -34,9 +34,9 @@ pipelines:
             - echo ${res_src_code_k8s_backapp_gradle_isGitTag}
             - appVersion=`if [[ ${res_src_code_k8s_backapp_gradle_isGitTag} == "True" ]]; then echo ${res_src_code_k8s_backapp_gradle_gitTagName}; else echo ${res_src_code_k8s_backapp_gradle_commitSha}; fi`
             - echo $appVersion
+            - add_run_variables myAppVersion=${appVersion}
             - add_run_variables myDockerTag="${appVersion}-${res_src_code_k8s_backapp_gradle_commitSha}"
             - echo $myDockerTag
-
 #            - add_run_variables subPath="${res_src_code_k8s_backapp_gradle_branchName}/${appVersion}"      
 
       - name: scan_bi_k8s_backapp_gradle
@@ -71,7 +71,7 @@ pipelines:
           onSuccess:
             - write_output pb_k8s_backapp_gradle dockerAppTag=${myDockerTag}
             - write_output pb_k8s_backapp_gradle biNumber=${res_bi_k8s_backapp_buildNumber}
-            - jfrog rt sp --build=${res_bi_k8s_backapp_gradle_buildName}/${res_bi_k8s_backapp_gradle_buildNumber} ${grdlPromoteRepo}/ "app.version=${appVersion}"
+            - jfrog rt sp --build=${res_bi_k8s_backapp_gradle_buildName}/${res_bi_k8s_backapp_gradle_buildNumber} ${grdlPromoteRepo}/ "app.version=${myAppVersion};app.name=kaizoku"
 
   - name: k8s_backapp_gradle_docker
     configuration:
@@ -100,6 +100,7 @@ pipelines:
             - echo $res_pb_k8s_backapp_gradle_dockerAppTag
             - add_run_variables myTag=${res_pb_k8s_backapp_gradle_dockerAppTag}
             - add_run_variables biNumber=${res_pb_k8s_backapp_gradle_biNumber}
+
       - name: build_k8s_backapp_gradle_docker
         type: DockerBuild
         configuration:
@@ -137,46 +138,31 @@ pipelines:
           onSuccess:
             - echo "Job well done!"
 
-  #     - name: xray_scan_docker_build_info_backapp
-  #       type: Bash
-  #       configuration:
-  #         integrations:
-  #           - name: artifactory
-  #         affinityGroup: swampup
-  #         inputResources:
-  #           - name: build_info_docker_backapp
-  #       execution:
-  #         onStart:
-  #           - echo ${res_build_info_docker_backapp_buildName}
-  #           - echo ${res_build_info_docker_backapp_buildNumber}
-  #           - jfrog rt bs ${res_build_info_docker_backapp_buildName} ${res_build_info_docker_backapp_buildNumber} --fail=false
+      - name: scan_k8s_backapp_gradle_docker
+        type: XrayScan
+        configuration:
+          failOnScan: false
+          inputResources:
+            - name: bi_k8s_backapp_gradle_docker
+              trigger: true
 
-  #     - name: promoting_docker_build_info_backapp
-  #       type: PromoteBuild
-  #       configuration:
-  #         affinityGroup: swampup
-  #         targetRepository: app-docker-rc-local
-  #         includeDependencies: false
-  #         status: "DOCKER_SCAN_OK"
-  #         comment: "Xray scan passed succesfully"
-  #         copy: "True"
-  #         integrations:
-  #           - name: artifactory
-  #         inputResources:
-  #           - name: build_info_docker_backapp
-  #             trigger: true
-  #         inputSteps:
-  #           - name: xray_scan_docker_build_info_backapp
-  #         outputResources:
-  #           - name: build_info_docker_backapp_promoted_staging
-  #       execution:
-  #         onStart:
-  #           - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
-  #           - echo ${res_build_info_docker_backapp_buildName}
-  #           - echo ${res_build_info_docker_backapp_buildNumber}
-  #           - jfrog rt cp --build=${res_build_info_docker_backapp_buildName}/${res_build_info_docker_backapp_buildNumber} app-docker-dev-local/ app-docker-rc-local/
-  #         onSuccess:
-  #           - jfrog rt sp --build=${res_build_info_docker_backapp_buildName}/${res_build_info_docker_backapp_buildNumber} app-docker-rc-local/**/manifest.json "docker.tag=${myDockerTag}"
-  #           - write_output build_info_docker_backapp_promoted_staging "backregistry=\"${ArtIP}/app-docker-virtual\""
-  #           - write_output build_info_docker_backapp_promoted_staging "backimage=\"backapp\""
-  #           - write_output build_info_docker_backapp_promoted_staging "backtag=${myDockerTag}"
+      - name: promote_bi_k8s_backapp_gradle_docker
+        type: PromoteBuild
+        configuration:
+          targetRepository: ${dockerPromoteRepo}
+          includeDependencies: false
+          status: "DOCKER_SCAN_OK"
+          comment: "Xray scan passed succesfully"
+          copy: false
+          integrations:
+            - name: artifactory_eu
+          inputResources:
+            - name: bi_k8s_backapp_gradle_docker
+              trigger: true
+          inputSteps:
+            - name: scan_k8s_backapp_gradle_docker
+          outputResources:
+            - name: bi_k8s_backapp_gradle_docker_promoted_staging
+        execution:
+          onSuccess:
+            - jfrog rt sp --build=${res_bi_k8s_backapp_gradle_docker_buildName}/${res_bi_k8s_backapp_gradle_docker_buildNumber} ${dockerPromoteRepo}/**/manifest.json "docker.tag=${myDockerTag}"
