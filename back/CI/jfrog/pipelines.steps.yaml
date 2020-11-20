@@ -34,8 +34,7 @@ pipelines:
             - echo ${res_src_code_k8s_backapp_gradle_isGitTag}
             - appVersion=`if [[ ${res_src_code_k8s_backapp_gradle_isGitTag} == "True" ]]; then echo ${res_src_code_k8s_backapp_gradle_gitTagName}; else echo ${res_src_code_k8s_backapp_gradle_commitSha}; fi`
             - echo $appVersion
-            - add_run_variables appVersion="${appVersion}"
-            - add_run_variables myDockerTag="${myAppVersion}-${res_src_code_k8s_backapp_gradle_commitSha}"
+            - add_run_variables myDockerTag="${appVersion}-${res_src_code_k8s_backapp_gradle_commitSha}"
 #            - add_run_variables subPath="${res_src_code_k8s_backapp_gradle_branchName}/${appVersion}"      
 
       - name: scan_bi_k8s_backapp_gradle
@@ -61,6 +60,7 @@ pipelines:
             - name: scan_bi_k8s_backapp_gradle
           outputResources:
             - name: bi_k8s_backapp_gradle_promoted_staging
+            - name: pb_k8s_backapp_gradle
         execution:  
           onStart:
             - echo ${res_bi_k8s_backapp_buildName} 
