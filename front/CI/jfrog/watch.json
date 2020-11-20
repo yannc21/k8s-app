@@ -82,7 +82,7 @@
             {
                 "type": "build",
                 "bin_mgr_id": "unused",
-                "name": "k8s_frontapp_npm_docker"
+                "name": "k8s_frontapp_js_docker"
             }
         ]
     },

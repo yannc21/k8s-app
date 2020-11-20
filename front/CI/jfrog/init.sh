@@ -6,7 +6,7 @@
 JPD_URL="http://artifactory-eu-yannc3-0.soleng-emea-staging.jfrog.team"
 ADMIN_USER="admin"
 ADMIN_PASS="password"
-BUILD_NAMES="k8s_frontapp_npm,k8s_frontapp_npm_docker"  #list with comma as a separator
+BUILD_NAMES="k8s_frontapp_npm,k8s_frontapp_js_docker"  #list with comma as a separator
 
 
 creds="-u$ADMIN_USER:$ADMIN_PASS"
