@@ -6,7 +6,8 @@ ENV URL="morty.com"
 COPY app.tar.gz .
 #COPY nginx.conf /etc/nginx/nginx.conf
 
-RUN tar -czvf app.tar.gz -D /var/www
+RUN tar -xzvf app.tar.gz -c /var/www/
+RUN ls -l && mv /var/www/build/* /var/www/ 
 
 EXPOSE 80
 ENTRYPOINT ["nginx","-g","daemon off;"]
