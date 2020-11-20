@@ -51,5 +51,5 @@ virtualRepositories:
     repositories:   
       - kaizoku-dev-grdl-local
       - kaizoku-rc-grdl-local
-      - kaizoku-jcenter-gradle-remote
+      - kaizoku-jcenter-grdl-remote
     defaultDeploymentRepo: kaizoku-dev-grdl-local
