@@ -47,7 +47,7 @@ resources:
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory_eu
-      pattern:  ${grdlPromoteRepo}/**/webservice-1.1.2.war
+      pattern:  ${grdlPromoteRepo}/**/webservice-*.war
       # pattern: 'app-gradle-rc-local/*/webservice-*.war'
       #pattern: 'app-gradle-rc-local/org/jfrog/example/gradle/webservice/1.1.2/webservice-1.1.2.war'
       # buildName: k8s_backapp_gradle_docker

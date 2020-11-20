@@ -113,9 +113,9 @@ pipelines:
             - name: artifactory_eu
         execution:
           onStart:
-            - ls -la ${res_frontapp_npm_exec_resourcePath}
-            - cp ${res_frontapp_npm_exec_resourcePath}/frontapp-2.0.3.tar.gz ${res_src_dockerfile_k8s_frontapp_npm_resourcePath}/front/CI/Docker/app.tar.gz
-            - ls -la ${res_src_dockerfile_k8s_frontapp_npm_resourcePath}/front/CI/Docker/
+            - ls -la ${res_backapp_gradle_exec_resourcePath}
+            - cp ${res_backapp_gradle_exec_resourcePath}/*.war ${res_src_dockerfile_k8s_backapp_gradle_resourcePath}/back/CI/Docker/
+            - ls -la ${res_src_dockerfile_k8s_backapp_gradle_resourcePath}/back/CI/Docker/
 
       - name: publish_k8s_backapp_gradle_docker
         type: DockerPush
