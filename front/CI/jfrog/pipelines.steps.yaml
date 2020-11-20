@@ -11,12 +11,6 @@ pipelines:
       - name: build_k8s_frontapp_npm
         type: NpmBuild
         configuration:
-          # runtime:
-          #   type: image
-          #   image:
-          #     custom:
-          #       name: docker.bintray.io/jfrog/pipelines-u18node
-          #       tag: 10.16.3
           npmArgs: '--no-progress --no-audit'
           affinityGroup: together
           repositoryName: ${myNpmRepo}
@@ -28,15 +22,14 @@ pipelines:
         execution:
           onStart:
             - export JFROG_CLI_BUILD_URL="${int_artifactory_eu_url/%artifactory/ui}/pipelines/myPipelines/app_dotnet/${run_number}/setup_env?branch=${res_src_code_k8s_frontapp_npm_branchName}"
-            - ls -l ${res_src_code_k8s_frontapp_npm_resourcePath}
             - restore_cache_files npm_cache ${res_src_code_k8s_frontapp_npm_resourcePath}/node_modules
           onSuccess:
-            - ls -l /tmp/jfrog
-            - echo ${res_src_code_k8s_frontapp_npm_isGitTag}
+            # - echo ${res_src_code_k8s_frontapp_npm_isGitTag}
             - appVersion=`if [[ ${res_src_code_k8s_frontapp_npm_isGitTag} == "True" ]]; then echo ${res_src_code_k8s_frontapp_npm_gitTagName}; else echo ${res_src_code_k8s_frontapp_npm_commitSha}; fi`
-            - echo $appVersion 
-            - add_pipeline_variables appVersion="${appVersion}"
-            - add_pipeline_variables subPath="${res_src_code_k8s_frontapp_npm_branchName}/${appVersion}"
+            # - echo $appVersion 
+            - add_run_variables myAppVersion="${appVersion}"
+            - add_run_variables myDockerTag="${myAppVersion}-${res_src_code_k8s_frontapp_npm_commitSha}"
+# - add_pipeline_variables subPath="${res_src_code_k8s_frontapp_npm_branchName}/${appVersion}"
             # cache node_modules folder for future runs
             - add_cache_files ${res_src_code_k8s_frontapp_npm_resourcePath}/front/node_modules npm_cache
             # pass front folder to next step
@@ -58,42 +51,19 @@ pipelines:
             - name: bi_k8s_frontapp_npm
         execution:
           onStart:
-            - echo "Run Unit Testing ..." 
-            - if [ $OFFLINE_MODE == "true" ]; then echo "Offline mode turned on";fi
             - restore_run_files mySources .
             - mkdir /tmp/jfrog 
             - restore_run_files jfrogCLI_tmp /tmp/jfrog/
             - ls -l /tmp/jfrog/
             - npm run build
+          onExecute:
+            - echo "Run Unit Testing ..." 
+            - if [ $OFFLINE_MODE == "true" ]; then echo "Offline mode turned on";fi
           onSuccess:
             - ls -la
             - tar -czvf frontapp-${myDemoVersion}.tar.gz build/
             - jfrog rt u frontapp-${myDemoVersion}.tar.gz ${myGenericRepo}/ --build-name=k8s_frontapp_npm --build-number=${run_number}
             - jfrog rt bp k8s_frontapp_npm ${run_number}
-
-      # - name: build_k8s_frontapp_npm
-      #   type: Bash
-      #   configuration:
-      #     inputResources:
-      #       - name: src_code_k8s_frontapp_npm
-      #     outputResources:
-      #       - name: bi_k8s_frontapp_npm
-      #     integrations:
-      #       - name: artifactory_eu
-      #   execution:
-      #     onStart:
-      #       # below is a string substition : replacing the /artifactory in the integration url by /uiÒ
-      #       - export JFROG_CLI_BUILD_URL="${int_artifactory_eu_url/%artifactory/ui}/pipelines/myPipelines/k8s_frontapp_npm/${run_number}/setup_env?branch=${res_src_code_k8s_frontapp_npm_branchName}"
-      #       - cd ${res_src_code_k8s_frontapp_npm_resourcePath}/front
-      #       - git checkout ${res_src_code_k8s_frontapp_npm_branchName}
-      #       - jfrog rt npmc --server-id-resolve artifactory_eu --repo-resolve ${myNpmRepo} --repo-deploy ${myGenericRepo}
-      #       - ls -l .jfrog/projects && cat .jfrog/projects/npm.yaml
-      #       - jfrog rt npm-ci --build-name=${pipeline_name} --build-number=${run_number} --module=dependencies
-      #     onSuccess:
-      #       - tar -czvf frontapp-${myDemoVersion}.tar.gz build/
-      #       - jfrog rt u frontapp-${myDemoVersion}.tar.gz ${myGenericRepo}/ --build-name=${pipeline_name} --build-number=${run_number}
-      #       - jfrog rt bp ${pipeline_name} ${run_number}
-      #       - jfrog rt bp ${pipeline_name} ${run_number}
 
       - name: scan_k8s_frontapp_npm
         type: XrayScan
@@ -118,76 +88,86 @@ pipelines:
               trigger: true
           outputResources:
             - name: bi_k8s_frontapp_npm_promoted_staging
+            - name: pb_frontapp_js            
         execution:  
           onStart:
             - echo ${res_bi_k8s_frontapp_npm_buildName} 
             - echo ${res_bi_k8s_frontapp_npm_buildNumber} 
-            - echo ${appVersion}
-      #     onSuccess:
-      #       - jfrog rt sp --build=${res_bi_k8s_frontapp_npm_buildName}/${res_bi_k8s_frontapp_npm_buildNumber} ${myNpmPromoteRepo}/ "app.version=${appVersion}"
+            - echo ${myAppVersion}
+          onSuccess:            
+            - write_output pb_frontapp_js dockerAppTag=${myDockerTag}
+            - write_output pb_frontapp_js biNumber=${res_bi_k8s_frontapp_npm_buildNumber}
+            - write_output pb_frontapp_js appVersion=${myAppVersion}
+            - which jfrog 
+            - jfrog --version
+            - curl -fL https://getcli.jfrog.io | sh
+            - chmod u+x jfrog 
+            - sudo mv jfrog $(which jfrog)
+            - jfrog --version
+            - jfrog rt sp --build=${res_bi_k8s_frontapp_npm_buildName}/${res_bi_k8s_frontapp_npm_buildNumber} -${myGenericPromoteRepo}/ "app.version=${myAppVersion};app.name=avengers"
 
-            #            - write_output bi_k8s_frontapp_npm_promoted_staging myversion=${appVersion}
 
+  - name: k8s_frontapp_js_docker
+    configuration:
+    environmentVariables:
+      readOnly:
+        dockerPushRepo: avengers-docker
+        dockerRepoUrl: avengers-docker.artifactory-eu-yannc3-0.soleng-emea-staging.jfrog.team:80
+        myDockerImageName: ${dockerRepoUrl}/frontapp-js
+        dockerPromoteRepo: avengers-rc-docker-local
+    steps:
+      - name: setup_env
+        type: Bash
+        configuration:
+          affinityGroup: together
+          runtime:
+            type: host
+          inputResources:
+            - name: pb_frontapp_js
+        execution:
+          onExecute:
+            - sudo mkdir -p /etc/docker 
+            - > 
+              sudo jq -n  "{\"insecure-registries\": [\"${dockerRepoUrl}\"]}" > /etc/docker/daemon.json
+            - sudo systemctl restart docker
+            - sudo cat /etc/docker/daemon.json
+            - add_run_variables myTag=${res_pb_frontapp_js_dockerAppTag}
+            - add_run_variables biNumber=${res_pb_frontapp_js_biNumber}
+      - name: build_k8s_frontapp_js_docker
+        type: DockerBuild
+        configuration:
+          affinityGroup: together
+          dockerFileName: Dockerfile
+          dockerFileLocation: front/CI/Docker/
+          dockerImageName: ${myDockerImageName}
+          dockerImageTag: ${myTag}
+          inputSteps:
+            - name: setup_env
+          inputResources:
+            - name: src_dockerfile_frontapp
+            - name: frontapp_exec
+          integrations:
+            - name: artifactory_eu
+        execution:
+          onStart:
+            - echo "TO DO : get tarball via FileSpec to install into Docker container"
 
-  # - name: suv_003_frontapp_docker_pipeline
-  #   steps:
-  #     - name: build_docker_frontapp
-  #       type: DockerBuild
-  #       configuration:
-  #         affinityGroup: swampupgrp
-  #         dockerFileName: jfrog-Dockerfile
-  #         dockerFileLocation: front/CI/Docker/
-  #         dockerImageName: '${ArtIP}/app-docker-virtual/frontapp'
-  #         dockerImageTag: ${appVersion}-${res_src_dockerfile_frontapp_commitSha}
-  #         inputResources:
-  #           - name: src_dockerfile_frontapp
-  #           - name: build_info_frontapp_promoted_staging
-  #           - name: frontapp_exec
-  #         integrations:
-  #           - name: artifactory
-  #           - name: app_docker_registry
-  #       execution:
-  #         onStart:
-  #           - echo ${int_artifactory_url}
-  #           - 'export ArtIP=$(echo ${int_artifactory_url}|awk -F ''/'' ''{print $3}'')'
-  #           - echo ${ArtIP}
-  #           - echo ${res_build_info_frontapp_promoted_staging_myversion}
-  #           - add_pipeline_variables appVersion="${res_build_info_frontapp_promoted_staging_myversion}"
-  #           - echo ${res_frontapp_exec_resourcePath}
-  #           - echo "Npm App Build number :" 
-  #           - echo ${triggerBuildInfoNumber}
-  #           - echo "Npm App version :" 
-  #           - echo ${appVersion} 
-  #           - echo "Git repo hash :" 
-  #           - echo ${res_src_dockerfile_frontapp_commitSha}
-  #           - echo "Copying exec binary to specific location..." && ls -l
-  #           - echo "Filespec location :" && echo ${res_frontapp_exec_resourcePath} && ls -l ${res_frontapp_exec_resourcePath}
-  #           - cp ${res_frontapp_exec_resourcePath}/front* ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker/
-  #           - cd ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker/
-  #           - tar xvf front*.tgz
-  #           - ls -l ${res_src_dockerfile_frontapp_resourcePath}/front/CI/Docker
-  #           - sed -i "s/registry/${ArtIP}/g" jfrog-Dockerfile
-  #           - echo $appVersion
-  #           - add_pipeline_variables myDockerTag="${appVersion}-${res_src_dockerfile_frontapp_commitSha}"
-  #         onSuccess:
-  #           - echo "Job well done!"
+      - name: publish_k8s_frontapp_js_docker
+        type: DockerPush
+        configuration:
+          affinityGroup: together
+          targetRepository: ${dockerPushRepo}
+          autoPublishBuildInfo: true
+          inputSteps:
+            - name: build_k8s_frontapp_js_docker
+          integrations:
+            - name: artifactory_eu
+          outputResources:
+            - name: bi_k8s_frontapp_js_docker
+        execution:
+          onSuccess:
+            - echo "Job well done!"
 
-  #     - name: publish_docker_frontapp
-  #       type: DockerPush
-  #       configuration:
-  #         affinityGroup: swampupgrp
-  #         targetRepository: app-docker-virtual
-  #         autoPublishBuildInfo: true
-  #         inputSteps:
-  #           - name: build_docker_frontapp
-  #         integrations:
-  #           - name: artifactory
-  #         outputResources:
-  #           - name: build_info_docker_frontapp
-  #       execution:
-  #         onSuccess:
-  #           - echo "Job well done!"
-  #           - echo $appVersion
       
   #     - name: xray_scan_docker_build_info_frontapp
   #       type: Bash

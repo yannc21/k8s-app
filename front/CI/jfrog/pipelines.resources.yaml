@@ -39,12 +39,10 @@ resources:
       buildName: k8s_frontapp_npm
       buildNumber: '${run_number}'
 
-  - name: bi_k8s_frontapp_npm_promoted_prod
-    type: BuildInfo
+  - name: pb_k8s_frontapp_js
+    type: PropertyBag
     configuration:
-      sourceArtifactory: artifactory_eu
-      buildName: k8s_frontapp_npm
-      buildNumber: '${run_number}'
+      biNumber: XXX
 
 # DOCKER PIPELINE 
 #  - name: aql_go
@@ -58,24 +56,24 @@ resources:
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory_eu
-      pattern: app-npm-rc-local/front/**/front**
-      buildName: ${triggerBuildInfoName}
-      buildNumber: ${triggerBuildInfoNumber}
+      pattern: avengers-generic/frontapp-2.0.3.tar.gz
+      # buildName: ${triggerBuildInfoName}
+      # buildNumber: ${triggerBuildInfoNumber}
       flat: true
 #      pattern: app-generic/backend
 #      aql: '{"name":"backend","@build.name":"backapp_go_pipeline","@build.number":"43"}'
 #      aql: "({\"name\":\"backend\"})"
 
-  # - name: bi_docker_frontapp_npm
-  #   type: BuildInfo
-  #   configuration:
-  #     sourceArtifactory: artifactory
-  #     buildName: frontapp_npm_docker
-  #     buildNumber: '${run_number}'
+  - name: bi_k8s_frontapp_js_docker
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: k8s_frontapp_js_docker
+      buildNumber: '${run_number}'
 
-  # - name: bi_docker_frontapp_npm_promoted_staging
-  #   type: BuildInfo
-  #   configuration:
-  #     sourceArtifactory: artifactory
-  #     buildName: frontapp_npm_docker
-  #     buildNumber: '${run_number}'
+  - name: bi_k8s_frontapp_js_docker_promoted_staging
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: artifactory_eu
+      buildName: k8s_frontapp_js_docker
+      buildNumber: '${run_number}'
