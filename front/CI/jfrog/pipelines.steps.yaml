@@ -151,6 +151,8 @@ pipelines:
         execution:
           onStart:
             - echo "TO DO = get tarball via FileSpec to install into Docker container"
+            - ls -la 
+            - mv frontapp-2.0.3.tar.gz app.tar.gz
 
       - name: publish_k8s_frontapp_js_docker
         type: DockerPush
