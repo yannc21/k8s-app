@@ -144,8 +144,8 @@ pipelines:
           inputSteps:
             - name: setup_env
           inputResources:
-            - name: src_dockerfile_frontapp
-            - name: frontapp_exec
+            - name: src_dockerfile_k8s_frontapp_npm
+            - name: frontapp_npm_exec
           integrations:
             - name: artifactory_eu
         execution:

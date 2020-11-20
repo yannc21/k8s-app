@@ -13,17 +13,6 @@ resources:
       branches:
         include: jfrog-ode
 
-# DOCKER PIPELINE
-  - name: src_dockerfile_k8s_frontapp_npm
-    type: GitRepo
-    configuration:
-      files:
-        include: ^front\/CI\/Docker\/.+
-      path: cyan21/k8s-app
-      branches:
-        include: jfrog-ode
-      gitProvider: yann_github
-
   # Build info for the published Npm App
   - name: bi_k8s_frontapp_npm
     type: BuildInfo
@@ -44,7 +33,16 @@ resources:
     configuration:
       biNumber: XXX
 
-# DOCKER PIPELINE 
+# DOCKER PIPELINE
+  - name: src_dockerfile_k8s_frontapp_npm
+    type: GitRepo
+    configuration:
+      files:
+        include: ^front\/CI\/Docker\/.+
+      path: cyan21/k8s-app
+      branches:
+        include: jfrog-ode
+      gitProvider: yann_github
 #  - name: aql_go
 #    type: Aql
 #    configuration:
