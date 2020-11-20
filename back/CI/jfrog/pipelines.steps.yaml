@@ -26,7 +26,7 @@ pipelines:
           integrations:
             - name: artifactory_eu
           outputResources:
-            - name: bi_k8s_backapp
+            - name: bi_k8s_backapp_gradle
         execution:
           onStart:
             - export JFROG_CLI_BUILD_URL="${int_artifactory_eu_url/%artifactory/ui}/pipelines/myPipelines/k8s_backapp_gradle/${run_number}/setup_env?branch=${res_src_code_k8s_backapp_gradle_branchName}"
@@ -42,7 +42,7 @@ pipelines:
         configuration:
           failOnScan: false
           inputResources:
-            - name: bi_k8s_backapp
+            - name: bi_k8s_backapp_gradle
               trigger: true
 
       - name: promote_bi_k8s_backapp_gradle
@@ -52,9 +52,9 @@ pipelines:
           includeDependencies: false
           status: SANDBOX_OK
           comment: Unit testing and Xray scan passed succesfully
-          copy: true
+          copy: false
           inputResources:
-            - name: bi_k8s_backapp
+            - name: bi_k8s_backapp_gradle
               trigger: true
           inputSteps:
             - name: scan_bi_k8s_backapp_gradle

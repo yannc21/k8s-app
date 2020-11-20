@@ -13,7 +13,7 @@ resources:
         include: jfrog-ode
 
   # Build info for the published gradle App
-  - name: bi_k8s_backapp
+  - name: bi_k8s_backapp_gradle
     type: BuildInfo
     configuration:
       sourceArtifactory: artifactory_eu
