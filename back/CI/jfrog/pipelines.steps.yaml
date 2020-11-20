@@ -65,14 +65,13 @@ pipelines:
             - name: pb_k8s_backapp_gradle
         execution:  
           onStart:
-            - echo ${res_bi_k8s_backapp_buildName} 
-            - echo ${res_bi_k8s_backapp_buildNumber} 
+            - echo ${res_bi_k8s_backapp_gradle_buildName} 
+            - echo ${res_bi_k8s_backapp_gradle_buildNumber} 
             - echo $myDockerTag
           onSuccess:
-            - jfrog rt sp --build=${res_bi_k8s_backapp_buildName}/${res_bi_k8s_backapp_buildNumber} ${grdlPromoteRepo}/ "app.version=${appVersion}"
             - write_output pb_k8s_backapp_gradle dockerAppTag=${myDockerTag}
             - write_output pb_k8s_backapp_gradle biNumber=${res_bi_k8s_backapp_buildNumber}
-
+            - jfrog rt sp --build=${res_bi_k8s_backapp_gradle_buildName}/${res_bi_k8s_backapp_gradle_buildNumber} ${grdlPromoteRepo}/ "app.version=${appVersion}"
 
   - name: k8s_backapp_gradle_docker
     configuration:
