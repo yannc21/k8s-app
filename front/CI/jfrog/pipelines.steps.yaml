@@ -88,16 +88,16 @@ pipelines:
               trigger: true
           outputResources:
             - name: bi_k8s_frontapp_npm_promoted_staging
-            - name: pb_frontapp_js            
+            - name: pb_k8s_frontapp_js            
         execution:  
           onStart:
             - echo ${res_bi_k8s_frontapp_npm_buildName} 
             - echo ${res_bi_k8s_frontapp_npm_buildNumber} 
             - echo ${myAppVersion}
           onSuccess:            
-            - write_output pb_frontapp_js dockerAppTag=${myDockerTag}
-            - write_output pb_frontapp_js biNumber=${res_bi_k8s_frontapp_npm_buildNumber}
-            - write_output pb_frontapp_js appVersion=${myAppVersion}
+            - write_output pb_k8s_frontapp_js dockerAppTag=${myDockerTag}
+            - write_output pb_k8s_frontapp_js biNumber=${res_bi_k8s_frontapp_npm_buildNumber}
+            - write_output pb_k8s_frontapp_js appVersion=${myAppVersion}
             - which jfrog 
             - jfrog --version
             - curl -fL https://getcli.jfrog.io | sh
@@ -123,7 +123,7 @@ pipelines:
           runtime:
             type: host
           inputResources:
-            - name: pb_frontapp_js
+            - name: pb_k8s_frontapp_js
         execution:
           onExecute:
             - sudo mkdir -p /etc/docker 
@@ -131,8 +131,8 @@ pipelines:
               sudo jq -n  "{\"insecure-registries\": [\"${dockerRepoUrl}\"]}" > /etc/docker/daemon.json
             - sudo systemctl restart docker
             - sudo cat /etc/docker/daemon.json
-            - add_run_variables myTag=${res_pb_frontapp_js_dockerAppTag}
-            - add_run_variables biNumber=${res_pb_frontapp_js_biNumber}
+            - add_run_variables myTag=${res_pb_k8s_frontapp_js_dockerAppTag}
+            - add_run_variables biNumber=${res_pb_k8s_frontapp_js_biNumber}
       - name: build_k8s_frontapp_js_docker
         type: DockerBuild
         configuration:
