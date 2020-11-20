@@ -4,7 +4,7 @@ pipelines:
       environmentVariables:
         readOnly:
           myDemoVersion:  2.0.0
-          grdlPromoteRepo: ninja-rc-grdl-local
+          grdlPromoteRepo: kaizoku-rc-grdl-local
     steps:
       - name: build_k8s_backapp_gradle
         type: GradleBuild
@@ -29,13 +29,13 @@ pipelines:
             - name: bi_k8s_backapp
         execution:
           onStart:
-            - export JFROG_CLI_BUILD_URL="${int_artifactory_eu_url/%artifactory/ui}/pipelines/myPipelines/app_dotnet/${run_number}/setup_env?branch=${res_src_code_k8s_backapp_gradle_branchName}"
+            - export JFROG_CLI_BUILD_URL="${int_artifactory_eu_url/%artifactory/ui}/pipelines/myPipelines/k8s_backapp_gradle/${run_number}/setup_env?branch=${res_src_code_k8s_backapp_gradle_branchName}"
           onSuccess:
             - echo ${res_src_code_k8s_backapp_gradle_isGitTag}
             - appVersion=`if [[ ${res_src_code_k8s_backapp_gradle_isGitTag} == "True" ]]; then echo ${res_src_code_k8s_backapp_gradle_gitTagName}; else echo ${res_src_code_k8s_backapp_gradle_commitSha}; fi`
             - echo $appVersion
-            - add_pipeline_variables appVersion="${appVersion}"
-            - add_pipeline_variables subPath="${res_src_code_k8s_backapp_gradle_branchName}/${appVersion}"      
+            - add_run_variables appVersion="${appVersion}"
+#            - add_run_variables subPath="${res_src_code_k8s_backapp_gradle_branchName}/${appVersion}"      
 
       - name: scan_bi_k8s_backapp_gradle
         type: XrayScan
