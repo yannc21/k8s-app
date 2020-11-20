@@ -2,9 +2,9 @@ version: 1
 type: gradle
 useWrapper: false
 resolver:
-  repo: app-gradle-virtual
-  serverID: artifactory
+  repo: kaizoku-grdl
+  serverID: artifactory_eu
 deployer:
-  repo: app-gradle-virtual
-  serverID: artifactory
+  repo: kaizoku-grdl
+  serverID: artifactory_eu
   deployMavenDescriptors: true
