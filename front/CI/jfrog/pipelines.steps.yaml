@@ -80,7 +80,7 @@ pipelines:
           includeDependencies: false
           status: SANDBOX_OK
           comment: Unit testing and Xray scan passed succesfully
-          copy: true
+          copy: false
           inputSteps:
             - name: scan_k8s_frontapp_npm
           inputResources:
@@ -152,7 +152,7 @@ pipelines:
           onStart:
             - echo "TO DO = get tarball via FileSpec to install into Docker container"
             - ls -la 
-            - mv frontapp-2.0.3.tar.gz app.tar.gz
+            - mv ${res_frontapp_npm_exec_resourcePath}/frontapp-2.0.3.tar.gz ./app.tar.gz
 
       - name: publish_k8s_frontapp_js_docker
         type: DockerPush
