@@ -52,7 +52,7 @@ resources:
       #pattern: 'app-gradle-rc-local/org/jfrog/example/gradle/webservice/1.1.2/webservice-1.1.2.war'
       # buildName: k8s_backapp_gradle_docker
       # buildNumber: ${run_number}
-      target: war/webservice.war
+      target: webservice.war
       flat: true
 
   - name: bi_k8s_backapp_gradle_docker
