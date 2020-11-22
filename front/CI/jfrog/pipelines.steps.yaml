@@ -22,6 +22,9 @@ pipelines:
         execution:
           onStart:
             - export JFROG_CLI_BUILD_URL="${int_artifactory_eu_url/%artifactory/ui}/pipelines/myPipelines/app_dotnet/${run_number}/setup_env?branch=${res_src_code_k8s_frontapp_npm_branchName}"
+            - cd ${res_src_code_k8s_frontapp_npm_resourcePath}/front/CI/jfrog
+            - ls -l && chmod +x init.sh
+            - ./init.sh -u  ${int_artifactory_eu_url/%artifactory/} -p ${int_artifactory_eu_apikey}            
             - restore_cache_files npm_cache ${res_src_code_k8s_frontapp_npm_resourcePath}/node_modules
           onSuccess:
             # - echo ${res_src_code_k8s_frontapp_npm_isGitTag}
