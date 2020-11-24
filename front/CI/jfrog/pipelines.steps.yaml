@@ -115,7 +115,7 @@ pipelines:
       environmentVariables:
         readOnly:
           dockerPushRepo: avengers-docker
-          dockerRepoUrl: avengers-docker.artifactory-eu-yannc3-0.soleng-emea-staging.jfrog.team:80
+          dockerRepoUrl: avengers-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
           myDockerImageName: ${dockerRepoUrl}/frontapp-js
           dockerPromoteRepo: avengers-rc-docker-local
     steps:
