@@ -93,5 +93,5 @@ resources:
     configuration:
       sourceArtifactory: artifactory_eu
       repository: ninjavengers-helm
-      chart: my-app
+      chart: myapp
       version: 1.0.0
