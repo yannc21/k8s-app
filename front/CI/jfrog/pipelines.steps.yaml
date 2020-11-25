@@ -209,8 +209,6 @@ pipelines:
         configuration:
           integrations:
             - name: yann_k8s
-          inputSteps: 
-            - name: promote_bi_k8s_frontapp_js_docker
           inputResources:
             - name: hc_my_app
             - name: pb_k8s_frontapp_docker
