@@ -213,7 +213,7 @@ pipelines:
             - name: hc_my_app
             - name: pb_k8s_frontapp_docker
           releaseName: helmreporesource
-          flags: "--namespace kube-system --cleanup-on-fail images.front.tag: ${res_pb_k8s_frontapp_docker_newTag}"
+          flags: "--namespace ninjavengers --cleanup-on-fail images.front.tag: ${res_pb_k8s_frontapp_docker_newTag}"
           valueFilePaths:
             - values.yaml
         #execution:
