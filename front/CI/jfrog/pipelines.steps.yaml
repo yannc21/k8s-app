@@ -32,7 +32,7 @@ pipelines:
             # - echo $appVersion 
             - add_run_variables myAppVersion="${appVersion}"
             - add_run_variables myDockerTag="${myAppVersion}-${res_src_code_k8s_frontapp_npm_commitSha}"
-# - add_pipeline_variables subPath="${res_src_code_k8s_frontapp_npm_branchName}/${appVersion}"
+            # - add_pipeline_variables subPath="${res_src_code_k8s_frontapp_npm_branchName}/${appVersion}"
             # cache node_modules folder for future runs
             - add_cache_files ${res_src_code_k8s_frontapp_npm_resourcePath}/front/node_modules npm_cache
             # pass front folder to next step
@@ -108,7 +108,6 @@ pipelines:
             - sudo mv jfrog $(which jfrog)
             - jfrog --version
             - jfrog rt sp --build=${res_bi_k8s_frontapp_npm_buildName}/${res_bi_k8s_frontapp_npm_buildNumber} -${myGenericPromoteRepo}/ "app.version=${myAppVersion};app.name=avengers"
-
 
   - name: k8s_frontapp_js_docker
     configuration:
@@ -197,7 +196,29 @@ pipelines:
             - name: scan_k8s_frontapp_js_docker
           outputResources:
             - name: bi_k8s_frontapp_js_docker_promoted_staging
+            - name: pb_k8s_frontapp_docker
         execution:
           onSuccess:
             - jfrog rt sp --build=${res_bi_k8s_frontapp_js_docker_buildName}/${res_bi_k8s_frontapp_js_docker_buildNumber} ${dockerPromoteRepo}/**/manifest.json "docker.tag=${myDockerTag}"
- 
+            - write_output pb_k8s_frontapp_docker newTag=${myTag}
+
+  - name: k8s_frontapp_js_deployment
+    steps:
+      - name: deploy_helm_chart
+        type: HelmDeploy
+        configuration:
+          integrations:
+            - name: yann_k8s
+          inputSteps: 
+            - name: promote_bi_k8s_frontapp_js_docker
+          inputResources:
+            - name: hc_my_app
+            - name: pb_k8s_frontapp_docker
+          releaseName: helmreporesource
+          flags: "--namespace kube-system --cleanup-on-fail images.front.tag: ${res_pb_k8s_frontapp_docker_newTag}"
+          valueFilePaths:
+            - values.yaml
+        #execution:
+          #onStart:
+            #- kubectl version
+            #- helm version

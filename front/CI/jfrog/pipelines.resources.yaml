@@ -75,3 +75,23 @@ resources:
       sourceArtifactory: artifactory_eu
       buildName: k8s_frontapp_js_docker
       buildNumber: '${run_number}'
+
+  - name: pb_k8s_frontapp_docker
+    type: PropertyBag
+    configuration:
+      newTag: XXX
+
+# HELM PIPELINE
+  - name: src_code_k8s_frontapp_chart
+    type: GitRepo
+    configuration:
+      gitProvider: yann_github
+      path: cyan21/k8s-helm
+ 
+  - name: hc_my_app
+    type: HelmChart
+    configuration:
+      sourceArtifactory: artifactory_eu
+      repository: ninjavengers-helm
+      chart: my-app
+      version: "1.0.${run_number}"
