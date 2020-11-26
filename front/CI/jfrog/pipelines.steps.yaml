@@ -243,10 +243,10 @@ pipelines:
             - name: hc_my_app
             - name: pb_k8s_frontapp_docker
           releaseName: helmreporesource
-          flags: "--namespace ninjavengers --cleanup-on-fail --set images.front.tag: ${res_pb_k8s_frontapp_docker_newTag}"
+          flags: "--debug --install --namespace ninjavengers --cleanup-on-fail --set images.front.tag=${res_pb_k8s_frontapp_docker_newTag}"
           valueFilePaths:
             - values.yaml
-        #execution:
-          #onStart:
-            #- kubectl version
+        execution:
+          onStart:
+            - echo ${res_pb_k8s_frontapp_docker_newTag}
             #- helm version
