@@ -199,7 +199,8 @@ pipelines:
             - name: pb_k8s_frontapp_docker
         execution:
           onSuccess:
-            - jfrog rt sp --build=${res_bi_k8s_frontapp_js_docker_buildName}/${res_bi_k8s_frontapp_js_docker_buildNumber} ${dockerPromoteRepo}/**/manifest.json "docker.tag=${myDockerTag}"
+            - echo "${dockerPromoteRepo}/${dockerRepoUrl}/frontapp-js/${myTag}/manifest.json"
+            - jfrog rt sp --build=${res_bi_k8s_frontapp_js_docker_buildName}/${res_bi_k8s_frontapp_js_docker_buildNumber} ${dockerPromoteRepo}/${dockerRepoUrl}/frontapp-js/${myTag}/manifest.json "docker.tag=${myTag}"
             - write_output pb_k8s_frontapp_docker newTag=${myTag}
 
   - name: k8s_frontapp_js_deployment
@@ -214,6 +215,8 @@ pipelines:
           affinityGroup: deploy
           runtime:
             type: host
+          inputResources:
+            - name: pb_k8s_frontapp_docker
         execution:
           onExecute:
             - sudo mkdir -p /etc/docker 
@@ -222,6 +225,9 @@ pipelines:
             - sudo systemctl restart docker
             - sudo cat /etc/docker/daemon.json
             - sudo systemctl status docker
+            - echo ${res_pb_k8s_frontapp_docker_newTag}
+            - add_run_variables myTag=${res_pb_k8s_frontapp_docker_newTag}
+
       - name: deploy_helm_chart
         type: HelmDeploy
         configuration:
@@ -243,10 +249,10 @@ pipelines:
             - name: hc_my_app
             - name: pb_k8s_frontapp_docker
           releaseName: helmreporesource
-          flags: "--debug --install --namespace ninjavengers --cleanup-on-fail --set images.front.tag=${res_pb_k8s_frontapp_docker_newTag}"
+          flags: "--debug --install --namespace ninjavengers --cleanup-on-fail --set images.front.tag=${myTag}"
           valueFilePaths:
             - values.yaml
         execution:
           onStart:
-            - echo ${res_pb_k8s_frontapp_docker_newTag}
+            - echo ${myTag}
             #- helm version
