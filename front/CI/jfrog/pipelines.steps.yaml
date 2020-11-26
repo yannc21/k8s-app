@@ -207,13 +207,14 @@ pipelines:
       - name: deploy_helm_chart
         type: HelmDeploy
         configuration:
+          helmVersion: 3
           integrations:
             - name: yann_k8s
           inputResources:
             - name: hc_my_app
             - name: pb_k8s_frontapp_docker
           releaseName: helmreporesource
-          flags: "--namespace ninjavengers --cleanup-on-fail images.front.tag: ${res_pb_k8s_frontapp_docker_newTag}"
+          flags: "--namespace ninjavengers --cleanup-on-fail --set images.front.tag: ${res_pb_k8s_frontapp_docker_newTag}"
           valueFilePaths:
             - values.yaml
         #execution:
