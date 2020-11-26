@@ -211,7 +211,7 @@ pipelines:
       - name: setup_env
         type: Bash
         configuration:
-          affinityGroup: dotnet
+          affinityGroup: deploy
           runtime:
             type: host
         execution:
@@ -225,6 +225,7 @@ pipelines:
       - name: deploy_helm_chart
         type: HelmDeploy
         configuration:
+          affinityGroup: deploy
           helmVersion: 3
           runtime:
             type: image
@@ -234,6 +235,8 @@ pipelines:
                 name: ${myDockerRegistry}/jfrog/pipelines-u18node
                 tag: 10.21.0
                 sourceRepository: ${myDockerRegistry}
+          inputSteps:
+            - name: setup_env
           integrations:
             - name: yann_k8s
           inputResources:
