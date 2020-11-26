@@ -247,7 +247,6 @@ pipelines:
             - name: yann_k8s
           inputResources:
             - name: hc_my_app
-            - name: pb_k8s_frontapp_docker
           releaseName: helmreporesource
           flags: "--debug --install --namespace ninjavengers --cleanup-on-fail --set images.front.tag=${myTag}"
           valueFilePaths:
