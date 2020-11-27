@@ -76,4 +76,5 @@ virtualRepositories:
       - avengers-dev-docker-local
       - avengers-rc-docker-local
       - avengers-dockerhub-remote
+      - avengers-bintray-remote
     defaultDeploymentRepo: avengers-dev-docker-local
