@@ -29,9 +29,9 @@ pipelines:
             # retrieved cached dependencies (stored onSucess execution)            
             - restore_cache_files npm_cache ${res_src_code_k8s_frontapp_npm_resourcePath}/node_modules
           onSuccess:
-            - echo $runVarAppVersion
 #            - appVersion=`if [[ ${res_src_code_k8s_frontapp_npm_isGitTag} == "True" ]]; then echo ${res_src_code_k8s_frontapp_npm_gitTagName}; else echo ${res_src_code_k8s_frontapp_npm_commitSha}; fi`
-            - add_run_variables runVarAppVersion=`jq .version package.json`
+            - add_run_variables runVarAppVersion=`jq .version ${res_src_code_k8s_frontapp_npm_resourcePath}/front/package.json`
+            - echo $runVarAppVersion
 #            - add_run_variables runVarGitTag=${res_src_code_k8s_frontapp_npm_gitTagName}
             - add_run_variables runVarGitCommit=${res_src_code_k8s_frontapp_npm_commitSha}
             # cache node_modules folder for future runs
