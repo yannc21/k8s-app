@@ -165,7 +165,7 @@ pipelines:
         execution:
           onSuccess:
             - echo "${envVarDockerPromoteRepo}/${envVarDockerRepoUrl}/frontapp-js/${runVarAppVersion}/manifest.json"
-            - jfrog rt sp --build=${res_bi_k8s_frontapp_js_docker_buildName}/${res_bi_k8s_frontapp_js_docker_buildNumber} ${envVarDockerPromoteRepo}/${envVarDockerRepoUrl}/frontapp-js/${runVarAppVersion}/manifest.json "app.version=${runVarAppVersion};app.commit.sha=${runVarAppCommitSHA};dockerfile.commit.sha=${runVarGitCommit}"
+            - jfrog rt sp --build=${res_bi_k8s_frontapp_js_docker_buildName}/${res_bi_k8s_frontapp_js_docker_buildNumber} ${envVarDockerPromoteRepo}/frontapp-js/${runVarAppVersion}/manifest.json "app.version=${runVarAppVersion};app.commit.sha=${runVarAppCommitSHA};dockerfile.commit.sha=${runVarGitCommit}"
 
       - name: scan_k8s_frontapp_js_docker
         type: XrayScan

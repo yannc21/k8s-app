@@ -44,6 +44,14 @@ remoteRepositories:
     enableTokenAuthentication: true
     xray:   
       enabled: true
+  avengers-bintray-remote:
+    type: docker
+    url: https://docker.bintray.io/
+    dockerApiVersion: V2
+    repoLayout: simple-default 
+    enableTokenAuthentication: true
+    xray:   
+      enabled: true
 virtualRepositories: 
   avengers-npm:
     type: npm

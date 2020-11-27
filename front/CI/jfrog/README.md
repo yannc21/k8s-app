@@ -22,13 +22,12 @@ curl -uadmin:chaysinh -X PATCH "http://localhost:8081/artifactory/api/system/con
 ````
 
 if you change the repo names, make sure to edit : 
-* the mvn-art-config
 * repo name in the pipelines.steps.yaml (pipeline variables)
 
 
 ## Integration creation
 
-integrations have to be created manually for now JFrog pipelines
+integrations have to be created manually for now on JFrog pipelines
 
 
 
