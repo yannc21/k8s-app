@@ -149,7 +149,7 @@ pipelines:
             - ls -la ${res_frontapp_npm_exec_resourcePath}
             - cp ${res_frontapp_npm_exec_resourcePath}/frontapp-${runVarAppVersion}.tar.gz ${res_src_dockerfile_k8s_frontapp_npm_resourcePath}/front/CI/Docker/app.tar.gz
             - ls -la ${res_src_dockerfile_k8s_frontapp_npm_resourcePath}/front/CI/Docker/
-            - add_run_variable runVarGitCommit=${res_src_dockerfile_k8s_frontapp_npm_commitSha}
+            - add_run_variables runVarGitCommit=${res_src_dockerfile_k8s_frontapp_npm_commitSha}
       - name: publish_k8s_frontapp_js_docker
         type: DockerPush
         configuration:
