@@ -67,8 +67,7 @@ pipelines:
             - tar -czvf frontapp-${runVarAppVersion}.tar.gz build/
             - jfrog rt u frontapp-${runVarAppVersion}.tar.gz ${envVarGenericRepo}/ --build-name=k8s_frontapp_npm --build-number=${run_number}
             - jfrog rt bp k8s_frontapp_npm ${run_number}
-            - jfrog rt sp --build=k8s_frontapp_npm/${run_number} ${envVarGenericRepo}/ "src.commit.sha"=${runVarGitCommit};app.version=${runVarAppVersion};app.name=avengers"
-
+            - jfrog rt sp --build=k8s_frontapp_npm/${run_number} ${envVarGenericRepo}/ "src.commit.sha=${runVarGitCommit};app.version=${runVarAppVersion};app.name=avengers"
 
       - name: scan_k8s_frontapp_npm
         type: XrayScan
