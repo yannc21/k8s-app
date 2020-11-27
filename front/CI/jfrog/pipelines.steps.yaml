@@ -101,7 +101,8 @@ pipelines:
             - echo ${runVarAppVersion}
           onSuccess:            
             - write_output pb_k8s_frontapp_js appVersion=${runVarAppVersion}
-  
+            - write_output pb_k8s_frontapp_js appCommitSHA=${runVarGitCommit}
+
   - name: k8s_frontapp_js_docker
     configuration:
       environmentVariables:
@@ -127,6 +128,8 @@ pipelines:
             - sudo systemctl restart docker
             - sudo cat /etc/docker/daemon.json
             - add_run_variables runVarAppVersion=${res_pb_k8s_frontapp_js_appVersion}
+            - add_run_variables runVarAppCommitSHA=${res_pb_k8s_frontapp_js_appCommitSHA}
+
       - name: build_k8s_frontapp_js_docker
         type: DockerBuild
         configuration:
@@ -163,7 +166,7 @@ pipelines:
         execution:
           onSuccess:
             - echo "${envVarDockerPromoteRepo}/${envVarDockerRepoUrl}/frontapp-js/${runVarAppVersion}/manifest.json"
-            - jfrog rt sp --build=${res_bi_k8s_frontapp_js_docker_buildName}/${res_bi_k8s_frontapp_js_docker_buildNumber} ${envVarDockerPromoteRepo}/${envVarDockerRepoUrl}/frontapp-js/${runVarAppVersion}/manifest.json "app.version=${runVarAppVersion};app.commit.sha=${runVarGitCommit}"
+            - jfrog rt sp --build=${res_bi_k8s_frontapp_js_docker_buildName}/${res_bi_k8s_frontapp_js_docker_buildNumber} ${envVarDockerPromoteRepo}/${envVarDockerRepoUrl}/frontapp-js/${runVarAppVersion}/manifest.json "app.version=${runVarAppVersion};app.commit.sha=${runVarAppCommitSHA};dockerfile.commit.sha=${runVarGitCommit}"
 
       - name: scan_k8s_frontapp_js_docker
         type: XrayScan
