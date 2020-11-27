@@ -54,7 +54,7 @@ resources:
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory_eu
-      pattern: avengers-generic/frontapp-2.0.3.tar.gz
+      pattern: avengers-generic/frontapp-${runVarAppVersion}.tar.gz
       # buildName: ${triggerBuildInfoName}
       # buildNumber: ${triggerBuildInfoNumber}
       flat: true
