@@ -3,17 +3,16 @@ pipelines:
     configuration:
       environmentVariables:
         readOnly:
-          myDemoVersion:  2.0.3
-          myNpmRepo: avengers-npm
-          myGenericRepo: avengers-generic
-          myGenericPromoteRepo: avengers-rc-generic-local
+          envVarNpmRepo: avengers-npm
+          envVarGenericRepo: avengers-generic
+          envVarGenericPromoteRepo: avengers-rc-generic-local
     steps:
       - name: build_k8s_frontapp_npm
         type: NpmBuild
         configuration:
           npmArgs: '--no-progress --no-audit'
           affinityGroup: together
-          repositoryName: ${myNpmRepo}
+          repositoryName: ${envVarNpmRepo}
           sourceLocation: front/
           integrations:
             - name: artifactory_eu
@@ -21,18 +20,20 @@ pipelines:
             - name: src_code_k8s_frontapp_npm
         execution:
           onStart:
+            # to inject CI URL into the build info
             - export JFROG_CLI_BUILD_URL="${int_artifactory_eu_url/%artifactory/ui}/pipelines/myPipelines/app_dotnet/${run_number}/setup_env?branch=${res_src_code_k8s_frontapp_npm_branchName}"
+            # to create the repo 
             - cd ${res_src_code_k8s_frontapp_npm_resourcePath}/front/CI/jfrog
             - ls -l && chmod +x init.sh
-            - ./init.sh -u  ${int_artifactory_eu_url/%artifactory/} -p ${int_artifactory_eu_apikey}            
+            - ./init.sh -u  ${int_artifactory_eu_url/%artifactory/} -p ${int_artifactory_eu_apikey}
+            # retrieved cached dependencies (stored onSucess execution)            
             - restore_cache_files npm_cache ${res_src_code_k8s_frontapp_npm_resourcePath}/node_modules
           onSuccess:
-            # - echo ${res_src_code_k8s_frontapp_npm_isGitTag}
-            - appVersion=`if [[ ${res_src_code_k8s_frontapp_npm_isGitTag} == "True" ]]; then echo ${res_src_code_k8s_frontapp_npm_gitTagName}; else echo ${res_src_code_k8s_frontapp_npm_commitSha}; fi`
-            # - echo $appVersion 
-            - add_run_variables myAppVersion="${appVersion}"
-            - add_run_variables myDockerTag="${myAppVersion}-${res_src_code_k8s_frontapp_npm_commitSha}"
-            # - add_pipeline_variables subPath="${res_src_code_k8s_frontapp_npm_branchName}/${appVersion}"
+            - echo $runVarAppVersion
+#            - appVersion=`if [[ ${res_src_code_k8s_frontapp_npm_isGitTag} == "True" ]]; then echo ${res_src_code_k8s_frontapp_npm_gitTagName}; else echo ${res_src_code_k8s_frontapp_npm_commitSha}; fi`
+            - add_run_variables runVarAppVersion=`jq .version package.json`
+#            - add_run_variables runVarGitTag=${res_src_code_k8s_frontapp_npm_gitTagName}
+            - add_run_variables runVarGitCommit=${res_src_code_k8s_frontapp_npm_commitSha}
             # cache node_modules folder for future runs
             - add_cache_files ${res_src_code_k8s_frontapp_npm_resourcePath}/front/node_modules npm_cache
             # pass front folder to next step
@@ -63,10 +64,11 @@ pipelines:
             - echo "Run Unit Testing ..." 
             - if [ $OFFLINE_MODE == "true" ]; then echo "Offline mode turned on";fi
           onSuccess:
-            - ls -la
-            - tar -czvf frontapp-${myDemoVersion}.tar.gz build/
-            - jfrog rt u frontapp-${myDemoVersion}.tar.gz ${myGenericRepo}/ --build-name=k8s_frontapp_npm --build-number=${run_number}
+            - tar -czvf frontapp-${runVarAppVersion}.tar.gz build/
+            - jfrog rt u frontapp-${runVarAppVersion}.tar.gz ${envVarGenericRepo}/ --build-name=k8s_frontapp_npm --build-number=${run_number}
             - jfrog rt bp k8s_frontapp_npm ${run_number}
+            - jfrog rt sp --build=k8s_frontapp_npm/${run_number} ${envVarGenericRepo}/ "src.commit.sha"=${runVarGitCommit};app.version=${runVarAppVersion};app.name=avengers"
+
 
       - name: scan_k8s_frontapp_npm
         type: XrayScan
@@ -79,7 +81,7 @@ pipelines:
       - name: promote_bi_k8s_frontapp_npm
         type: PromoteBuild
         configuration:
-          targetRepository: ${myGenericPromoteRepo}
+          targetRepository: ${envVarGenericPromoteRepo}
           includeDependencies: false
           status: SANDBOX_OK
           comment: Unit testing and Xray scan passed succesfully
@@ -96,27 +98,18 @@ pipelines:
           onStart:
             - echo ${res_bi_k8s_frontapp_npm_buildName} 
             - echo ${res_bi_k8s_frontapp_npm_buildNumber} 
-            - echo ${myAppVersion}
+            - echo ${runVarAppVersion}
           onSuccess:            
-            - write_output pb_k8s_frontapp_js dockerAppTag=${myDockerTag}
-            - write_output pb_k8s_frontapp_js biNumber=${res_bi_k8s_frontapp_npm_buildNumber}
-            - write_output pb_k8s_frontapp_js appVersion=${myAppVersion}
-            - which jfrog 
-            - jfrog --version
-            - curl -fL https://getcli.jfrog.io | sh
-            - chmod u+x jfrog 
-            - sudo mv jfrog $(which jfrog)
-            - jfrog --version
-            - jfrog rt sp --build=${res_bi_k8s_frontapp_npm_buildName}/${res_bi_k8s_frontapp_npm_buildNumber} -${myGenericPromoteRepo}/ "app.version=${myAppVersion};app.name=avengers"
-
+            - write_output pb_k8s_frontapp_js appVersion=${runVarAppVersion}
+  
   - name: k8s_frontapp_js_docker
     configuration:
       environmentVariables:
         readOnly:
-          dockerPushRepo: avengers-docker
-          dockerRepoUrl: avengers-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
-          myDockerImageName: ${dockerRepoUrl}/frontapp-js
-          dockerPromoteRepo: avengers-rc-docker-local
+          envVarDockerRepoUrl: avengers-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerPushRepo: avengers-docker
+          envVarDockerImageName: ${envVarDockerRepoUrl}/frontapp-js
+          envVarDockerPromoteRepo: avengers-rc-docker-local
     steps:
       - name: setup_env
         type: Bash
@@ -130,19 +123,18 @@ pipelines:
           onExecute:
             - sudo mkdir -p /etc/docker 
             - > 
-              sudo jq -n  "{\"insecure-registries\": [\"${dockerRepoUrl}\"]}" > /etc/docker/daemon.json
+              sudo jq -n  "{\"insecure-registries\": [\"${envVarDockerRepoUrl}\"]}" > /etc/docker/daemon.json
             - sudo systemctl restart docker
             - sudo cat /etc/docker/daemon.json
-            - add_run_variables myTag=${res_pb_k8s_frontapp_js_dockerAppTag}
-            - add_run_variables biNumber=${res_pb_k8s_frontapp_js_biNumber}
+            - add_run_variables runVarAppVersion=${res_pb_k8s_frontapp_js_appVersion}
       - name: build_k8s_frontapp_js_docker
         type: DockerBuild
         configuration:
           affinityGroup: together
           dockerFileName: Dockerfile
           dockerFileLocation: front/CI/Docker/
-          dockerImageName: ${myDockerImageName}
-          dockerImageTag: ${myTag}
+          dockerImageName: ${envVarDockerImageName}
+          dockerImageTag: ${runVarAppVersion}
           inputSteps:
             - name: setup_env
           inputResources:
@@ -153,13 +145,14 @@ pipelines:
         execution:
           onStart:
             - ls -la ${res_frontapp_npm_exec_resourcePath}
-            - cp ${res_frontapp_npm_exec_resourcePath}/frontapp-2.0.3.tar.gz ${res_src_dockerfile_k8s_frontapp_npm_resourcePath}/front/CI/Docker/app.tar.gz
+            - cp ${res_frontapp_npm_exec_resourcePath}/frontapp-${runVarAppVersion}.tar.gz ${res_src_dockerfile_k8s_frontapp_npm_resourcePath}/front/CI/Docker/app.tar.gz
             - ls -la ${res_src_dockerfile_k8s_frontapp_npm_resourcePath}/front/CI/Docker/
+            - add_run_variable runVarGitCommit=${res_src_dockerfile_k8s_frontapp_npm_commitSha}
       - name: publish_k8s_frontapp_js_docker
         type: DockerPush
         configuration:
           affinityGroup: together
-          targetRepository: ${dockerPushRepo}
+          targetRepository: ${envVarDockerPushRepo}
           autoPublishBuildInfo: true
           inputSteps:
             - name: build_k8s_frontapp_js_docker
@@ -169,7 +162,8 @@ pipelines:
             - name: bi_k8s_frontapp_js_docker
         execution:
           onSuccess:
-            - echo "Job well done!"
+            - echo "${envVarDockerPromoteRepo}/${envVarDockerRepoUrl}/frontapp-js/${runVarAppVersion}/manifest.json"
+            - jfrog rt sp --build=${res_bi_k8s_frontapp_js_docker_buildName}/${res_bi_k8s_frontapp_js_docker_buildNumber} ${envVarDockerPromoteRepo}/${envVarDockerRepoUrl}/frontapp-js/${runVarAppVersion}/manifest.json "app.version=${runVarAppVersion};app.commit.sha=${runVarGitCommit}"
 
       - name: scan_k8s_frontapp_js_docker
         type: XrayScan
@@ -199,15 +193,13 @@ pipelines:
             - name: pb_k8s_frontapp_docker
         execution:
           onSuccess:
-            - echo "${dockerPromoteRepo}/${dockerRepoUrl}/frontapp-js/${myTag}/manifest.json"
-            - jfrog rt sp --build=${res_bi_k8s_frontapp_js_docker_buildName}/${res_bi_k8s_frontapp_js_docker_buildNumber} ${dockerPromoteRepo}/${dockerRepoUrl}/frontapp-js/${myTag}/manifest.json "docker.tag=${myTag}"
-            - write_output pb_k8s_frontapp_docker newTag=${myTag}
+            - write_output pb_k8s_frontapp_docker newTag=${runVarAppVersion}
 
   - name: k8s_frontapp_js_deployment
     configuration:
       environmentVariables:
         readOnly:
-          myDockerRegistry: avengers-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerRegistry: avengers-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
     steps:
       - name: setup_env
         type: Bash
@@ -221,12 +213,12 @@ pipelines:
           onExecute:
             - sudo mkdir -p /etc/docker 
             - > 
-              sudo jq -n  "{\"insecure-registries\": [\"${myDockerRegistry}\"]}" > /etc/docker/daemon.json
+              sudo jq -n  "{\"insecure-registries\": [\"${envVarDockerRegistry}\"]}" > /etc/docker/daemon.json
             - sudo systemctl restart docker
             - sudo cat /etc/docker/daemon.json
             - sudo systemctl status docker
             - echo ${res_pb_k8s_frontapp_docker_newTag}
-            - add_run_variables myTag=${res_pb_k8s_frontapp_docker_newTag}
+            - add_run_variables runVarNewTag=${res_pb_k8s_frontapp_docker_newTag}
 
       - name: deploy_helm_chart
         type: HelmDeploy
@@ -238,9 +230,9 @@ pipelines:
             image:
               custom:
                 registry: artifactory_eu
-                name: ${myDockerRegistry}/jfrog/pipelines-u18node
+                name: ${envVarDockerRegistry}/jfrog/pipelines-u18node
                 tag: 10.21.0
-                sourceRepository: ${myDockerRegistry}
+                sourceRepository: ${envVarDockerRegistry}
           inputSteps:
             - name: setup_env
           integrations:
@@ -248,10 +240,10 @@ pipelines:
           inputResources:
             - name: hc_my_app
           releaseName: helmreporesource
-          flags: "--debug --install --namespace ninjavengers --cleanup-on-fail --set images.front.tag=${myTag}"
+          flags: "--debug --install --namespace ninjavengers --cleanup-on-fail --set images.front.tag=${runVarNewTag}"
           valueFilePaths:
             - values.yaml
         execution:
           onStart:
-            - echo ${myTag}
+            - echo ${runVarNewTag}
             #- helm version
