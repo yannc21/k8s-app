@@ -69,8 +69,8 @@ pipelines:
             - echo ${res_bi_k8s_backapp_gradle_buildName} 
             - echo ${res_bi_k8s_backapp_gradle_buildNumber} 
           onSuccess:
-            - write_output pb_backapp_gradle appVersion=${runVarAppVersion}
-            - write_output pb_backapp_gradle appCommitSHA=${runVarGitCommit}
+            - write_output pb_k8s_backapp_gradle appVersion=${runVarAppVersion}
+            - write_output pb_k8s_backapp_gradle appCommitSHA=${runVarGitCommit}
 
   - name: k8s_backapp_gradle_docker
     configuration:
