@@ -38,6 +38,8 @@ pipelines:
             - add_run_variables runVarGitCommit=${res_src_code_k8s_backapp_gradle_commitSha}
             - echo $runVarAppVersion
             - echo $runVarGitCommit
+            - jfrog rt c show
+            - echo "jfrog rt sp --build=${res_bi_k8s_backapp_gradle_buildName}/${res_bi_k8s_backapp_gradle_buildNumber} ${envVarGrdlRepo}/ \"src.commit.sha=${runVarGitCommit};app.version=${runVarAppVersion};app.name=kaizoku\""
             - jfrog rt sp --build=${res_bi_k8s_backapp_gradle_buildName}/${res_bi_k8s_backapp_gradle_buildNumber} ${envVarGrdlRepo}/ "src.commit.sha=${runVarGitCommit};app.version=${runVarAppVersion};app.name=kaizoku"
                 
       - name: scan_bi_k8s_backapp_gradle
