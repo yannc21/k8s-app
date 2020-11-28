@@ -69,3 +69,20 @@ resources:
     type: PropertyBag
     configuration:
       newTag: XXX
+
+# HELM PIPELINE
+  - name: src_code_k8s_backapp_chart
+    type: GitRepo
+    configuration:
+      gitProvider: yann_github
+      path: cyan21/k8s-app
+      files:
+        include: ^chart\/.+
+        
+  - name: hc_my_app
+    type: HelmChart
+    configuration:
+      sourceArtifactory: artifactory_eu
+      repository: ninjavengers-helm
+      chart: myapp
+      version: 1.0.0

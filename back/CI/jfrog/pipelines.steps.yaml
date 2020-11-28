@@ -167,3 +167,56 @@ pipelines:
         execution:
           onSuccess:
             - write_output pb_k8s_backapp_gradle_docker newTag=${runVarAppVersion}
+
+  - name: k8s_backapp_gradle_deployment
+    configuration:
+      environmentVariables:
+        readOnly:
+          envVarDockerRegistry: kaizoku-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+    steps:
+      - name: setup_env
+        type: Bash
+        configuration:
+          affinityGroup: deploy
+          runtime:
+            type: host
+          inputResources:
+            - name: pb_k8s_backapp_gradle_docker
+        execution:
+          onExecute:
+            - sudo mkdir -p /etc/docker 
+            - > 
+              sudo jq -n  "{\"insecure-registries\": [\"${envVarDockerRegistry}\"]}" > /etc/docker/daemon.json
+            - sudo systemctl restart docker
+            - sudo cat /etc/docker/daemon.json
+            - sudo systemctl status docker
+            - echo ${res_pb_k8s_backapp_gradle_docker_newTag}
+            - add_run_variables runVarNewTag=${res_pb_k8s_backapp_gradle_docker_newTag}
+
+      - name: deploy_helm_chart
+        type: HelmDeploy
+        configuration:
+          affinityGroup: deploy
+          helmVersion: 3
+          runtime:
+            type: image
+            image:
+              custom:
+                registry: artifactory_eu
+                name: ${envVarDockerRegistry}/jfrog/pipelines-u18node
+                tag: 10.21.0
+                sourceRepository: ${envVarDockerRegistry}
+          inputSteps:
+            - name: setup_env
+          integrations:
+            - name: yann_k8s
+          inputResources:
+            - name: hc_my_app
+          releaseName: helmreporesource
+          flags: "--debug --install --namespace ninjavengers --cleanup-on-fail --set images.back.tag=${runVarNewTag}"
+          valueFilePaths:
+            - values.yaml
+        execution:
+          onStart:
+            - echo ${runVarNewTag}
+            #- helm version

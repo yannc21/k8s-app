@@ -21,6 +21,11 @@ localRepositories:
     repoLayout: simple-default 
     xray:   
       enabled: true
+  kaivengers-dev-helm-local:
+    type: helm
+    repoLayout: simple-default 
+    xray:   
+      enabled: false
 remoteRepositories: 
   kaizoku-jcenter-grdl-remote:
     type: gradle 
@@ -36,6 +41,20 @@ remoteRepositories:
     enableTokenAuthentication: true
     xray:   
       enabled: true
+  kaizoku-bintray-remote:
+    type: docker
+    url: https://docker.bintray.io/
+    dockerApiVersion: V2
+    repoLayout: simple-default 
+    enableTokenAuthentication: true
+    xray:   
+      enabled: true
+  kaivengers-chartcenter-remote:
+    type: helm
+    url: https://repo.chartcenter.io/
+    repoLayout: simple-default 
+    xray:   
+      enabled: false
 virtualRepositories: 
   kaizoku-docker:
     type: docker
@@ -43,7 +62,9 @@ virtualRepositories:
     repoLayout: simple-default 
     repositories:   
       - kaizoku-dev-docker-local
+      - kaizoku-rc-docker-local
       - kaizoku-dockerhub-remote
+      - kaizoku-bintray-remote
     defaultDeploymentRepo: kaizoku-dev-docker-local
   kaizoku-grdl:
     type: gradle
@@ -53,3 +74,10 @@ virtualRepositories:
       - kaizoku-rc-grdl-local
       - kaizoku-jcenter-grdl-remote
     defaultDeploymentRepo: kaizoku-dev-grdl-local
+  kaivengers-helm:
+    type: helm
+    repoLayout: simple-default 
+    repositories:   
+      - kaivengers-dev-helm-local
+      - kaivengers-chartcenter-remote
+    defaultDeploymentRepo: kaivengers-dev-helm-local
