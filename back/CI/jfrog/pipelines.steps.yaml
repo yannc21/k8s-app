@@ -33,7 +33,9 @@ pipelines:
             - cd ${res_src_code_k8s_backapp_gradle_resourcePath}/back/CI/jfrog
             - ls -l && chmod +x init.sh
             - ./init.sh -u  ${int_artifactory_eu_url/%artifactory/} -p ${int_artifactory_eu_apikey} 
+            - echo $res_bi_k8s_backapp_gradle_buildNumber
           onSuccess:
+            - echo $res_bi_k8s_backapp_gradle_buildNumber
             - add_run_variables runVarAppVersion=`sed -n "s/currentVersion=\(.*\)/\1/p" ${res_src_code_k8s_backapp_gradle_resourcePath}/back/src/gradle.properties`
             - add_run_variables runVarGitCommit=${res_src_code_k8s_backapp_gradle_commitSha}
             - echo $runVarAppVersion
@@ -41,7 +43,9 @@ pipelines:
             - jfrog rt c show
             - echo "jfrog rt sp --build=${res_bi_k8s_backapp_gradle_buildName}/${res_bi_k8s_backapp_gradle_buildNumber} ${envVarGrdlRepo}/ \"src.commit.sha=${runVarGitCommit};app.version=${runVarAppVersion};app.name=kaizoku\""
             - jfrog rt sp --build=${res_bi_k8s_backapp_gradle_buildName}/${res_bi_k8s_backapp_gradle_buildNumber} ${envVarGrdlRepo}/ "src.commit.sha=${runVarGitCommit};app.version=${runVarAppVersion};app.name=kaizoku"
-                
+          onComplete:
+            - echo $res_bi_k8s_backapp_gradle_buildNumber
+
       - name: scan_bi_k8s_backapp_gradle
         type: XrayScan
         configuration:
