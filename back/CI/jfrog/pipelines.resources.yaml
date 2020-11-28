@@ -47,11 +47,7 @@ resources:
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory_eu
-      pattern:  ${grdlPromoteRepo}/**/webservice-*.war
-      # pattern: 'app-gradle-rc-local/*/webservice-*.war'
-      #pattern: 'app-gradle-rc-local/org/jfrog/example/gradle/webservice/1.1.2/webservice-1.1.2.war'
-      # buildName: k8s_backapp_gradle_docker
-      # buildNumber: ${run_number}
+      pattern:  ${envVarGrdlPromoteRepo}/**/webservice-*.war
       target: webservice.war
       flat: true
 
@@ -68,3 +64,8 @@ resources:
       sourceArtifactory: artifactory_eu
       buildName: k8s_backapp_gradle_docker
       buildNumber: ${run_number}
+
+  - name: pb_k8s_frontapp_docker
+    type: PropertyBag
+    configuration:
+      newTag: XXX

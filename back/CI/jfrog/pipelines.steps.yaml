@@ -3,8 +3,8 @@ pipelines:
     configuration:
       environmentVariables:
         readOnly:
-          myDemoVersion:  2.0.0
-          grdlPromoteRepo: kaizoku-rc-grdl-local
+          envVarGrdlRepo: kaizoku-grdl
+          envVarGrdlPromoteRepo: kaizoku-rc-grdl-local
     steps:
       - name: build_k8s_backapp_gradle
         type: GradleBuild
@@ -34,14 +34,12 @@ pipelines:
             - ls -l && chmod +x init.sh
             - ./init.sh -u  ${int_artifactory_eu_url/%artifactory/} -p ${int_artifactory_eu_apikey} 
           onSuccess:
-            - echo ${res_src_code_k8s_backapp_gradle_isGitTag}
-            - appVersion=`if [[ ${res_src_code_k8s_backapp_gradle_isGitTag} == "True" ]]; then echo ${res_src_code_k8s_backapp_gradle_gitTagName}; else echo ${res_src_code_k8s_backapp_gradle_commitSha}; fi`
-            - echo $appVersion
-            - add_run_variables myAppVersion=${appVersion}
-            - add_run_variables myDockerTag="${appVersion}-${res_src_code_k8s_backapp_gradle_commitSha}"
-            - echo $myDockerTag
-#            - add_run_variables subPath="${res_src_code_k8s_backapp_gradle_branchName}/${appVersion}"      
-
+            - add_run_variables runVarAppVersion=`sed -n "s/currentVersion=\(.*\)/\1/p" ${res_src_code_backapp_gradle_resourcePath}/back/src/gradle.properties`
+            - add_run_variables runVarGitCommit=${res_src_code_k8s_backapp_gradle_commitSha}
+            - echo $runVarAppVersion
+            - echo $runVarGitCommit
+            - jfrog rt sp --build=${res_bi_backapp_gradle_buildName}/${res_bi_backapp_gradle_buildNumber} ${envVarGrdlRepo}/ "src.commit.sha=${runVarGitCommit};app.version=${runVarAppVersion};app.name=kaizoku"
+                
       - name: scan_bi_k8s_backapp_gradle
         type: XrayScan
         configuration:
@@ -53,7 +51,7 @@ pipelines:
       - name: promote_bi_k8s_backapp_gradle
         type: PromoteBuild
         configuration:
-          targetRepository: ${grdlPromoteRepo}
+          targetRepository: ${envVarGrdlPromoteRepo}
           includeDependencies: false
           status: SANDBOX_OK
           comment: Unit testing and Xray scan passed succesfully
@@ -70,20 +68,18 @@ pipelines:
           onStart:
             - echo ${res_bi_k8s_backapp_gradle_buildName} 
             - echo ${res_bi_k8s_backapp_gradle_buildNumber} 
-            - echo $myDockerTag
           onSuccess:
-            - write_output pb_k8s_backapp_gradle dockerAppTag=${myDockerTag}
-            - write_output pb_k8s_backapp_gradle biNumber=${res_bi_k8s_backapp_buildNumber}
-            - jfrog rt sp --build=${res_bi_k8s_backapp_gradle_buildName}/${res_bi_k8s_backapp_gradle_buildNumber} ${grdlPromoteRepo}/ "app.version=${myAppVersion};app.name=kaizoku"
+            - write_output pb_backapp_gradle appVersion=${runVarAppVersion}
+            - write_output pb_backapp_gradle appCommitSHA=${runVarGitCommit}
 
   - name: k8s_backapp_gradle_docker
     configuration:
       environmentVariables:
         readOnly:
-          dockerPushRepo: kaizoku-docker
-          dockerRepoUrl: kaizoku-docker.artifactory-eu-yannc3-0.soleng-emea-staging.jfrog.team:80
-          myDockerImageName: ${dockerRepoUrl}/backapp-gradle
-          dockerPromoteRepo: kaizoku-rc-docker-local
+          envVarDockerPushRepo: kaizoku-docker
+          envVarDockerRepoUrl: kaizoku-docker.artifactory-eu-yannc3-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerImageName: ${envVarDockerRepoUrl}/backapp-gradle
+          envVarDockerPromoteRepo: kaizoku-rc-docker-local
     steps:
       - name: setup_env
         type: Bash
@@ -97,12 +93,11 @@ pipelines:
           onExecute:
             - sudo mkdir -p /etc/docker 
             - > 
-              sudo jq -n  "{\"insecure-registries\": [\"${dockerRepoUrl}\"]}" > /etc/docker/daemon.json
+              sudo jq -n  "{\"insecure-registries\": [\"${envVarDockerRepoUrl}\"]}" > /etc/docker/daemon.json
             - sudo systemctl restart docker
             - sudo cat /etc/docker/daemon.json
-            - echo $res_pb_k8s_backapp_gradle_dockerAppTag
-            - add_run_variables myTag=${res_pb_k8s_backapp_gradle_dockerAppTag}
-            - add_run_variables biNumber=${res_pb_k8s_backapp_gradle_biNumber}
+            - add_run_variables runVarAppVersion=${res_pb_k8s_backapp_gradle_appVersion}
+            - add_run_variables runVarAppCommitSHA=${res_pb_k8s_backapp_gradle_appCommitSHA}
 
       - name: build_k8s_backapp_gradle_docker
         type: DockerBuild
@@ -110,8 +105,8 @@ pipelines:
           affinityGroup: together
           dockerFileName: jfrog-Dockerfile
           dockerFileLocation: back/CI/Docker/
-          dockerImageName: ${myDockerImageName}
-          dockerImageTag: ${myTag}
+          dockerImageName: ${envVarDockerImageName}
+          dockerImageTag: ${runVarAppVersion}
           inputSteps:
             - name: setup_env
           inputResources:
@@ -124,12 +119,13 @@ pipelines:
             - ls -la ${res_backapp_gradle_exec_resourcePath}
             - cp ${res_backapp_gradle_exec_resourcePath}/*.war ${res_src_dockerfile_k8s_backapp_gradle_resourcePath}/back/CI/Docker/
             - ls -la ${res_src_dockerfile_k8s_backapp_gradle_resourcePath}/back/CI/Docker/
+            - add_run_variables runVarGitCommit=${res_src_dockerfile_k8s_backapp_gradle_commitSha}
 
       - name: publish_k8s_backapp_gradle_docker
         type: DockerPush
         configuration:
           affinityGroup: together
-          targetRepository: ${dockerPushRepo}
+          targetRepository: ${envVarDockerPushRepo}
           autoPublishBuildInfo: true
           inputSteps:
             - name: build_k8s_backapp_gradle_docker
@@ -139,7 +135,8 @@ pipelines:
             - name: bi_k8s_backapp_gradle_docker
         execution:
           onSuccess:
-            - echo "Job well done!"
+            - echo "${envVarDockerPushRepo}/backapp-gradle/${runVarAppVersion}/manifest.json"
+            - jfrog rt sp --build=${res_bi_backapp_gradle_docker_buildName}/${res_bi_backapp_gradle_docker_buildNumber} ${envVarDockerPushRepo}/backapp-gradle/${runVarAppVersion}/manifest.json "app.version=${runVarAppVersion};app.commit.sha=${runVarAppCommitSHA};dockerfile.commit.sha=${runVarGitCommit}"
 
       - name: scan_k8s_backapp_gradle_docker
         type: XrayScan
@@ -152,7 +149,7 @@ pipelines:
       - name: promote_bi_k8s_backapp_gradle_docker
         type: PromoteBuild
         configuration:
-          targetRepository: ${dockerPromoteRepo}
+          targetRepository: ${envVarDockerPromoteRepo}
           includeDependencies: false
           status: "DOCKER_SCAN_OK"
           comment: "Xray scan passed succesfully"
@@ -166,6 +163,7 @@ pipelines:
             - name: scan_k8s_backapp_gradle_docker
           outputResources:
             - name: bi_k8s_backapp_gradle_docker_promoted_staging
+            - name: pb_k8s_backapp_gradle_docker
         execution:
           onSuccess:
-            - jfrog rt sp --build=${res_bi_k8s_backapp_gradle_docker_buildName}/${res_bi_k8s_backapp_gradle_docker_buildNumber} ${dockerPromoteRepo}/**/manifest.json "docker.tag=${myDockerTag}"
+            - write_output pb_k8s_backapp_gradle_docker newTag=${runVarAppVersion}
