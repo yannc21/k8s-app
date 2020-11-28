@@ -65,7 +65,7 @@ resources:
       buildName: k8s_backapp_gradle_docker
       buildNumber: ${run_number}
 
-  - name: pb_k8s_frontapp_docker
+  - name: pb_k8s_backapp_gradle_docker
     type: PropertyBag
     configuration:
       newTag: XXX
@@ -78,11 +78,11 @@ resources:
       path: cyan21/k8s-app
       files:
         include: ^chart\/.+
-        
-  - name: hc_my_app
+
+  - name: hc_my_app_backapp_gradle
     type: HelmChart
     configuration:
       sourceArtifactory: artifactory_eu
-      repository: ninjavengers-helm
+      repository: kaivengers-helm
       chart: myapp
       version: 1.0.0

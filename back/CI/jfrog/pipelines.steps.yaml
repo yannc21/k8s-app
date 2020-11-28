@@ -211,7 +211,7 @@ pipelines:
           integrations:
             - name: yann_k8s
           inputResources:
-            - name: hc_my_app
+            - name: hc_my_app_backapp_gradle
           releaseName: helmreporesource
           flags: "--debug --install --namespace ninjavengers --cleanup-on-fail --set images.back.tag=${runVarNewTag}"
           valueFilePaths:
