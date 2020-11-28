@@ -242,7 +242,7 @@ pipelines:
           inputResources:
             - name: hc_my_app
           releaseName: helmreporesource
-          flags: "--debug --install --namespace ninjavengers --cleanup-on-fail --set images.front.tag=${runVarNewTag}"
+          flags: "--debug --install --namespace ninjavengers --cleanup-on-fail --set images.front.tag=${runVarNewTag} --set images.front.repository=${envVarDockerRegistry}/frontapp-js"
           valueFilePaths:
             - values.yaml
         execution:
