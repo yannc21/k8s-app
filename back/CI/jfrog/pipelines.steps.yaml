@@ -77,7 +77,7 @@ pipelines:
       environmentVariables:
         readOnly:
           envVarDockerPushRepo: kaizoku-docker
-          envVarDockerRepoUrl: kaizoku-docker.artifactory-eu-yannc3-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerRepoUrl: kaizoku-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
           envVarDockerImageName: ${envVarDockerRepoUrl}/backapp-gradle
           envVarDockerPromoteRepo: kaizoku-rc-docker-local
     steps:
