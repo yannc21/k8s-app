@@ -213,7 +213,7 @@ pipelines:
           inputResources:
             - name: hc_my_app_backapp_gradle
           releaseName: helmreporesource
-          flags: "--debug --install --namespace ninjavengers --cleanup-on-fail --set images.back.tag=${runVarNewTag}"
+          flags: "--debug --install --namespace ninjavengers --cleanup-on-fail --set images.back.tag=${runVarNewTag} --set images.back.repository=${envVarDockerRegistry}/backapp-gradle"
           valueFilePaths:
             - values.yaml
         execution:
