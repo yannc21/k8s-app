@@ -167,12 +167,15 @@ pipelines:
         execution:
           onSuccess:
             - write_output pb_k8s_backapp_gradle_docker newTag=${runVarAppVersion}
+            - write_output pb_k8s_backapp_gradle_docker buildInfoName=${res_bi_k8s_backapp_gradle_docker_buildName}
+            - write_output pb_k8s_backapp_gradle_docker buildInfoNumber=${run_number}
 
   - name: k8s_backapp_gradle_deployment
     configuration:
       environmentVariables:
         readOnly:
-          envVarDockerRegistry: kaizoku-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerRegistry: kaizoku-rc-docker-local.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerPromoteRepo: kaizoku-release-docker-local
     steps:
       - name: setup_env
         type: Bash
@@ -192,6 +195,8 @@ pipelines:
             - sudo systemctl status docker
             - echo ${res_pb_k8s_backapp_gradle_docker_newTag}
             - add_run_variables runVarNewTag=${res_pb_k8s_backapp_gradle_docker_newTag}
+            - add_run_variables runVarBuildName=${res_pb_k8s_backapp_gradle_docker_buildInfoName}
+            - add_run_variables runVarBuildNumber=${res_pb_k8s_backapp_gradle_docker_buildInfoNumber}
 
       - name: deploy_helm_chart
         type: HelmDeploy
@@ -219,4 +224,44 @@ pipelines:
         execution:
           onStart:
             - echo ${runVarNewTag}
-            #- helm version
+            - add_run_variables runVarChartName=${res_hc_my_app_backapp_gradle_chart}
+            - add_run_variables runVarChartNumber=${res_hc_my_app_backapp_gradle_version}
+
+      - name: run_app_test
+        type: Bash
+        configuration:
+          inputResources:
+            - name: deploy_helm_chart
+        execution:
+          onExecute:
+            - echo running tests !!!
+          onSuccess:
+            - echo tests OK !!!
+          onFailure:
+            - echo tests KO !!!
+          onComplete:
+            - echo stop deployment
+      - name: promote_b8s_backapp_gradle_docker_image
+        type: Bash
+        configuration:
+          integrations:
+            - name: artifactory_eu
+          inputSteps:
+            - name: run_app_test
+        execution:
+          onExecute:
+            # subdomain method
+            - repoKey=`echo ${envVarDockerRegistry} | cut -d"." -f1`
+            - > 
+              echo """"
+              {
+                \"targetRepo\" : \"${envVarDockerPromoteRepo}\", 
+                \"dockerRepository\" : \"${envVarDockerRegistry}/backapp_gradle\", 
+                \"tag\" : \"${runVarNewTag}\",
+                \"targetTag\" : \"${runVarNewTag}\",
+                \"copy\": false
+              }""" > payload.json
+            - cat payload.json
+            - jfrog rt curl -XPOST api/docker/${repoKey}/v2/promote -T payload.json
+          onSuccess:
+            - jfrog rt sp --build=${runVarBuildName}/${runVarBuildNumber} ${repoKey}/backapp-gradle/${runVarNewTag}/manifest.json "validation.chart.name=${runVarChartName};validation.chart.version=${runVarChartVersion}"
