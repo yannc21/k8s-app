@@ -252,9 +252,11 @@ pipelines:
             - name: run_app_test
         execution:
           onExecute:
-            - > 
-              echo "{\"targetRepo\" : \"${envVarDockerPromoteRepo}\",\"dockerRepository\" : \"${envVarDockerRegistry}/backapp_gradle\", \"tag\" : \"${runVarNewTag}\",\"targetTag\" : \"${runVarNewTag}\",\"copy\" : false}" > payload.json
+            - >
+              echo  "{\"targetRepo\" : \"${envVarDockerPromoteRepo}\",\"dockerRepository\" : \"${envVarDockerRegistry}/backapp_gradle\", \"tag\" : \"${runVarNewTag}\",\"targetTag\" : \"${runVarNewTag}\",\"copy\" : false}" > payload.json
             - cat payload.json
-            - jfrog rt curl -XPOST api/docker/${envVarDockerSourceRepo}/v2/promote -T payload.json
+            # escape semi colon
+            - > 
+              jfrog rt curl -XPOST api/docker/${envVarDockerSourceRepo}/v2/promote -H "Content-Type: application/json"  -F "data=@payload.json'
           onSuccess:
             - jfrog rt sp --build=${runVarBuildName}/${runVarBuildNumber} ${envVarDockerPromoteRepo}/backapp-gradle/${runVarNewTag}/manifest.json "validation.chart.name=${runVarChartName};validation.chart.version=${runVarChartVersion}"
