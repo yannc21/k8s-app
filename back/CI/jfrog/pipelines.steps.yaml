@@ -174,7 +174,8 @@ pipelines:
     configuration:
       environmentVariables:
         readOnly:
-          envVarDockerRegistry: kaizoku-docker-local.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerRegistry: kaizoku-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerSourceRepo: kaizoku-rc-docker-local
           envVarDockerPromoteRepo: kaizoku-release-docker-local
     steps:
       - name: setup_env
@@ -250,8 +251,6 @@ pipelines:
             - name: run_app_test
         execution:
           onExecute:
-            # subdomain method
-            - repoKey=`echo ${envVarDockerRegistry} | cut -d"." -f1`
             - > 
               echo """"
               {
@@ -262,6 +261,6 @@ pipelines:
                 \"copy\": false
               }""" > payload.json
             - cat payload.json
-            - jfrog rt curl -XPOST api/docker/${repoKey}/v2/promote -T payload.json
+            - jfrog rt curl -XPOST api/docker/${envVarDockerSourceRepo}/v2/promote -T payload.json
           onSuccess:
-            - jfrog rt sp --build=${runVarBuildName}/${runVarBuildNumber} ${repoKey}/backapp-gradle/${runVarNewTag}/manifest.json "validation.chart.name=${runVarChartName};validation.chart.version=${runVarChartVersion}"
+            - jfrog rt sp --build=${runVarBuildName}/${runVarBuildNumber} ${envVarDockerPromoteRepo}/backapp-gradle/${runVarNewTag}/manifest.json "validation.chart.name=${runVarChartName};validation.chart.version=${runVarChartVersion}"
