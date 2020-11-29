@@ -229,7 +229,7 @@ pipelines:
             - echo ${res_hc_my_app_backapp_gradle_chart}
             - echo ${res_hc_my_app_backapp_gradle_version}
             - add_run_variables runVarChartName=${res_hc_my_app_backapp_gradle_chart}
-            - add_run_variables runVarChartNumber=${res_hc_my_app_backapp_gradle_version}
+            - add_run_variables runVarChartVersion=${res_hc_my_app_backapp_gradle_version}
 
       - name: run_app_test
         type: Bash
@@ -257,7 +257,7 @@ pipelines:
             - echo ${runVarChartName}
             - echo ${runVarChartVersion} 
             - >
-              echo  "{\"targetRepo\" : \"${envVarDockerPromoteRepo}\",\"dockerRepository\" : \"${envVarDockerSourceRepo}/backapp_gradle\", \"tag\" : \"${runVarNewTag}\",\"targetTag\" : \"${runVarNewTag}\",\"copy\" : false}" > payload.json
+              echo  "{\"targetRepo\" : \"${envVarDockerPromoteRepo}\",\"dockerRepository\" : \"${envVarDockerSourceRepo}/backapp-gradle\", \"tag\" : \"${runVarNewTag}\",\"targetTag\" : \"${runVarNewTag}\",\"copy\" : false}" > payload.json
             - cat payload.json
             # escape semi colon
             - > 
