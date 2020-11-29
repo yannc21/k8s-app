@@ -257,7 +257,7 @@ pipelines:
             - echo ${runVarChartName}
             - echo ${runVarChartVersion} 
             - >
-              echo  "{\"targetRepo\" : \"${envVarDockerPromoteRepo}\",\"dockerRepository\" : \"${envVarDockerSourceRepo}\", \"tag\" : \"${runVarNewTag}\",\"targetTag\" : \"${runVarNewTag}\",\"copy\" : false}" > payload.json
+              echo  "{\"targetRepo\" : \"${envVarDockerPromoteRepo}\",\"dockerRepository\" : \"backapp-gradle\", \"tag\" : \"${runVarNewTag}\",\"targetTag\" : \"${runVarNewTag}\",\"copy\" : false}" > payload.json
             - cat payload.json
             # escape semi colon
             - > 
