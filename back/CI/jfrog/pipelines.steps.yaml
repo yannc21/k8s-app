@@ -252,14 +252,7 @@ pipelines:
         execution:
           onExecute:
             - > 
-              echo """"
-              {
-                \"targetRepo\" : \"${envVarDockerPromoteRepo}\", 
-                \"dockerRepository\" : \"${envVarDockerRegistry}/backapp_gradle\", 
-                \"tag\" : \"${runVarNewTag}\",
-                \"targetTag\" : \"${runVarNewTag}\",
-                \"copy\": false
-              }""" > payload.json
+              echo "{\"targetRepo\" : \"${envVarDockerPromoteRepo}\",\"dockerRepository\" : \"${envVarDockerRegistry}/backapp_gradle\", \"tag\" : \"${runVarNewTag}\",\"targetTag\" : \"${runVarNewTag}\",\"copy\" : false}" > payload.json
             - cat payload.json
             - jfrog rt curl -XPOST api/docker/${envVarDockerSourceRepo}/v2/promote -T payload.json
           onSuccess:
