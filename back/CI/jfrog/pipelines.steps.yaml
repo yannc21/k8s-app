@@ -119,7 +119,8 @@ pipelines:
             - ls -la ${res_backapp_gradle_exec_resourcePath}
             - cp ${res_backapp_gradle_exec_resourcePath}/*.war ${res_src_dockerfile_k8s_backapp_gradle_resourcePath}/back/CI/Docker/
             - ls -la ${res_src_dockerfile_k8s_backapp_gradle_resourcePath}/back/CI/Docker/
-            - add_run_variables runVarGitCommit=${res_src_dockerfile_k8s_backapp_gradle_commitSha}
+            # get last commit on the dockerfile
+            - add_run_variables runVarGitCommit=`git log -n 1 --pretty=format:%H -- ${res_src_dockerfile_k8s_backapp_gradle_resourcePath}/back/CI/Docker/jfrog-Dockerfile`
 
       - name: publish_k8s_backapp_gradle_docker
         type: DockerPush
