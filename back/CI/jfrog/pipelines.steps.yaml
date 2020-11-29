@@ -226,6 +226,8 @@ pipelines:
         execution:
           onStart:
             - echo ${runVarNewTag}
+            - echo ${res_hc_my_app_backapp_gradle_chart}
+            - echo ${res_hc_my_app_backapp_gradle_version}
             - add_run_variables runVarChartName=${res_hc_my_app_backapp_gradle_chart}
             - add_run_variables runVarChartNumber=${res_hc_my_app_backapp_gradle_version}
 
@@ -257,6 +259,6 @@ pipelines:
             - cat payload.json
             # escape semi colon
             - > 
-              jfrog rt curl -XPOST api/docker/${envVarDockerSourceRepo}/v2/promote -H "Content-Type: application/json"  -F "data=@payload.json"
+              jfrog rt curl -XPOST api/docker/${envVarDockerSourceRepo}/v2/promote -H "Content-Type: application/json" -d @payload.json"
           onSuccess:
             - jfrog rt sp --build=${runVarBuildName}/${runVarBuildNumber} ${envVarDockerPromoteRepo}/backapp-gradle/${runVarNewTag}/manifest.json "validation.chart.name=${runVarChartName};validation.chart.version=${runVarChartVersion}"
