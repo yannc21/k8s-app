@@ -254,8 +254,10 @@ pipelines:
             - name: run_app_test
         execution:
           onExecute:
+            - echo ${runVarChartName}
+            - echo ${runVarChartVersion} 
             - >
-              echo  "{\"targetRepo\" : \"${envVarDockerPromoteRepo}\",\"dockerRepository\" : \"${envVarDockerRegistry}/backapp_gradle\", \"tag\" : \"${runVarNewTag}\",\"targetTag\" : \"${runVarNewTag}\",\"copy\" : false}" > payload.json
+              echo  "{\"targetRepo\" : \"${envVarDockerPromoteRepo}\",\"dockerRepository\" : \"${envVarDockerSourceRepo}/backapp_gradle\", \"tag\" : \"${runVarNewTag}\",\"targetTag\" : \"${runVarNewTag}\",\"copy\" : false}" > payload.json
             - cat payload.json
             # escape semi colon
             - > 
