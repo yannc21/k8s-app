@@ -174,7 +174,7 @@ pipelines:
     configuration:
       environmentVariables:
         readOnly:
-          envVarDockerRegistry: kaizoku-rc-docker-local.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerRegistry: kaizoku-docker-local.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
           envVarDockerPromoteRepo: kaizoku-release-docker-local
     steps:
       - name: setup_env
