@@ -206,6 +206,7 @@ pipelines:
     configuration:
       environmentVariables:
         readOnly:
+          envVarAppName: frontapp-js
           envVarDockerRegistry: avengers-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
           envVarDockerSourceRepo: avengers-rc-docker-local
           envVarDockerPromoteRepo: avengers-release-docker-local
