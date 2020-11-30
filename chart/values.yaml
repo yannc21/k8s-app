@@ -2,7 +2,7 @@ replicaCount: 1
 
 imagePullSecrets:
   - name: avengers-registry
-  - name: ninja-registry
+  - name: kaizoku-registry
 
 nameOverride: ""
 fullnameOverride: ""
@@ -10,11 +10,11 @@ fullnameOverride: ""
 images:
   front:
     repository: avengers-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team/frontapp-js
-    tag: "0.0.1" 
+    tag: "1.0.0" 
     pullPolicy: IfNotPresent
   back:
-    repository: ninja-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team/backapp-mvn
-    tag: "1.1.0-844fa98486473874ea9f7eb0e2713008f35b6c16"
+    repository: kaizoku-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team/backapp-mvn
+    tag: "1.1.0"
     pullPolicy: IfNotPresent
 
 serviceAccounts:
