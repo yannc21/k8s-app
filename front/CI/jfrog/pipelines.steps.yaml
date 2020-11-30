@@ -150,7 +150,7 @@ pipelines:
             - ls -la ${res_frontapp_npm_exec_resourcePath}
             - cp ${res_frontapp_npm_exec_resourcePath}/frontapp-${runVarAppVersion}.tar.gz ${res_src_dockerfile_k8s_frontapp_npm_resourcePath}/front/CI/Docker/app.tar.gz
             - ls -la ${res_src_dockerfile_k8s_frontapp_npm_resourcePath}/front/CI/Docker/
-            - cd ${res_src_dockerfile_k8s_frontapp_npm_resourcePath}/front/CI/Docker/
+            - cd ${res_src_dockerfile_k8s_frontapp_npm_resourcePath}
             # get last commit on the dockerfile
             - add_run_variables runVarGitCommit=`git log -n 1 --pretty=format:%H -- front/CI/Docker/Dockerfile`
       - name: publish_k8s_frontapp_js_docker
