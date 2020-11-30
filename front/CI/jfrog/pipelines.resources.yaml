@@ -88,10 +88,10 @@ resources:
       gitProvider: yann_github
       path: cyan21/k8s-helm
  
-  - name: hc_my_app
+  - name: hc_my_app_frontapp_js
     type: HelmChart
     configuration:
       sourceArtifactory: artifactory_eu
-      repository: ninjavengers-helm
+      repository: kaivengers-helm
       chart: myapp
       version: 1.0.0

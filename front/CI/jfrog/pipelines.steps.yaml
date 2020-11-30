@@ -106,9 +106,10 @@ pipelines:
     configuration:
       environmentVariables:
         readOnly:
+          envVarAppName: frontapp-js
           envVarDockerRepoUrl: avengers-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
           envVarDockerPushRepo: avengers-docker
-          envVarDockerImageName: ${envVarDockerRepoUrl}/frontapp-js
+          envVarDockerImageName: ${envVarDockerRepoUrl}/${envVarAppName}
           envVarDockerPromoteRepo: avengers-rc-docker-local
     steps:
       - name: setup_env
@@ -149,7 +150,9 @@ pipelines:
             - ls -la ${res_frontapp_npm_exec_resourcePath}
             - cp ${res_frontapp_npm_exec_resourcePath}/frontapp-${runVarAppVersion}.tar.gz ${res_src_dockerfile_k8s_frontapp_npm_resourcePath}/front/CI/Docker/app.tar.gz
             - ls -la ${res_src_dockerfile_k8s_frontapp_npm_resourcePath}/front/CI/Docker/
-            - add_run_variables runVarGitCommit=${res_src_dockerfile_k8s_frontapp_npm_commitSha}
+            - cd ${res_src_dockerfile_k8s_frontapp_npm_resourcePath}/front/CI/Docker/
+            # get last commit on the dockerfile
+            - add_run_variables runVarGitCommit=`git log -n 1 --pretty=format:%H -- front/CI/Docker/Dockerfile`
       - name: publish_k8s_frontapp_js_docker
         type: DockerPush
         configuration:
@@ -164,8 +167,8 @@ pipelines:
             - name: bi_k8s_frontapp_js_docker
         execution:
           onSuccess:
-            - echo "${envVarDockerPushRepo}/frontapp-js/${runVarAppVersion}/manifest.json"
-            - jfrog rt sp --build=${res_bi_k8s_frontapp_js_docker_buildName}/${res_bi_k8s_frontapp_js_docker_buildNumber} ${envVarDockerPushRepo}/frontapp-js/${runVarAppVersion}/manifest.json "app.version=${runVarAppVersion};app.commit.sha=${runVarAppCommitSHA};dockerfile.commit.sha=${runVarGitCommit}"
+            - echo "${envVarDockerPushRepo}/${envVarAppName}/${runVarAppVersion}/manifest.json"
+            - jfrog rt sp --build=${res_bi_k8s_frontapp_js_docker_buildName}/${run_number} ${envVarDockerPushRepo}/${envVarAppName}/${runVarAppVersion}/manifest.json "app.version=${runVarAppVersion};app.commit.sha=${runVarAppCommitSHA};dockerfile.commit.sha=${runVarGitCommit}"
 
       - name: scan_k8s_frontapp_js_docker
         type: XrayScan
@@ -196,12 +199,16 @@ pipelines:
         execution:
           onSuccess:
             - write_output pb_k8s_frontapp_docker newTag=${runVarAppVersion}
+            - write_output pb_k8s_frontapp_docker buildInfoName=${res_bi_k8s_frontapp_docker_buildName}
+            - write_output pb_k8s_frontapp_docker buildInfoNumber=${run_number}
 
   - name: k8s_frontapp_js_deployment
     configuration:
       environmentVariables:
         readOnly:
           envVarDockerRegistry: avengers-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerSourceRepo: avengers-rc-docker-local
+          envVarDockerPromoteRepo: avengers-release-docker-local
     steps:
       - name: setup_env
         type: Bash
@@ -221,7 +228,8 @@ pipelines:
             - sudo systemctl status docker
             - echo ${res_pb_k8s_frontapp_docker_newTag}
             - add_run_variables runVarNewTag=${res_pb_k8s_frontapp_docker_newTag}
-
+            - add_run_variables runVarBuildName=${res_pb_k8s_frontapp_docker_buildInfoName}
+            - add_run_variables runVarBuildNumber=${res_pb_k8s_frontapp_docker_buildInfoNumber}
       - name: deploy_helm_chart
         type: HelmDeploy
         configuration:
@@ -240,12 +248,49 @@ pipelines:
           integrations:
             - name: yann_k8s
           inputResources:
-            - name: hc_my_app
+            - name: hc_my_app_frontapp_js
           releaseName: helmreporesource
-          flags: "--debug --install --namespace ninjavengers --cleanup-on-fail --set images.front.tag=${runVarNewTag} --set images.front.repository=${envVarDockerRegistry}/frontapp-js"
+          flags: "--debug --install --namespace ninjavengers --cleanup-on-fail --set images.front.tag=${runVarNewTag} --set images.front.repository=${envVarDockerRegistry}/${envVarAppName}"
           valueFilePaths:
             - values.yaml
         execution:
           onStart:
             - echo ${runVarNewTag}
-            #- helm version
+            - echo ${res_hc_my_app_frontapp_js_chart}
+            - echo ${res_hc_my_app_frontapp_js_version}
+            - add_run_variables runVarChartName=${res_hc_my_app_frontapp_js_chart}
+            - add_run_variables runVarChartVersion=${res_hc_my_app_frontapp_js_version}
+      - name: run_app_test
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: deploy_helm_chart
+        execution:
+          onExecute:
+            - echo running tests !!!
+          onSuccess:
+            - echo tests OK !!!
+          onFailure:
+            - echo tests KO !!!
+          onComplete:
+            - echo stop deployment
+      - name: promote_b8s_frontapp_js_docker_image
+        type: Bash
+        configuration:
+          integrations:
+            - name: artifactory_eu
+          inputSteps:
+            - name: run_app_test
+        execution:
+          onExecute:
+            - echo ${runVarChartName}
+            - echo ${runVarChartVersion} 
+            - >
+              echo  "{\"targetRepo\" : \"${envVarDockerPromoteRepo}\",\"dockerRepository\" : \"${envVarAppName}\", \"tag\" : \"${runVarNewTag}\",\"targetTag\" : \"${runVarNewTag}\",\"copy\" : false}" > payload.json
+            - cat payload.json
+            # escape semi colon
+            - > 
+              jfrog rt curl -XPOST api/docker/${envVarDockerSourceRepo}/v2/promote -H "Content-Type: application/json" -d @payload.json
+          onSuccess:
+            - echo  "jfrog rt sp --build=${runVarBuildName}/${runVarBuildNumber} ${envVarDockerPromoteRepo}/${envVarAppName}/${runVarNewTag}/manifest.json \"validation.chart.name=${runVarChartName};validation.chart.version=${runVarChartVersion}\""
+            - jfrog rt sp --build=${runVarBuildName}/${runVarBuildNumber} ${envVarDockerPromoteRepo}/${envVarAppName}/${runVarNewTag}/manifest.json "validation.chart.name=${runVarChartName};validation.chart.version=${runVarChartVersion}"

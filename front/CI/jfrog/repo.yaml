@@ -29,6 +29,11 @@ localRepositories:
     repoLayout: simple-default 
     xray:   
       enabled: true
+  avengers-release-docker-local:
+    type: docker
+    repoLayout: simple-default 
+    xray:   
+      enabled: true
   kaivengers-dev-helm-local:
     type: helm
     repoLayout: simple-default 
@@ -86,6 +91,7 @@ virtualRepositories:
     repositories:   
       - avengers-dev-docker-local
       - avengers-rc-docker-local
+      - avengers-release-docker-local
       - avengers-dockerhub-remote
       - avengers-bintray-remote
     defaultDeploymentRepo: avengers-dev-docker-local
