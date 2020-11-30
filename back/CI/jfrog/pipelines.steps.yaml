@@ -76,9 +76,10 @@ pipelines:
     configuration:
       environmentVariables:
         readOnly:
+          envVarAppName: backapp-gradle
           envVarDockerPushRepo: kaizoku-docker
           envVarDockerRepoUrl: kaizoku-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
-          envVarDockerImageName: ${envVarDockerRepoUrl}/backapp-gradle
+          envVarDockerImageName: ${envVarDockerRepoUrl}/${envVarAppName}
           envVarDockerPromoteRepo: kaizoku-rc-docker-local
     steps:
       - name: setup_env
@@ -137,8 +138,8 @@ pipelines:
             - name: bi_k8s_backapp_gradle_docker
         execution:
           onSuccess:
-            - echo "${envVarDockerPushRepo}/backapp-gradle/${runVarAppVersion}/manifest.json"
-            - jfrog rt sp --build=${res_bi_k8s_backapp_gradle_docker_buildName}/${run_number} ${envVarDockerPushRepo}/backapp-gradle/${runVarAppVersion}/manifest.json "app.version=${runVarAppVersion};app.commit.sha=${runVarAppCommitSHA};dockerfile.commit.sha=${runVarGitCommit}"
+            - echo "${envVarDockerPushRepo}/${envVarAppName}/${runVarAppVersion}/manifest.json"
+            - jfrog rt sp --build=${res_bi_k8s_backapp_gradle_docker_buildName}/${run_number} ${envVarDockerPushRepo}/${envVarAppName}/${runVarAppVersion}/manifest.json "app.version=${runVarAppVersion};app.commit.sha=${runVarAppCommitSHA};dockerfile.commit.sha=${runVarGitCommit}"
 
       - name: scan_k8s_backapp_gradle_docker
         type: XrayScan
@@ -221,7 +222,7 @@ pipelines:
           inputResources:
             - name: hc_my_app_backapp_gradle
           releaseName: helmreporesource
-          flags: "--debug --install --namespace ninjavengers --cleanup-on-fail --set images.back.tag=${runVarNewTag} --set images.back.repository=${envVarDockerRegistry}/backapp-gradle"
+          flags: "--debug --install --namespace ninjavengers --cleanup-on-fail --set images.back.tag=${runVarNewTag} --set images.back.repository=${envVarDockerRegistry}/${envVarAppName}"
           valueFilePaths:
             - values.yaml
         execution:
@@ -258,11 +259,11 @@ pipelines:
             - echo ${runVarChartName}
             - echo ${runVarChartVersion} 
             - >
-              echo  "{\"targetRepo\" : \"${envVarDockerPromoteRepo}\",\"dockerRepository\" : \"backapp-gradle\", \"tag\" : \"${runVarNewTag}\",\"targetTag\" : \"${runVarNewTag}\",\"copy\" : false}" > payload.json
+              echo  "{\"targetRepo\" : \"${envVarDockerPromoteRepo}\",\"dockerRepository\" : \"${envVarAppName}\", \"tag\" : \"${runVarNewTag}\",\"targetTag\" : \"${runVarNewTag}\",\"copy\" : false}" > payload.json
             - cat payload.json
             # escape semi colon
             - > 
               jfrog rt curl -XPOST api/docker/${envVarDockerSourceRepo}/v2/promote -H "Content-Type: application/json" -d @payload.json
           onSuccess:
-            - echo  "jfrog rt sp --build=${runVarBuildName}/${runVarBuildNumber} ${envVarDockerPromoteRepo}/backapp-gradle/${runVarNewTag}/manifest.json \"validation.chart.name=${runVarChartName};validation.chart.version=${runVarChartVersion}\""
-            - jfrog rt sp --build=${runVarBuildName}/${runVarBuildNumber} ${envVarDockerPromoteRepo}/backapp-gradle/${runVarNewTag}/manifest.json "validation.chart.name=${runVarChartName};validation.chart.version=${runVarChartVersion}"
+            - echo  "jfrog rt sp --build=${runVarBuildName}/${runVarBuildNumber} ${envVarDockerPromoteRepo}/${envVarAppName}/${runVarNewTag}/manifest.json \"validation.chart.name=${runVarChartName};validation.chart.version=${runVarChartVersion}\""
+            - jfrog rt sp --build=${runVarBuildName}/${runVarBuildNumber} ${envVarDockerPromoteRepo}/${envVarAppName}/${runVarNewTag}/manifest.json "validation.chart.name=${runVarChartName};validation.chart.version=${runVarChartVersion}"
