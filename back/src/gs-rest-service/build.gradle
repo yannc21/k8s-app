@@ -3,12 +3,12 @@ buildscript {
         jcenter()
         
     }
-/*
+
     dependencies {
         //Check for the latest version here: http://plugins.gradle.org/plugin/com.jfrog.artifactory
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
     }
-*/
+
 }
 
 plugins {
@@ -16,11 +16,11 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 	id 'java'
 }
-/*
+/**/
 allprojects {
     apply plugin: "com.jfrog.artifactory"
 }
-*/
+
 group = 'com.example'
 version = '0.0.1'
 sourceCompatibility = '1.8'

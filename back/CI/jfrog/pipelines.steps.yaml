@@ -11,7 +11,7 @@ pipelines:
         configuration: 
           gradleCommand:  clean artifactoryPublish  -b build.gradle --stacktrace
           sourceLocation:       back/src/gs-rest-service  #required
-          configFileLocation:   ../  #required
+          configFileLocation:   .  #required
           configFileName:       gradle-art-config  #required
           forceXrayScan:        false #optional
           autoPublishBuildInfo: true #optional
