@@ -3,10 +3,12 @@ buildscript {
         jcenter()
         
     }
+/*
     dependencies {
         //Check for the latest version here: http://plugins.gradle.org/plugin/com.jfrog.artifactory
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
     }
+*/
 }
 
 plugins {
@@ -23,10 +25,11 @@ group = 'com.example'
 version = '0.0.1'
 sourceCompatibility = '1.8'
 
+/*
 repositories {
 	mavenCentral()
 }
-
+*/
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
