@@ -47,8 +47,8 @@ resources:
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory_eu
-      pattern:  ${envVarGrdlPromoteRepo}/**/webservice-*.war
-      target: webservice.war
+      pattern:  ${envVarGrdlPromoteRepo}/**/rest-service-*.jar
+      target: rest-service.jar
       flat: true
 
   - name: bi_k8s_backapp_gradle_docker
