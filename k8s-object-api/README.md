@@ -18,31 +18,19 @@ sudo kubectl create secret docker-registry kaizoku-registry \
 * create namespace
 
 ````
-sudo kubectl create ns ninjavengers
+sudo kubectl create ns kaivengers
 ````
 
 * create service account
 
 ````
-sudo kubectl create sa ironman -n ninjavengers
+sudo kubectl create sa ironman -n kaivengers
 ````
 
-* create secret for service account
+* create secret for service account + role + rolebinding
 
 ````
-sudo kubectl apply -f secret.yaml -n ninjavengers
-````
-
-* create role
-
-````
-sudo kubectl apply -f role.yaml
-````
-
-* create role binding
-
-````
-sudo kubectl apply -f rolebinding.yaml
+sudo kubectl apply -f setup.yaml -n kaivengers
 ````
 
 # JFrog Pipelines configuration
@@ -58,15 +46,14 @@ So to craft a kubeconfig with a service account :
 2/ have a look to your kubeconfig 
 
 ````
-kubectl config view --flatten --minify
+sudo kubectl config view --flatten --minify > myKubeConfig
 // kubeconfig should be in <HOME>/.kube/config
 ````
 
-3/ Extract the token of the service account via these commands
+3/ Extract the token of the service account 
 
 ````
-sudo kubectl get secret -n ninjavengers
-sudo kubectl describe secret ironman-token-xxxxxx -n ninjavengers
+sudo kubectl describe secrets ironman-secret  -n kaivengers | grep "^token" | tr -d [[:space:]] | cut -d: -f2
 ````
 
 4/ Inject the token into a kubeconfig 
