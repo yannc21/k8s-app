@@ -1,0 +1,21 @@
+localRepositories:   
+  kaivengers-dev-helm-local:
+    type: helm
+    repoLayout: simple-default 
+    xray:   
+      enabled: false
+remoteRepositories: 
+  kaivengers-chartcenter-remote:
+    type: helm
+    url: https://repo.chartcenter.io/
+    repoLayout: simple-default 
+    xray:   
+      enabled: false
+virtualRepositories: 
+  kaivengers-helm:
+    type: helm
+    repoLayout: simple-default 
+    repositories:   
+      - kaivengers-dev-helm-local
+      - kaivengers-chartcenter-remote
+    defaultDeploymentRepo: kaivengers-dev-helm-local

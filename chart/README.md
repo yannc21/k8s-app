@@ -1,25 +1,33 @@
 # For demo
 
-> only tested on minikube  
-
 this simple helm chart deploys :
-* 1 front end in a pod and  1 service
-* 1 back end in a pod and 1 service
-
-relies on https://github.com/cyan21/k8s-app.git
+* 1 front end (1 pod + 1 service)
+* 1 back end (1 pod + 1 service)
 
 > using the nodePort type for each service
 
-### HOW TO USE
+# Deploy Chart
 
 ```
-helm install <RELEASE_NAME> <PATH_TO_SRC>  --set services.back.ip=<MINIKUBE_IP>
-
-```
-Example:
-```
-git clone https://github.com/cyan21/k8s-helm.git
-
-helm install the-app k8s-helm --set services.back.ip=$(minikube ip)
+git clone https://github.com/cyan21/k8s-app.git
+cd k8s-app
+helm install the-app chart/ --set services.back.ip=$(minikube ip)
 ```
 
+# Publish Chart to Artifactory
+
+* Create Helm repositories
+```
+curl -uadmin:chaysinh -X PATCH "http://localhost:8081/artifactory/api/system/configuration" -H "Content-Type: application/yaml" -T repo.yml
+```
+
+* Package chart
+```
+helm package chart/
+helm install the-app chart/ --set services.back.ip=$(minikube ip)
+```
+
+* Upload chart to Artifactory
+```
+curl -u<USERNAME>:<PASSWORD> -T <PATH_TO_FILE> "http://localhost:8081/artifactory/kaivengers-dev-helm-local/<TARGET_FILE_PATH>" 
+```
