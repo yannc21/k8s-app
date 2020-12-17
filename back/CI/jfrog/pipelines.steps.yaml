@@ -3,6 +3,8 @@ pipelines:
     configuration:
       environmentVariables:
         readOnly:
+          envVarDockerRepo: kaizoku-docker
+          envVarDockerRegistry: ${envVarDockerRepo}.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
           envVarGrdlRepo: kaizoku-grdl
           envVarGrdlPromoteRepo: kaizoku-rc-grdl-local
     steps:
@@ -46,6 +48,14 @@ pipelines:
         configuration: 
           environmentVariables:
             JFROG_CLI_LOG_LEVEL: DEBUG
+          runtime:
+            type: image
+            image:
+              custom:
+                registry: artifactory_eu
+                name: ${envVarDockerRegistry}/library/gradle
+                tag: 6.7-jdk15
+                sourceRepository: ${envVarDockerRepo}
           inputResources:
             - name: src_code_k8s_backapp_gradle
           integrations:
