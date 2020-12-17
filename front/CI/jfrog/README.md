@@ -8,12 +8,19 @@ JFrog platform enabling Artifactory, Xray, Pipelines
 | Artifactory | NPM local repo   | avengers-dev-npm-local | | 
 | Artifactory | NPM local repo   | avengers-rc-npm-local | for npm promotion | 
 | Artifactory | NPM remote repo  | avengers-npmjs-remote | | 
+| Artifactory | Generic virtual repo | avengers-generic | | 
+| Artifactory | NPM local repo   | avengers-dev-generic-local | | 
+| Artifactory | NPM local repo   | avengers-rc-generic-local | for promotion | 
 | Artifactory | Docker virtual repo | avengers-dev-docker | aggregate docker dev local and remote | 
 | Artifactory | Docker local repo   | avengers-dev-docker-local | | 
 | Artifactory | Docker local repo   | avengers-rc-docker-local | for mvn promotion | 
 | Artifactory | Docker remote repo  | avengers-dockerhub-remote | | 
+| Artifactory | Helm virtual repo   | kaivengers-helm | | 
+| Artifactory | Helm local repo     | kaivengers-dev-helm-local | | 
+| Artifactory | Helm remote repo    | kaivengers-chartcenter-remote | | 
 | Pipelines   | Github Integration | yann_github | pointing to https://github.com/cyan21 |
 | Pipelines   | Artifactory Integration | artifactory_eu | |
+| Pipelines   | K8S Integration | yann_k8s | see k8s-object-api folder to create it|
 
 ## Repository creation
 
@@ -21,8 +28,7 @@ JFrog platform enabling Artifactory, Xray, Pipelines
 curl -uadmin:chaysinh -X PATCH "http://localhost:8081/artifactory/api/system/configuration" -H "Content-Type: application/yaml" -T repo.yml
 ````
 
-if you change the repo names, make sure to edit : 
-* repo name in the pipelines.steps.yaml (pipeline variables)
+if you change the repo names, make sure to edit environment variables in **pipelines.steps.yaml**
 
 
 ## Integration creation
