@@ -9,12 +9,6 @@ pipelines:
       - name: build_k8s_backapp_gradle
         type: GradleBuild
         configuration: 
-          runtime:
-            type: image
-            image:
-              custom:
-                name: drydock/u18java
-                tag: master
           gradleCommand:  clean artifactoryPublish -b build.gradle
           sourceLocation:       back/src  #required
           configFileLocation:   .  #required
@@ -29,6 +23,7 @@ pipelines:
             - name: bi_k8s_backapp_gradle
         execution:
           onStart:
+            - jfrog --version
             - export JFROG_CLI_BUILD_URL="${int_artifactory_eu_url/%artifactory/ui}/pipelines/myPipelines/k8s_backapp_gradle/${run_number}/setup_env?branch=${res_src_code_k8s_backapp_gradle_branchName}"
             - cd ${res_src_code_k8s_backapp_gradle_resourcePath}/back/CI/jfrog
             - ls -l && chmod +x init.sh
@@ -215,7 +210,7 @@ pipelines:
                 registry: artifactory_eu
                 name: ${envVarDockerRegistry}/jfrog/pipelines-u18node
                 tag: 10.21.0
-                sourceRepository: ${envVarDockerRegistry}
+                sourceRepository: ${envVarDockerSourceRepo}
           inputSteps:
             - name: setup_env
           integrations:
