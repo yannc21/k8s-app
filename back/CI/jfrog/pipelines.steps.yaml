@@ -173,7 +173,8 @@ pipelines:
       environmentVariables:
         readOnly:
           envVarAppName: backapp-gradle
-          envVarDockerRegistry: kaizoku-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerRepo: kaizoku-docker
+          envVarDockerRegistry: ${envVarDockerRepo}.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
           envVarDockerSourceRepo: kaizoku-rc-docker-local
           envVarDockerPromoteRepo: kaizoku-release-docker-local
     steps:
@@ -210,7 +211,7 @@ pipelines:
                 registry: artifactory_eu
                 name: ${envVarDockerRegistry}/jfrog/pipelines-u18node
                 tag: 10.21.0
-                sourceRepository: ${envVarDockerSourceRepo}
+                sourceRepository: ${envVarDockerRepo}
           inputSteps:
             - name: setup_env
           integrations:

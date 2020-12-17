@@ -207,7 +207,8 @@ pipelines:
       environmentVariables:
         readOnly:
           envVarAppName: frontapp-js
-          envVarDockerRegistry: avengers-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerRepo: avengers-docker
+          envVarDockerRegistry: ${envVarDockerRepo}.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
           envVarDockerSourceRepo: avengers-rc-docker-local
           envVarDockerPromoteRepo: avengers-release-docker-local
     steps:
@@ -243,7 +244,7 @@ pipelines:
                 registry: artifactory_eu
                 name: ${envVarDockerRegistry}/jfrog/pipelines-u18node
                 tag: 10.21.0
-                sourceRepository: ${envVarDockerSourceRepo}
+                sourceRepository: ${envVarDockerRepo}
           inputSteps:
             - name: setup_env
           integrations:
