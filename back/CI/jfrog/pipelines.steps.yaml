@@ -11,7 +11,7 @@ pipelines:
         configuration: 
           environmentVariables:
             JFROG_CLI_LOG_LEVEL: DEBUG
-          gradleCommand:  clean build 
+          gradleCommand:  clean artifactoryPublish 
           sourceLocation:       back/src/gs-rest-service  #required
           configFileLocation:   .  #required
           configFileName:       gradle-art-config  #required
