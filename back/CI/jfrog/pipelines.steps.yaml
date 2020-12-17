@@ -83,7 +83,7 @@ pipelines:
         configuration:
           failOnScan: false
           inputResources:
-            - name: bi_k8s_backapp_gradleV2
+            - name: bi_k8s_backapp_gradle
               trigger: true
 
       - name: promote_bi_k8s_backapp_gradle
