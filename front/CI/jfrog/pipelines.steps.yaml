@@ -181,7 +181,7 @@ pipelines:
       - name: promote_bi_k8s_frontapp_js_docker
         type: PromoteBuild
         configuration:
-          targetRepository: ${dockerPromoteRepo}
+          targetRepository: ${envVarDockerPromoteRepo}
           includeDependencies: false
           status: "DOCKER_SCAN_OK"
           comment: "Xray scan passed succesfully"
