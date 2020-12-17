@@ -9,7 +9,7 @@ pipelines:
       - name: build_k8s_backapp_gradle
         type: GradleBuild
         configuration: 
-          gradleCommand:  clean -b build.gradle
+          gradleCommand:  clean artifactoryPublish  -b build.gradle
           sourceLocation:       back/src/gs-rest-service  #required
           configFileLocation:   ../  #required
           configFileName:       gradle-art-config  #required
