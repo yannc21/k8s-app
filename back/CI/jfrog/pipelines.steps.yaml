@@ -26,6 +26,9 @@ pipelines:
         execution:
           onStart:
             - jfrog --version
+            - cli_path=$(dirname "$(which jfrog)") && echo $cli_path
+            - curl -fL https://getcli.jfrog.io | sh && ls -l           
+            - mv ./jfrog "$cli_path/" && ls -l "$cli_path/jfrog"  && jfrog --version
             - export JFROG_CLI_BUILD_URL="${int_artifactory_eu_url/%artifactory/ui}/pipelines/myPipelines/k8s_backapp_gradle/${run_number}/setup_env?branch=${res_src_code_k8s_backapp_gradle_branchName}"
             - cd ${res_src_code_k8s_backapp_gradle_resourcePath}/back/CI/jfrog
             - ls -l && chmod +x init.sh
