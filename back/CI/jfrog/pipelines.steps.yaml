@@ -270,7 +270,7 @@ pipelines:
             - name: yann_k8s
           inputResources:
             - name: hc_my_app_backapp_gradle
-          releaseName: helmreporesource
+          releaseName: my-super-app
           flags: "--debug --install --namespace kaivengers --cleanup-on-fail --set images.back.tag=${runVarNewTag} --set images.back.repository=${envVarDockerRegistry}/${envVarAppName}"
           valueFilePaths:
             - values.yaml

@@ -243,7 +243,7 @@ pipelines:
               custom:
                 registry: artifactory_eu
                 name: ${envVarDockerRegistry}/jfrog/pipelines-u18node
-                tag: 10.21.0
+                tag: 10.21.0-ych
                 sourceRepository: ${envVarDockerRepo}
           inputSteps:
             - name: setup_env
@@ -251,7 +251,7 @@ pipelines:
             - name: yann_k8s
           inputResources:
             - name: hc_my_app_frontapp_js
-          releaseName: helmreporesource
+          releaseName: my-super-app
           flags: "--debug --install --namespace kaivengers --cleanup-on-fail --set images.front.tag=${runVarNewTag} --set images.front.repository=${envVarDockerRegistry}/${envVarAppName}"
           valueFilePaths:
             - values.yaml
