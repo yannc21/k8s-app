@@ -6,11 +6,9 @@ resources:
       gitProvider: yann_github
       path: cyan21/k8s-app
       files:
-        include: chart/CI/jfrog/Dockerfile
+        include: ^chart\/CI\/jfrog\/Dockerfile
       branches:
         include: jfrog-ode 
-      buildOn:
-         commit: false
 
   - name: bi_base_image_helm 
     type: BuildInfo 

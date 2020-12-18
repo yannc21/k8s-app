@@ -18,6 +18,7 @@ Automation in the pipelines :
 * Create 1 policy in Xray
 * Adapt the pipelines to your environment
 * Create the API objects (see `k8s-object-api` folder) before running the pipelines
+* Run the k8s_project_init pipeline
 
 > the repositories in Artifactory and the watches are created during the pipelines
 
