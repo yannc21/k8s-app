@@ -40,7 +40,7 @@ pipelines:
           affinityGroup: helm
           dockerFileName: Dockerfile
           dockerFileLocation: chart/CI/jfrog/
-          dockerImageName: ${envVarDockerRegistry}
+          dockerImageName: ${envVarDockerRegistry}/${envVarDockerPushRepo}
           dockerImageTag: ${envVarBaseImageTag}
           inputSteps:
             - name: publish_helm_chart
