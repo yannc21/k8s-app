@@ -26,7 +26,6 @@ pipelines:
             - name: bi_hc_my_app
         execution:
           onStart:
-            - helm version
             # escape semi colon
             - >  
               jfrog rt curl -XPATCH -H "Content-Type: application/yaml" -T ${res_src_code_k8s_helm_resourcePath}/chart/CI/jfrog/repo.yaml api/system/configuration
