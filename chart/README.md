@@ -24,7 +24,6 @@ curl -uadmin:chaysinh -X PATCH "http://localhost:8081/artifactory/api/system/con
 * Package chart
 ```
 helm package chart/
-helm install the-app chart/ --set services.back.ip=$(minikube ip)
 ```
 
 * Upload chart to Artifactory
