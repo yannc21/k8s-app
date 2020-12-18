@@ -53,7 +53,7 @@ pipelines:
             image:
               custom:
                 registry: artifactory_eu
-                name: ${envVarDockerRegistry}/library/gradle
+                name: ${envVarDockerRegistry}/gradle
                 tag: 6.7-jdk15-jfrog
                 sourceRepository: ${envVarDockerRepo}
           inputResources:
