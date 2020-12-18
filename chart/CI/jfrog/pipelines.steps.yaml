@@ -66,4 +66,5 @@ pipelines:
           integrations:
             - name: artifactory_eu
           outputResources:
+            - name: hc_my_app
             - name: bi_hc_my_app
