@@ -10,7 +10,7 @@ spec:
     - port: {{ .Values.services.back.port }}
       targetPort: {{ .Values.services.back.targetPort }}
       protocol: TCP
-      nodePort:  {{ .Values.services.back.nodePort }}
+#      nodePort:  {{ .Values.services.back.nodePort }}
       name: http
   selector:
     {{- include "my-app.selectorLabels.back" . | nindent 4 }}

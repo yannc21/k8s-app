@@ -32,15 +32,15 @@ spec:
           imagePullPolicy: {{ .Values.images.back.pullPolicy }}
           ports:
             - name: http
-              containerPort: 8090
+              containerPort: {{ .Values.services.back.targetPort }}
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /quote
+              path: /greeting
               port: http
           readinessProbe:
             httpGet:
-              path: /quote
+              path: /greeting
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

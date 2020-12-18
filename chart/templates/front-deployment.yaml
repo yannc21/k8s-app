@@ -32,7 +32,7 @@ spec:
           imagePullPolicy: {{ .Values.images.front.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: {{ .Values.services.back.targetPort }}
               protocol: TCP
           livenessProbe:
             httpGet:

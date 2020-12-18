@@ -44,17 +44,18 @@ securityContext: {}
 
 services:
   front:
-#  type: ClusterIP
-    type: NodePort
+    type: ClusterIP
+    # port used by the service
     port: 80
-#    targetPort: 30021
-#    ip: 192.168.99.107
+    # port opened in the container
+    targetPort: 80
+
   back:
-    type: NodePort
+    type: ClusterIP
     port: 80
-    targetPort: 8090
-    nodePort: 7001
-    ip: 192.168.99.107
+    targetPort: 8080
+#    nodePort: 7001
+ #   ip: 192.168.99.107
 
 ingress:
   enabled: false
