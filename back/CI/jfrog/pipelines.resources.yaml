@@ -47,7 +47,7 @@ resources:
     type: FileSpec
     configuration:
       sourceArtifactory: artifactory_eu
-      pattern:  ${envVarGrdlPromoteRepo}/**/rest-service-*.jar
+      pattern:  ${envVarGrdlPromoteRepo}/**/rest-service-${runVarAppVersion}.jar
       target: rest-service.jar
       flat: true
 
