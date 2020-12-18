@@ -92,6 +92,6 @@ resources:
     type: HelmChart
     configuration:
       sourceArtifactory: artifactory_eu
-      repository: kaivengers-helm
-      chart: myapp
-      version: 1.0.0
+      repository: ${envVarHelmRepo}
+      chart: ${envVarHelmName}
+      version: ${envVarHelmVers}

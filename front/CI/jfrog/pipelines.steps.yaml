@@ -214,6 +214,9 @@ pipelines:
           envVarK8SNameSpace: kaivengers
           envVarRuntimeImgName: jfrog/pipelines-u18node
           envVarRuntimeImgVers: 10.21.0-ych
+          envVarHelmRepo: kaivengers-helm
+          envVarHelmName: myapp
+          envVarHelmVers: 1.0.0
     steps:
       - name: setup_env
         type: Bash
