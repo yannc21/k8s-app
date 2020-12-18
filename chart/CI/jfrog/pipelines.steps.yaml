@@ -13,7 +13,7 @@ pipelines:
       - name: publish_helm_chart
         type: HelmPublish
         configuration:
-          helmVersion: 3
+          helmVersion: 2
           chartPath: .
           lint: true
           autoPublishBuildInfo: true
