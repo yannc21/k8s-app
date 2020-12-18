@@ -2,19 +2,6 @@
 
 Before deploying the helm chart :
 
-* create secrets for Artifactory (will be referenced in the helm chart)
-
-````
-sudo kubectl create secret docker-registry avengers-registry \
-    --docker-server=avengers-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80 \
-    --docker-username=admin --docker-password=password --docker-email=yannc@jfrog.com   
-
-sudo kubectl create secret docker-registry kaizoku-registry \
-    --docker-server=kaizoku-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80 \
-    --docker-username=admin --docker-password=password --docker-email=yannc@jfrog.com   
-
-````
-
 * create namespace
 
 ````
@@ -25,6 +12,18 @@ sudo kubectl create ns kaivengers
 
 ````
 sudo kubectl create sa ironman -n kaivengers
+````
+
+* create secrets to use Artifactory as a private container registry (there are referenced in the helm chart)
+
+````
+sudo kubectl create secret docker-registry avengers-registry \
+    --docker-server=avengers-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80 \
+    --docker-username=admin --docker-password=password --docker-email=yannc@jfrog.com -n kaivengers 
+
+sudo kubectl create secret docker-registry kaizoku-registry \
+    --docker-server=kaizoku-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80 \
+    --docker-username=admin --docker-password=password --docker-email=yannc@jfrog.com -n kaivengers   
 ````
 
 * create secret for service account + role + rolebinding
