@@ -252,6 +252,8 @@ pipelines:
       - name: deploy_helm_chart
         type: HelmDeploy
         configuration:
+          environmentVariables:
+            JFROG_CLI_LOG_LEVEL: DEBUG
           affinityGroup: deploy
           helmVersion: 3
           runtime:
