@@ -14,7 +14,7 @@ pipelines:
         type: HelmPublish
         configuration:
           helmVersion: 2
-          chartPath: .
+          chartPath: chart/content/
           lint: true
           autoPublishBuildInfo: true
           inputResources:
