@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: v2
 name: myapp
 description: My super application with a front and back end
 type: application
