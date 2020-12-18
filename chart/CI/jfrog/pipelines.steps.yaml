@@ -30,8 +30,8 @@ pipelines:
             - >  
               jfrog rt curl -XPATCH -H "Content-Type: application/yaml" -T ${res_src_code_k8s_helm_resourcePath}/chart/CI/jfrog/repo.yaml api/system/configuration
             - curl  https://get.helm.sh/helm-canary-linux-amd64.tar.gz | tar xvz -C /tmp
-            - mv /tmp/linux-amd64/helm /usr/local/bin/
-            - helm version
+            - mv /tmp/linux-amd64/helm /usr/local/bin/helm3
+            - helm3 version
 
 # WORKAROUND FOR HELM DEPLOY WHICH REQUIRES A NEWER JFROG CLI VERSION   
       - name: build_helm_base_image
