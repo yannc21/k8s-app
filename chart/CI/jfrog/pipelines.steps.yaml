@@ -10,19 +10,29 @@ pipelines:
           envVarHelmName: myapp
           envVarHelmVers: 1.0.0
     steps:
-      - name: setup_env
-        type: Bash
+      - name: publish_helm_chart
+        type: HelmPublish
         configuration:
-          runtime:
-            type: host
+          helmVersion: 3
+          chartPath: .
+          lint: true
+          autoPublishBuildInfo: true
+          inputResources:
+            - name: src_code_k8s_helm
+          inputSteps:
+            - name: publish_helm_base_image
           integrations:
             - name: artifactory_eu
+          outputResources:
+            - name: hc_my_app
+            - name: bi_hc_my_app
         execution:
-          onExecute:
+          onStart:
             # escape semi colon
             - >  
-              jfrog rt curl -XPATCH -H "Content-Type: application/yaml" -T repo.yaml api/system/configuration
+              jfrog rt curl -XPATCH -H "Content-Type: application/yaml" -T chart/CI/jfrog/repo.yaml api/system/configuration
 
+# WORKAROUND FOR HELM DEPLOY WHICH REQUIRES A NEWER JFROG CLI VERSION   
       - name: build_helm_base_image
         type: DockerBuild
         configuration:
@@ -32,7 +42,7 @@ pipelines:
           dockerImageName: ${envVarDockerRegistry}
           dockerImageTag: ${envVarBaseImageTag}
           inputSteps:
-            - name: setup_env
+            - name: publish_helm_chart
           inputResources:
             - name: src_dockerfile_base_image_helm
           integrations:
@@ -52,19 +62,3 @@ pipelines:
           outputResources:
             - name: bi_base_image_helm
 
-      - name: publish_helm_chart
-        type: HelmPublish
-        configuration:
-          helmVersion: 3
-          chartPath: .
-          lint: true
-          autoPublishBuildInfo: true
-          inputResources:
-            - name: src_code_k8s_helm
-          inputSteps:
-            - name: publish_helm_base_image
-          integrations:
-            - name: artifactory_eu
-          outputResources:
-            - name: hc_my_app
-            - name: bi_hc_my_app
