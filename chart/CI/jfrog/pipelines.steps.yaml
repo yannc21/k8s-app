@@ -1,0 +1,69 @@
+pipelines:
+  - name: k8s_project_init
+    configuration:
+      environmentVariables:
+        readOnly:
+          envVarDockerRegistry: kaivengers-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerPushRepo: kaivengers-docker
+          envVarBaseImageTag: 10.21.0-jfrog
+          envVarHelmRepo: kaivengers-helm
+          envVarHelmName: myapp
+          envVarHelmVers: 1.0.0
+    steps:
+      - name: setup_env
+        type: Bash
+        configuration:
+          runtime:
+            type: host
+          integrations:
+            - name: artifactory_eu
+        execution:
+          onExecute:
+            # escape semi colon
+            - >  
+              jfrog rt curl -XPATCH -H "Content-Type: application/yaml" -T repo.yaml api/system/configuration
+
+      - name: build_helm_base_image
+        type: DockerBuild
+        configuration:
+          affinityGroup: helm
+          dockerFileName: Dockerfile
+          dockerFileLocation: chart/CI/jfrog/
+          dockerImageName: ${envVarDockerRegistry}
+          dockerImageTag: ${envVarBaseImageTag}
+          inputSteps:
+            - name: setup_env
+          inputResources:
+            - name: src_dockerfile_base_image_helm
+          integrations:
+            - name: artifactory_eu
+
+      - name: publish_helm_base_image
+        type: DockerPush
+        configuration:
+          affinityGroup: helm
+          targetRepository: ${envVarDockerPushRepo}
+          autoPublishBuildInfo: true
+          forceXrayScan: true
+          inputSteps:
+            - name: build_helm_base_image
+          integrations:
+            - name: artifactory_eu
+          outputResources:
+            - name: bi_base_image_helm
+
+      - name: publish_helm_chart
+        type: HelmPublish
+        configuration:
+          helmVersion: 3
+          chartPath: .
+          lint: true
+          autoPublishBuildInfo: true
+          inputResources:
+            - name: src_code_k8s_helm
+          inputSteps:
+            - name: publish_helm_base_image
+          integrations:
+            - name: artifactory_eu
+          outputResources:
+            - name: bi_hc_my_app
