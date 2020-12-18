@@ -123,7 +123,7 @@ pipelines:
         readOnly:
           envVarAppName: backapp-gradle
           envVarDockerPushRepo: kaizoku-docker
-          envVarDockerRepoUrl: kaizoku-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerRepoUrl: ${envVarDockerPushRepo}.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
           envVarDockerImageName: ${envVarDockerRepoUrl}/${envVarAppName}
           envVarDockerPromoteRepo: kaizoku-rc-docker-local
     steps:
@@ -227,6 +227,9 @@ pipelines:
           envVarDockerRegistry: ${envVarDockerRepo}.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
           envVarDockerSourceRepo: kaizoku-rc-docker-local
           envVarDockerPromoteRepo: kaizoku-release-docker-local
+          envVarK8SNameSpace: kaivengers
+          envVarRuntimeImgName: jfrog/pipelines-u18node
+          envVarRuntimeImgVers: 10.21.0-ych
     steps:
       - name: setup_env
         type: Bash
@@ -261,8 +264,8 @@ pipelines:
             image:
               custom:
                 registry: artifactory_eu
-                name: ${envVarDockerRegistry}/jfrog/pipelines-u18node
-                tag: 10.21.0-ych
+                name: ${envVarDockerRegistry}/${envVarRuntimeImgName}
+                tag: ${envVarRuntimeImgVers}
                 sourceRepository: ${envVarDockerRepo}
           inputSteps:
             - name: setup_env
@@ -271,7 +274,7 @@ pipelines:
           inputResources:
             - name: hc_my_app_backapp_gradle
           releaseName: my-super-app
-          flags: "--debug --install --namespace kaivengers --cleanup-on-fail --set images.back.tag=${runVarNewTag} --set images.back.repository=${envVarDockerRegistry}/${envVarAppName}"
+          flags: "--debug --install --namespace ${envVarK8SNameSpace} --cleanup-on-fail --set images.back.tag=${runVarNewTag} --set images.back.repository=${envVarDockerRegistry}/${envVarAppName}"
           valueFilePaths:
             - values.yaml
         execution:
