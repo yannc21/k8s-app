@@ -33,7 +33,7 @@ pipelines:
             - curl  https://get.helm.sh/helm-canary-linux-amd64.tar.gz | tar xvz -C /tmp
             - mv /tmp/linux-amd64/helm /usr/local/bin/helm3
             - helm3 version
-            - cat chart/CI/jfrog/Dockerfile
+            - cat ${res_src_code_k8s_helm_resourcePath}/chart/CI/jfrog/Dockerfile
 
 # WORKAROUND FOR HELM DEPLOY WHICH REQUIRES A NEWER JFROG CLI VERSION   
       - name: build_helm_base_image
