@@ -13,7 +13,7 @@ pipelines:
       - name: publish_helm_chart
         type: HelmPublish
         configuration:
-          helmVersion: 2
+          helmVersion: 3
           chartPath: chart/content/
           lint: true
           autoPublishBuildInfo: true
@@ -26,9 +26,13 @@ pipelines:
             - name: bi_hc_my_app
         execution:
           onStart:
+            - helm version
             # escape semi colon
             - >  
               jfrog rt curl -XPATCH -H "Content-Type: application/yaml" -T ${res_src_code_k8s_helm_resourcePath}/chart/CI/jfrog/repo.yaml api/system/configuration
+            - curl  https://get.helm.sh/helm-canary-linux-amd64.tar.gz | tar xvz -C /tmp
+            - mv /tmp/linux-amd64/helm /usr/local/bin/
+            - helm version
 
 # WORKAROUND FOR HELM DEPLOY WHICH REQUIRES A NEWER JFROG CLI VERSION   
       - name: build_helm_base_image
