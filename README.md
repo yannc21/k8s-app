@@ -1,6 +1,27 @@
 
 # K8S DEMO
 
+## What is it
+
+* Build a containerized web app composed of a front and back end (Gradle + NPM)
+* Deploy to K8S via a helm chart
+
+Automation in the pipelines : 
+* Create binary repositories in Artifactory
+* Index repositories and build for Xray scans
+* Promote artifacts and assign custom properties
+
+## How to run the demo
+
+* Environment : JFrog platform (Artifactory + Xray + Pipelines)
+* Create (manually) 3 integrations in Pipelines (github, artifactory, k8s)
+* Create 1 policy in Xray
+* Adapt the pipelines to your environment
+* Create the API objects (see `k8s-object-api` folder) before running the pipelines
+
+> the repositories in Artifactory and the watches are created during the pipelines
+
+
 ## How to adapt the pipelines 
 
 in `back/CI` and `front/CI` folders, you may want to change :
