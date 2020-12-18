@@ -5,6 +5,7 @@ pipelines:
         readOnly:
           envVarDockerRegistry: kaivengers-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
           envVarDockerPushRepo: kaivengers-docker
+          envVarDockerImageName: jfrog/pipelines-u18node
           envVarBaseImageTag: 10.21.0-jfrog
           envVarHelmRepo: kaivengers-helm
           envVarHelmName: myapp
@@ -40,7 +41,7 @@ pipelines:
           affinityGroup: helm
           dockerFileName: Dockerfile
           dockerFileLocation: chart/CI/jfrog/
-          dockerImageName: ${envVarDockerRegistry}/${envVarDockerPushRepo}
+          dockerImageName: ${envVarDockerRegistry}/${envVarDockerImageName}
           dockerImageTag: ${envVarBaseImageTag}
           inputSteps:
             - name: publish_helm_chart
