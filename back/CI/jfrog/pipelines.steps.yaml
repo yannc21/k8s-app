@@ -8,17 +8,53 @@ pipelines:
           envVarGrdlRepo: kaizoku-grdl
           envVarGrdlPromoteRepo: kaizoku-rc-grdl-local
     steps:
-      # - name: build_k8s_backapp_gradle
-      #   type: GradleBuild
+      - name: build_k8s_backapp_gradle
+        type: GradleBuild
+        configuration: 
+          environmentVariables:
+            JFROG_CLI_LOG_LEVEL: DEBUG
+          gradleCommand:  clean build artifactoryPublish -b build.gradle --stacktrace
+          sourceLocation:       back/src/gs-rest-service  #required
+          configFileLocation:   .  #required
+          configFileName:       gradle-art-config  #required
+          forceXrayScan:        false #optional
+          autoPublishBuildInfo: true #optional
+          inputResources:
+            - name: src_code_k8s_backapp_gradle
+          integrations:
+            - name: artifactory_eu
+          outputResources:
+            - name: bi_k8s_backapp_gradle
+        execution:
+          onStart:
+            - jfrog --version
+      #       - cli_path=$(dirname "$(which jfrog)") && echo $cli_path
+      #       - curl -fL https://getcli.jfrog.io | sh && ls -l           
+      #       - mv ./jfrog "$cli_path/" && ls -l "$cli_path/jfrog"  && jfrog --version
+            - export JFROG_CLI_BUILD_URL="${int_artifactory_eu_url/%artifactory/ui}/pipelines/myPipelines/k8s_backapp_gradle/${run_number}/setup_env?branch=${res_src_code_k8s_backapp_gradle_branchName}"
+            - cd ${res_src_code_k8s_backapp_gradle_resourcePath}/back/CI/jfrog
+            - ls -l && chmod +x init.sh
+            - ./init.sh -u  ${int_artifactory_eu_url/%artifactory/} -p ${int_artifactory_eu_apikey}
+          onSuccess:
+            - add_run_variables runVarAppVersion=`sed -n "s/currentVersion=\(.*\)/\1/p" ${res_src_code_k8s_backapp_gradle_resourcePath}/back/src/gradle.properties`
+            - add_run_variables runVarGitCommit=${res_src_code_k8s_backapp_gradle_commitSha}
+            - echo $runVarAppVersion
+            - echo $runVarGitCommit
+            - jfrog rt sp --build=${res_bi_k8s_backapp_gradle_buildName}/${run_number}  --exclusions="*.pom;*src*" ${envVarGrdlRepo}/ "src.commit.sha=${runVarGitCommit};app.version=${runVarAppVersion};app.name=kaizoku"
+
+      # - name: build_k8s_backapp_gradleV2
+      #   type: Bash
       #   configuration: 
       #     environmentVariables:
       #       JFROG_CLI_LOG_LEVEL: DEBUG
-      #     gradleCommand:  clean artifactoryPublish -b build.gradle --stacktrace
-      #     sourceLocation:       back/src/gs-rest-service  #required
-      #     configFileLocation:   .  #required
-      #     configFileName:       gradle-art-config  #required
-      #     forceXrayScan:        false #optional
-      #     autoPublishBuildInfo: true #optional
+      #     runtime:
+      #       type: image
+      #       image:
+      #         custom:
+      #           registry: artifactory_eu
+      #           name: ${envVarDockerRegistry}/gradle
+      #           tag: 6.7-jdk15-jfrog
+      #           sourceRepository: ${envVarDockerRepo}
       #     inputResources:
       #       - name: src_code_k8s_backapp_gradle
       #     integrations:
@@ -31,60 +67,23 @@ pipelines:
       #       - cli_path=$(dirname "$(which jfrog)") && echo $cli_path
       #       - curl -fL https://getcli.jfrog.io | sh && ls -l           
       #       - mv ./jfrog "$cli_path/" && ls -l "$cli_path/jfrog"  && jfrog --version
+      #     onExecute:
       #       - export JFROG_CLI_BUILD_URL="${int_artifactory_eu_url/%artifactory/ui}/pipelines/myPipelines/k8s_backapp_gradle/${run_number}/setup_env?branch=${res_src_code_k8s_backapp_gradle_branchName}"
-      #       - cd ${res_src_code_k8s_backapp_gradle_resourcePath}/back/CI/jfrog
-      #       - ls -l && chmod +x init.sh
-      #       - ./init.sh -u  ${int_artifactory_eu_url/%artifactory/} -p ${int_artifactory_eu_apikey}
-      #       - gradle task 
+      #       - cd ${res_src_code_k8s_backapp_gradle_resourcePath} && ls -l
+      #       - git branch
+      #       - git checkout ${res_src_code_k8s_backapp_gradle_branchName}
+      #       - cd back/src/gs-rest-service
+      #       - jfrog rt gradlec --server-id-resolve artifactory_eu --repo-resolve ${envVarGrdlRepo} --server-id-deploy artifactory_eu --repo-deploy ${envVarGrdlRepo}
+      #       - ls -l .jfrog/projects 
+      #       - jfrog rt gradle clean artifactoryPublish -b build.gradle --build-name=${pipeline_name} --build-number=${run_number}
+      #       - jfrog rt bce ${pipeline_name} ${run_number}
+      #       - jfrog rt bp ${pipeline_name} ${run_number}
       #     onSuccess:
       #       - add_run_variables runVarAppVersion=`sed -n "s/currentVersion=\(.*\)/\1/p" ${res_src_code_k8s_backapp_gradle_resourcePath}/back/src/gradle.properties`
       #       - add_run_variables runVarGitCommit=${res_src_code_k8s_backapp_gradle_commitSha}
       #       - echo $runVarAppVersion
       #       - echo $runVarGitCommit
       #       - jfrog rt sp --build=${res_bi_k8s_backapp_gradle_buildName}/${run_number}  --exclusions="*.pom;*src*" ${envVarGrdlRepo}/ "src.commit.sha=${runVarGitCommit};app.version=${runVarAppVersion};app.name=kaizoku"
-
-      - name: build_k8s_backapp_gradleV2
-        type: Bash
-        configuration: 
-          environmentVariables:
-            JFROG_CLI_LOG_LEVEL: DEBUG
-          runtime:
-            type: image
-            image:
-              custom:
-                registry: artifactory_eu
-                name: ${envVarDockerRegistry}/gradle
-                tag: 6.7-jdk15-jfrog
-                sourceRepository: ${envVarDockerRepo}
-          inputResources:
-            - name: src_code_k8s_backapp_gradle
-          integrations:
-            - name: artifactory_eu
-          outputResources:
-            - name: bi_k8s_backapp_gradle
-        execution:
-          onStart:
-            - jfrog --version
-            - cli_path=$(dirname "$(which jfrog)") && echo $cli_path
-            - curl -fL https://getcli.jfrog.io | sh && ls -l           
-            - mv ./jfrog "$cli_path/" && ls -l "$cli_path/jfrog"  && jfrog --version
-          onExecute:
-            - export JFROG_CLI_BUILD_URL="${int_artifactory_eu_url/%artifactory/ui}/pipelines/myPipelines/k8s_backapp_gradle/${run_number}/setup_env?branch=${res_src_code_k8s_backapp_gradle_branchName}"
-            - cd ${res_src_code_k8s_backapp_gradle_resourcePath} && ls -l
-            - git branch
-            - git checkout ${res_src_code_k8s_backapp_gradle_branchName}
-            - cd back/src/gs-rest-service
-            - jfrog rt gradlec --server-id-resolve artifactory_eu --repo-resolve ${envVarGrdlRepo} --server-id-deploy artifactory_eu --repo-deploy ${envVarGrdlRepo}
-            - ls -l .jfrog/projects 
-            - jfrog rt gradle clean artifactoryPublish -b build.gradle --build-name=${pipeline_name} --build-number=${run_number}
-            - jfrog rt bce ${pipeline_name} ${run_number}
-            - jfrog rt bp ${pipeline_name} ${run_number}
-          onSuccess:
-            - add_run_variables runVarAppVersion=`sed -n "s/currentVersion=\(.*\)/\1/p" ${res_src_code_k8s_backapp_gradle_resourcePath}/back/src/gradle.properties`
-            - add_run_variables runVarGitCommit=${res_src_code_k8s_backapp_gradle_commitSha}
-            - echo $runVarAppVersion
-            - echo $runVarGitCommit
-            - jfrog rt sp --build=${res_bi_k8s_backapp_gradle_buildName}/${run_number}  --exclusions="*.pom;*src*" ${envVarGrdlRepo}/ "src.commit.sha=${runVarGitCommit};app.version=${runVarAppVersion};app.name=kaizoku"
 
       - name: scan_bi_k8s_backapp_gradle
         type: XrayScan
