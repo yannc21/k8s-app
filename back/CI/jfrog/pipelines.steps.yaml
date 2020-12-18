@@ -262,7 +262,7 @@ pipelines:
               custom:
                 registry: artifactory_eu
                 name: ${envVarDockerRegistry}/jfrog/pipelines-u18node
-                tag: 10.21.0
+                tag: 10.21.0-ych
                 sourceRepository: ${envVarDockerRepo}
           inputSteps:
             - name: setup_env
