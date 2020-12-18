@@ -28,7 +28,7 @@ pipelines:
           onStart:
             # escape semi colon
             - >  
-              jfrog rt curl -XPATCH -H "Content-Type: application/yaml" -T chart/CI/jfrog/repo.yaml api/system/configuration
+              jfrog rt curl -XPATCH -H "Content-Type: application/yaml" -T ${res_src_code_k8s_helm_resourcePath}/chart/CI/jfrog/repo.yaml api/system/configuration
 
 # WORKAROUND FOR HELM DEPLOY WHICH REQUIRES A NEWER JFROG CLI VERSION   
       - name: build_helm_base_image
