@@ -163,7 +163,7 @@ pipelines:
         execution:
           onStart:
             - ls -la ${res_backapp_gradle_exec_resourcePath}
-            - cp ${res_backapp_gradle_exec_resourcePath}/*.war ${res_src_dockerfile_k8s_backapp_gradle_resourcePath}/back/CI/Docker/
+            - cp ${res_backapp_gradle_exec_resourcePath}/*.jar ${res_src_dockerfile_k8s_backapp_gradle_resourcePath}/back/CI/Docker/
             - ls -la ${res_src_dockerfile_k8s_backapp_gradle_resourcePath}/back/CI/Docker/
             - cd ${res_src_dockerfile_k8s_backapp_gradle_resourcePath}
             # get last commit on the dockerfile
