@@ -37,4 +37,10 @@ in `back/CI` and `front/CI` folders, you may want to change :
     
 * for Xray, change the policy name in `watch.json`
 
-> if you want to change the repo name (created during the pipelines), edit `repo.yaml`
+> if you want to change the repo names (created during the pipelines), edit `repo.yaml`
+
+> naming conventions for variables : 
+> * `envVar*` for environment variables
+> * `runVar*` for variables generated during the pipelines
+
+> property bags are used to pass variables between pipelines
