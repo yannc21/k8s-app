@@ -54,7 +54,7 @@ pipelines:
               custom:
                 registry: artifactory_eu
                 name: ${envVarDockerRegistry}/library/gradle
-                tag: 6.7-jdk15
+                tag: 6.7-jdk15-jfrog
                 sourceRepository: ${envVarDockerRepo}
           inputResources:
             - name: src_code_k8s_backapp_gradle
@@ -85,8 +85,6 @@ pipelines:
             - echo $runVarAppVersion
             - echo $runVarGitCommit
             - jfrog rt sp --build=${res_bi_k8s_backapp_gradle_buildName}/${run_number}  --exclusions="*.pom;*src*" ${envVarGrdlRepo}/ "src.commit.sha=${runVarGitCommit};app.version=${runVarAppVersion};app.name=kaizoku"
-
-
 
       - name: scan_bi_k8s_backapp_gradle
         type: XrayScan
