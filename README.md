@@ -4,23 +4,37 @@
 ## What is it
 
 * Build a containerized web app composed of a front and back end (Gradle + NPM)
-* Deploy to K8S via a helm chart
+* Deploy it to K8S cluster via a helm chart
 
-Automation in the pipelines : 
+After loading the YAML files into JFrog Pipelines, the following pipelines will be created
+
+| Pipeline Name | Description | 
+| ----------- | ----------- |
+| k8s_project_init | Create Helm Chart and Docker repository  |
+| k8s_backapp_gradle | Build and promote Gradle app|
+| k8s_backapp_gradle_docker | Containerize Gradle app|
+| k8s_backapp_gradle_deployment | Deploy Gradle app on K8S cluster via Helm Chart |
+| k8s_frontapp_npm | Build and promote ReactJS app|
+| k8s_frontapp_js_docker | Containerize ReactJS app|
+| k8s_frontapp_js_deployment | Deploy ReactJS app on K8S cluster via Helm Chart |
+
+Automations executed during the pipelines :
 * Create binary repositories in Artifactory
 * Index repositories and build for Xray scans
+* Create watches per pipeline
 * Promote artifacts and assign custom properties
 
 ## How to run the demo
 
-* Environment : JFrog platform (Artifactory + Xray + Pipelines)
+1. Requirements : 
+* Running environment : JFrog platform (Artifactory + Xray + Pipelines)
 * Create (manually) 3 integrations in Pipelines (github, artifactory, k8s)
 * Create 1 policy in Xray
-* Adapt the pipelines to your environment
-* Create the API objects (see `k8s-object-api` folder) before running the pipelines
-* Run the k8s_project_init pipeline
 
-> the repositories in Artifactory and the watches are created during the pipelines
+2. Adapt the pipelines to your environment (see next section)
+
+3. For K8S deployment, create the API objects (see `k8s-object-api` folder) before running the pipelines
+* Run the `k8s_project_init` pipeline
 
 
 ## How to adapt the pipelines 
@@ -38,7 +52,7 @@ in `back/CI` and `front/CI` folders, you may want to change :
     
 * for Xray, change the policy name in `watch.json`
 
-> if you want to change the repo names (created during the pipelines), edit `repo.yaml`
+> if you want to change the repo names (created during the pipelines), edit `repo.yaml` and adapt accordingly the pipelines environment variables
 
 > naming conventions for variables : 
 > * `envVar*` for environment variables

@@ -23,9 +23,7 @@ JFrog platform enabling Artifactory, Xray, Pipelines
 
 ## Repository creation
 
-````
-curl -uadmin:chaysinh -X PATCH "http://localhost:8081/artifactory/api/system/configuration" -H "Content-Type: application/yaml" -T repo.yaml
-````
+see `chart/CI/jfrog/init.sh`
 
 if you change the repo names, make sure to edit environment variables in **pipelines.steps.yaml**
 

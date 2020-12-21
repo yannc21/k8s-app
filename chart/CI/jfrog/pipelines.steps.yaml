@@ -11,6 +11,20 @@ pipelines:
           envVarHelmName: myapp
           envVarHelmVers: 1.0.0
     steps:
+      - name: create_resources
+        type: Bash
+        configuration:
+          runtime:
+            type: host
+          inputResources:
+            - name: src_code_k8s_app
+          integrations:
+            - name: artifactory_eu
+        execution:
+          onExecute:
+            - cd ${res_src_code_k8s_app_resourcePath}/chart/CI/jfrog
+            - ls -l && chmod +x init.sh
+            - ./init.sh -u  ${int_artifactory_eu_url/%artifactory/} -p ${int_artifactory_eu_apikey}
       - name: publish_helm_chart
         type: HelmPublish
         configuration:
@@ -20,6 +34,8 @@ pipelines:
           autoPublishBuildInfo: true
           inputResources:
             - name: src_code_k8s_helm
+          inputSteps:
+            - name: create_resources
           integrations:
             - name: artifactory_eu
           outputResources:
@@ -27,9 +43,6 @@ pipelines:
             - name: bi_hc_my_app
         execution:
           onStart:
-            # escape semi colon
-            - >  
-              jfrog rt curl -XPATCH -H "Content-Type: application/yaml" -T ${res_src_code_k8s_helm_resourcePath}/chart/CI/jfrog/repo.yaml api/system/configuration
             - curl  https://get.helm.sh/helm-canary-linux-amd64.tar.gz | tar xvz -C /tmp
             - mv /tmp/linux-amd64/helm /usr/local/bin/helm3
             - helm3 version
