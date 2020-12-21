@@ -33,7 +33,7 @@ pipelines:
       #       - mv ./jfrog "$cli_path/" && ls -l "$cli_path/jfrog"  && jfrog --version
             - export JFROG_CLI_BUILD_URL="${int_artifactory_eu_url/%artifactory/ui}/pipelines/myPipelines/k8s_backapp_gradle/${run_number}/setup_env?branch=${res_src_code_k8s_backapp_gradle_branchName}"
           onSuccess:
-            - add_run_variables runVarAppVersion=`sed -n "s/currentVersion=\(.*\)/\1/p" ${res_src_code_k8s_backapp_gradle_resourcePath}/back/src/gradle.properties`
+            - add_run_variables runVarAppVersion=`sed -n "s/currentVersion=\(.*\)/\1/p" ${res_src_code_k8s_backapp_gradle_resourcePath}/back/src/gs-rest-service/gradle.properties`
             - add_run_variables runVarGitCommit=${res_src_code_k8s_backapp_gradle_commitSha}
             - echo $runVarAppVersion
             - echo $runVarGitCommit
