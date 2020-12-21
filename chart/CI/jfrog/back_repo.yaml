@@ -72,6 +72,7 @@ virtualRepositories:
       - kaizoku-release-docker-local
       - kaizoku-dockerhub-remote
       - kaizoku-bintray-remote
+      - kaivengers-release-docker-local
     defaultDeploymentRepo: kaizoku-dev-docker-local
   kaizoku-grdl:
     type: gradle
@@ -80,5 +81,4 @@ virtualRepositories:
       - kaizoku-dev-grdl-local
       - kaizoku-rc-grdl-local
       - kaizoku-jcenter-grdl-remote
-      - kaivengers-release-docker-local
     defaultDeploymentRepo: kaizoku-dev-grdl-local
