@@ -33,6 +33,7 @@ pipelines:
             - sudo systemctl restart docker
             - sudo cat /etc/docker/daemon.json
 
+
       - name: publish_helm_chart
         type: HelmPublish
         configuration:
