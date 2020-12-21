@@ -80,11 +80,5 @@ virtualRepositories:
       - kaizoku-dev-grdl-local
       - kaizoku-rc-grdl-local
       - kaizoku-jcenter-grdl-remote
+      - kaivengers-release-docker-local
     defaultDeploymentRepo: kaizoku-dev-grdl-local
-  kaivengers-helm:
-    type: helm
-    repoLayout: simple-default 
-    repositories:   
-      - kaivengers-dev-helm-local
-      - kaivengers-chartcenter-remote
-    defaultDeploymentRepo: kaivengers-dev-helm-local

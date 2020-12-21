@@ -94,6 +94,7 @@ virtualRepositories:
       - avengers-release-docker-local
       - avengers-dockerhub-remote
       - avengers-bintray-remote
+      - kaivengers-release-docker-local
     defaultDeploymentRepo: avengers-dev-docker-local
   kaivengers-helm:
     type: helm

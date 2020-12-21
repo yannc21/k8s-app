@@ -43,10 +43,3 @@ virtualRepositories:
       - kaivengers-dockerhub-remote
       - kaivengers-bintray-remote
     defaultDeploymentRepo: kaivengers-release-docker-local
-  kaivengers-helm:
-    type: helm
-    repoLayout: simple-default 
-    repositories:   
-      - kaivengers-dev-helm-local
-      - kaivengers-chartcenter-remote
-    defaultDeploymentRepo: kaivengers-dev-helm-local
