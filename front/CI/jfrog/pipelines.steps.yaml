@@ -104,7 +104,7 @@ pipelines:
         readOnly:
           envVarAppName: frontapp-js
           envVarDockerPushRepo: avengers-docker
-          envVarDockerRepoUrl: ${envVarDockerPushRepo}.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerRepoUrl: ${envVarDockerPushRepo}.artifactory-eu-yannc3-0.soleng-emea-staging.jfrog.team:80
           envVarDockerImageName: ${envVarDockerRepoUrl}/${envVarAppName}
           envVarDockerPromoteRepo: avengers-rc-docker-local
     steps:
@@ -204,7 +204,7 @@ pipelines:
         readOnly:
           envVarAppName: frontapp-js
           envVarDockerRepo: avengers-docker
-          envVarDockerRegistry: ${envVarDockerRepo}.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerRegistry: ${envVarDockerRepo}.artifactory-eu-yannc3-0.soleng-emea-staging.jfrog.team:80
           envVarDockerSourceRepo: avengers-rc-docker-local
           envVarDockerPromoteRepo: avengers-release-docker-local
           envVarK8SNameSpace: kaivengers

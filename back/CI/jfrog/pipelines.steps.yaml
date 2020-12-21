@@ -4,7 +4,7 @@ pipelines:
       environmentVariables:
         readOnly:
           envVarDockerRepo: kaizoku-docker
-          envVarDockerRegistry: ${envVarDockerRepo}.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerRegistry: ${envVarDockerRepo}.artifactory-eu-yannc3-0.soleng-emea-staging.jfrog.team:80
           envVarGrdlRepo: kaizoku-grdl
           envVarGrdlPromoteRepo: kaizoku-rc-grdl-local
     steps:
@@ -120,7 +120,7 @@ pipelines:
         readOnly:
           envVarAppName: backapp-gradle
           envVarDockerPushRepo: kaizoku-docker
-          envVarDockerRepoUrl: ${envVarDockerPushRepo}.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerRepoUrl: ${envVarDockerPushRepo}.artifactory-eu-yannc3-0.soleng-emea-staging.jfrog.team:80
           envVarDockerImageName: ${envVarDockerRepoUrl}/${envVarAppName}
           envVarDockerPromoteRepo: kaizoku-rc-docker-local
     steps:
@@ -221,7 +221,7 @@ pipelines:
         readOnly:
           envVarAppName: backapp-gradle
           envVarDockerRepo: kaizoku-docker
-          envVarDockerRegistry: ${envVarDockerRepo}.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerRegistry: ${envVarDockerRepo}.artifactory-eu-yannc3-0.soleng-emea-staging.jfrog.team:80
           envVarDockerSourceRepo: kaizoku-rc-docker-local
           envVarDockerPromoteRepo: kaizoku-release-docker-local
           envVarK8SNameSpace: kaivengers

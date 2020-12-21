@@ -3,7 +3,7 @@ pipelines:
     configuration:
       environmentVariables:
         readOnly:
-          envVarDockerRegistry: kaivengers-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80
+          envVarDockerRegistry: kaivengers-docker.artifactory-eu-yannc3-0.soleng-emea-staging.jfrog.team:80
           envVarDockerPushRepo: kaivengers-docker
           envVarDockerImageName: jfrog/pipelines-u18node
           envVarBaseImageTag: 10.21.0-jfrog
