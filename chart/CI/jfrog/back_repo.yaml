@@ -33,7 +33,7 @@ localRepositories:
     xray:   
       enabled: false
   kaivengers-release-docker-local:
-    type: docker
+    type:   
     dockerApiVersion: V2
     repoLayout: simple-default 
     xray:   
