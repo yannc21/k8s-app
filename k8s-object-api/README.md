@@ -52,7 +52,7 @@ sudo kubectl config view --flatten --minify > myKubeConfig
 3/ Extract the token of the service account 
 
 ````
-sudo kubectl describe secrets ironman-secret  -n kaivengers | grep "^token" | tr -d [[:space:]] | cut -d: -f2
+sudo kubectl describe secrets $(sudo kubectl get secret -n kaivengers -o custom-columns=NAME:.metadata.name | grep ironman)  -n kaivengers | grep "^token" | tr -d [[:space:]] | cut -d: -f2
 ````
 
 4/ Inject the token into a kubeconfig 

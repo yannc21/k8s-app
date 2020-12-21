@@ -14,6 +14,7 @@ pipelines:
       - name: create_resources
         type: Bash
         configuration:
+          affinityGroup: helm
           runtime:
             type: host
           inputResources:
@@ -25,9 +26,17 @@ pipelines:
             - cd ${res_src_code_k8s_app_resourcePath}/chart/CI/jfrog
             - ls -l && chmod +x init.sh
             - ./init.sh -u  ${int_artifactory_eu_url/%artifactory/} -p ${int_artifactory_eu_apikey}
+          onStart:
+            - sudo mkdir -p /etc/docker 
+            - > 
+              sudo jq -n  "{\"insecure-registries\": [\"${envVarDockerRegistry}\"]}" > /etc/docker/daemon.json
+            - sudo systemctl restart docker
+            - sudo cat /etc/docker/daemon.json
+
       - name: publish_helm_chart
         type: HelmPublish
         configuration:
+          affinityGroup: helm
           helmVersion: 3
           chartPath: chart/content/
           lint: true
@@ -63,13 +72,7 @@ pipelines:
             - name: src_dockerfile_base_image_helm
           integrations:
             - name: artifactory_eu
-        execution:
-          onStart:
-            - sudo mkdir -p /etc/docker 
-            - > 
-              sudo jq -n  "{\"insecure-registries\": [\"${envVarDockerRegistry}\"]}" > /etc/docker/daemon.json
-            - sudo systemctl restart docker
-            - sudo cat /etc/docker/daemon.json
+
       - name: publish_helm_base_image
         type: DockerPush
         configuration:
