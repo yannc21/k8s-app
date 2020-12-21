@@ -49,7 +49,9 @@ Automations executed during the `k8s_project_init` pipeline :
 
 2. In JFrog Xray, create 1 policy in Xray called `global` enabling `fail_build`
 
-3. In the source repo, modify the repository URLs (in environment variables) in `pipelines.steps.yaml` files in  `chart/CI/jfrog`, `back/CI/jfrog` and `front/CI/jfrog`. Don't forget the `FROM` instruction in the `Dockerfile`
+3. In the source repo, modify the repository URLs : 
+* in `pipelines.steps.yaml` files in  `chart/CI/jfrog`, `back/CI/jfrog` and `front/CI/jfrog`
+* in `values.yaml` in `chart/content` 
 
 4. In JFrog Pipelines, start manually the `k8s_project_init` pipeline
 
