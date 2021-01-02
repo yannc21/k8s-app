@@ -1,4 +1,4 @@
-FROM kaivengers-docker.artifactory-eu-yannc4-0.soleng-emea-staging.jfrog.team:80/jfrog/pipelines-u18node:10.21.0
+FROM docker.bintray.io/jfrog/pipelines-u18node:10.21.0
 
 LABEL maintainer="yannc@jfrog.com"
 

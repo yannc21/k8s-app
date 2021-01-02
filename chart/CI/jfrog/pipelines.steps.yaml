@@ -14,6 +14,7 @@ pipelines:
       - name: create_resources
         type: Bash
         configuration:
+          affinityGroup: helm
           runtime:
             type: host
           inputResources:
@@ -34,6 +35,7 @@ pipelines:
       - name: publish_helm_chart
         type: HelmPublish
         configuration:
+          affinityGroup: helm
           helmVersion: 3
           chartPath: chart/content/
           lint: true
