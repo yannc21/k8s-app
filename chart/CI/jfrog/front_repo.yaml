@@ -34,11 +34,6 @@ localRepositories:
     repoLayout: simple-default 
     xray:   
       enabled: true
-  kaivengers-dev-helm-local:
-    type: helm
-    repoLayout: simple-default 
-    xray:   
-      enabled: false
 remoteRepositories: 
   avengers-npmjs-remote:
     type: npm
@@ -62,12 +57,6 @@ remoteRepositories:
     enableTokenAuthentication: true
     xray:   
       enabled: true
-  kaivengers-chartcenter-remote:
-    type: helm
-    url: https://repo.chartcenter.io/
-    repoLayout: simple-default 
-    xray:   
-      enabled: false
 virtualRepositories: 
   avengers-npm:
     type: npm
@@ -96,10 +85,3 @@ virtualRepositories:
       - avengers-bintray-remote
       - kaivengers-release-docker-local
     defaultDeploymentRepo: avengers-dev-docker-local
-  kaivengers-helm:
-    type: helm
-    repoLayout: simple-default 
-    repositories:   
-      - kaivengers-dev-helm-local
-      - kaivengers-chartcenter-remote
-    defaultDeploymentRepo: kaivengers-dev-helm-local
